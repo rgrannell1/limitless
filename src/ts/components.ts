@@ -111,9 +111,10 @@ export function FiringPattern(context: Context, params: EnemyParams) {
     }));
 
 
-    bullet.onCollide("shape", () => {
-      context.state.ship.destroy();
-      bullet.destroy();
+    bullet.onCollide("shape", (obj) => {
+      if (obj === context.state.ship) {
+        location.reload();
+      }
     });
 
   }, 150);

@@ -5354,9 +5354,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         speed: 100,
         rotation: 60
       }));
-      bullet.onCollide("shape", () => {
-        context2.state.ship.destroy();
-        bullet.destroy();
+      bullet.onCollide("shape", (obj) => {
+        if (obj === context2.state.ship) {
+          location.reload();
+        }
       });
     }, 150);
   }
