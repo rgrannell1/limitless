@@ -19,7 +19,8 @@ export function FiringPattern(context: Context, params: EnemyParams) {
   let angle = 0;
 
   setInterval(() => {
-    angle += 15;
+    // to avoid recurring patterns, our friend phi
+    angle += 10 * 1.61803399;
 
     const distance = 30;
     const radians = (angle * Math.PI) / 180;

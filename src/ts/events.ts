@@ -43,15 +43,16 @@ function renderJumpEffect(
   const steps = Math.ceil(distance / 14);
 
   for (let ith = 0; ith < steps; ith++) {
-    const x = currentX + xDiff * (ith / steps);
-    const y = currentY + yDiff * (ith / steps);
+    const progress = ith / steps;
+    const x = currentX + xDiff * progress;
+    const y = currentY + yDiff * progress;
 
     add([
       text("□", { size: 32 }),
       pos(x, y - 8),
       color(249, 199, 255),
       lifespan(0.5, { fade: 0.3 }),
-      opacity(0.8),
+      opacity(0.8 * progress),
       "jumpEffect",
     ]);
   }
