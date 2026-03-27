@@ -5274,8 +5274,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   // src/ts/components.ts
   function Ship() {
     return [
-      rect(32, 32, "red"),
+      rect(32, 32),
       pos(DIMENSION / 2, DIMENSION / 2),
+      area(),
       "shape"
     ];
   }
@@ -5299,7 +5300,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const { position } = params;
     return [
       text("\u25C8", { size: 32, styles: {} }),
-      pos(...position)
+      pos(...position),
+      area()
     ];
   }
   function renderLimitBarText(limitsBar) {

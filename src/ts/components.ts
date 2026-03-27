@@ -1,10 +1,10 @@
 import { CURSOR_SIZE, DEFAULT_LIMITS, DIMENSION, LIMIT_TEXT_SIZE } from "./constants"
-import { EnemryType } from "./types";
 
 export function Ship() {
   return [
-    rect(32, 32, "red"),
+    rect(32, 32),
     pos(  DIMENSION / 2, DIMENSION / 2),
+    area(),
     "shape"
   ]
 }
@@ -40,7 +40,8 @@ export function LimitTokens(params: ListTokensParams) {
 
   return [
     text("◈", { size: 32, styles: {  } }),
-    pos(...position)
+    pos(...position),
+    area()
   ]
 }
 
