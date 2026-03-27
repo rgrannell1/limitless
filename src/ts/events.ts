@@ -23,16 +23,42 @@ function bindShipEvents(context: Context) {
   });
 }
 
-function bindCursorEvents(context: Context) {
-  onMouseMove(() => {
-    if (!context.state.cursor) {
-      throw new Error("cursor is not defined in state");
-    }
+/*
+ * Render a jump effect
+ */
+function renderJumpEffect(
+  currentX: number,
+  currentY: number,
+  targetX: number,
+  targetY: number,
+) {
 
-    context.state.cursor.pos = [mousePos().x, mousePos().y];
-  });
 
-  onMouseRelease(() => {
+  const xDiff = targetX - currentX;
+  const yDiff = targetY - currentY;
+
+  const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+  const steps = Math.ceil(distance / 5);
+
+  console.log({xDiff, yDiff, distance, steps});
+
+  for (let ith = 0; ith < steps; ith++) {
+    const x = currentX + xDiff * (ith / steps);
+    const y = currentY + yDiff * (ith / steps);
+
+    add([
+      rect(32, 32),
+      pos(x, y),
+      color(255, 255, 255),
+      lifespan(0.5, { fade: 0.5 }),
+      opacity(0.8),
+      "jumpEffect",
+    ]);
+  }
+}
+
+
+function jumpShip(context: Context) {
     const { ship, limitsBar } = context.state;
     if (!limitsBar) {
       throw new Error("limitsBar is not defined in state");
@@ -52,9 +78,29 @@ function bindCursorEvents(context: Context) {
     limitsBar.value -= 1;
     limitsBar.text = renderLimitBarText(limitsBar);
 
+    const targetX = mousePos().x;
+    const targetY = mousePos().y;
+
+    const currentX = ship.pos.x;
+    const currentY = ship.pos.y;
+
+    console.log(({ currentX, currentY, targetX, targetY }));
+    renderJumpEffect(currentX, currentY, targetX, targetY);
+
     // we do, so jump around, jump around
-    ship.moveTo(mousePos().x, mousePos().y);
+    ship.moveTo(targetX, targetY);
+}
+
+function bindCursorEvents(context: Context) {
+  onMouseMove(() => {
+    if (!context.state.cursor) {
+      throw new Error("cursor is not defined in state");
+    }
+
+    context.state.cursor.pos = [mousePos().x, mousePos().y];
   });
+
+  onMouseRelease(() => jumpShip(context));
 }
 
 export function bindEvents(context: Context) {

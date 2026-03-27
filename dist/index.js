@@ -5288,9 +5288,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function Timer() {
     return [
-      text(renderTimerText(0)),
+      text(renderTimerText({ value: 60 })),
       pos(DIMENSION - 120, 30),
-      { value: 0 }
+      { value: 60 }
     ];
   }
   function Background() {
@@ -5349,6 +5349,46 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       ship.move(0, MOVE_RATE);
     });
   }
+  function renderJumpEffect(currentX, currentY, targetX, targetY) {
+    const xDiff = targetX - currentX;
+    const yDiff = targetY - currentY;
+    const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+    const steps = Math.ceil(distance / 5);
+    console.log({ xDiff, yDiff, distance, steps });
+    for (let ith = 0; ith < steps; ith++) {
+      const x = currentX + xDiff * (ith / steps);
+      const y = currentY + yDiff * (ith / steps);
+      add([
+        rect(32, 32),
+        pos(x, y),
+        color(255, 255, 255),
+        lifespan(0.5, { fade: 0.5 }),
+        opacity(0.8),
+        "jumpEffect"
+      ]);
+    }
+  }
+  function jumpShip(context2) {
+    const { ship, limitsBar } = context2.state;
+    if (!limitsBar) {
+      throw new Error("limitsBar is not defined in state");
+    }
+    if (limitsBar.value === 0) {
+      return;
+    }
+    console.log(
+      `decreasing limitsBar.value from ${limitsBar.value} to ${limitsBar.value - 1}`
+    );
+    limitsBar.value -= 1;
+    limitsBar.text = renderLimitBarText(limitsBar);
+    const targetX = mousePos().x;
+    const targetY = mousePos().y;
+    const currentX = ship.pos.x;
+    const currentY = ship.pos.y;
+    console.log({ currentX, currentY, targetX, targetY });
+    renderJumpEffect(currentX, currentY, targetX, targetY);
+    ship.moveTo(targetX, targetY);
+  }
   function bindCursorEvents(context2) {
     onMouseMove(() => {
       if (!context2.state.cursor) {
@@ -5356,21 +5396,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       }
       context2.state.cursor.pos = [mousePos().x, mousePos().y];
     });
-    onMouseRelease(() => {
-      const { ship, limitsBar } = context2.state;
-      if (!limitsBar) {
-        throw new Error("limitsBar is not defined in state");
-      }
-      if (limitsBar.value === 0) {
-        return;
-      }
-      console.log(
-        `decreasing limitsBar.value from ${limitsBar.value} to ${limitsBar.value - 1}`
-      );
-      limitsBar.value -= 1;
-      limitsBar.text = renderLimitBarText(limitsBar);
-      ship.moveTo(mousePos().x, mousePos().y);
-    });
+    onMouseRelease(() => jumpShip(context2));
   }
   function bindEvents(context2) {
     bindShipEvents(context2);
@@ -5391,8 +5417,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       if (!context2.state.timer) {
         return;
       }
-      context2.state.timer.value += 1;
-      context2.state.timer.text = renderTimerText(context2.state.timer);
+      if (context2.state.timer.value > 0) {
+        context2.state.timer.value -= 1;
+        context2.state.timer.text = renderTimerText(context2.state.timer);
+      }
     }, 1e3);
   }
 

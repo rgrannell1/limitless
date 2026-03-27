@@ -7,7 +7,9 @@ export function bindIntervals(context: Context) {
       return;
     }
 
-    context.state.timer.value += 1;
-    context.state.timer.text = renderTimerText(context.state.timer);
+    if (context.state.timer.value > 0) {
+      context.state.timer.value -= 1;
+      context.state.timer.text = renderTimerText(context.state.timer);
+    }
   }, 1000);
 }

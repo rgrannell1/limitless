@@ -24,9 +24,9 @@ export function renderTimerText(timer: any) {
 
 export function Timer() {
   return [
-    text(renderTimerText(0)),
+    text(renderTimerText({ value: 60 })),
     pos(DIMENSION - 120, 30),
-    { value: 0 },
+    { value: 60 },
   ];
 }
 
