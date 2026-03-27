@@ -1,4 +1,5 @@
-import { renderTimerText } from "./components"
+import { renderTimerText } from "./components.ts"
+import { Context } from "./types.ts"
 
 
 export function bindIntervals(context: Context) {

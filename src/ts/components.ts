@@ -68,5 +68,4 @@ export function Enemy() {
     pos(  DIMENSION / 2, DIMENSION / 2),
     "shape"
   ]
-
 }
