@@ -66,9 +66,7 @@ function spawnEnemy(context: Context) {
 
   for (const vertex of triangle) {
     enemies.push(add(Enemy({ position: [vertex.x, vertex.y] })));
-
-    // and a firing pattern, please
-    FiringPattern({ position: [vertex.x, vertex.y] });
+    FiringPattern(context, { position: [vertex.x + 16, vertex.y + 16] });
   }
 }
 

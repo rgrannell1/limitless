@@ -5277,7 +5277,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   // src/ts/components.ts
   function Ship() {
     return [
-      rect(32, 32),
+      rect(16, 16),
       pos(DIMENSION / 2, DIMENSION / 2),
       area(),
       "shape"
@@ -5337,25 +5337,36 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       "shape"
     ];
   }
-  function FiringPattern(params) {
+  function FiringPattern(context2, params) {
     const { position } = params;
     let angle = 0;
     setInterval(() => {
       angle += 15;
-      add(Bullet({
-        position,
+      const distance = 30;
+      const radians = angle * Math.PI / 180;
+      const outwardPosition = [
+        position[0] + distance * Math.cos(radians),
+        position[1] + distance * Math.sin(radians)
+      ];
+      const bullet = add(Bullet({
+        position: outwardPosition,
         angle,
-        speed: 100
+        speed: 100,
+        rotation: 60
       }));
+      bullet.onCollide("shape", () => {
+        context2.state.ship.destroy();
+        bullet.destroy();
+      });
     }, 150);
   }
   function Bullet(params) {
-    const { position, angle, speed } = params;
+    const { position, angle, speed, rotation } = params;
     return [
       rect(8, 8),
       pos(...position),
       area(),
-      rotate(30),
+      rotate(params.rotation ?? 30),
       move(angle, speed),
       color(255, 192, 203),
       offscreen({ destroy: true })
@@ -5366,18 +5377,19 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var MOVE_RATE = 200;
   function bindShipEvents(context2) {
     const { ship } = context2.state;
-    console.log(ship);
-    onKeyDown("right", () => {
-      ship.move(MOVE_RATE, 0);
-    });
-    onKeyDown("left", () => {
-      ship.move(-MOVE_RATE, 0);
-    });
-    onKeyDown("up", () => {
-      ship.move(0, -MOVE_RATE);
-    });
-    onKeyDown("down", () => {
-      ship.move(0, MOVE_RATE);
+    onUpdate(() => {
+      const mouseX = mousePos().x;
+      const mouseY = mousePos().y;
+      const shipX = ship.pos.x;
+      const shipY = ship.pos.y;
+      const dx = mouseX - shipX;
+      const dy = mouseY - shipY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance > 1) {
+        const dirX = dx / distance;
+        const dirY = dy / distance;
+        ship.move(dirX * MOVE_RATE, dirY * MOVE_RATE);
+      }
     });
   }
   function renderJumpEffect(currentX, currentY, targetX, targetY) {
@@ -5491,7 +5503,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     ];
     for (const vertex of triangle) {
       enemies.push(add(Enemy({ position: [vertex.x, vertex.y] })));
-      FiringPattern({ position: [vertex.x, vertex.y] });
+      FiringPattern(context2, { position: [vertex.x + 16, vertex.y + 16] });
     }
   }
   function gameScene(context2) {

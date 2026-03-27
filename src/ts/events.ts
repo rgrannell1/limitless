@@ -6,20 +6,21 @@ const MOVE_RATE = 200;
 function bindShipEvents(context: Context) {
   const { ship } = context.state;
 
-  console.log(ship);
+  onUpdate(() => {
+    const mouseX = mousePos().x;
+    const mouseY = mousePos().y;
+    const shipX = ship.pos.x;
+    const shipY = ship.pos.y;
 
-  onKeyDown("right", () => {
-    ship.move(MOVE_RATE, 0);
-  });
+    const dx = mouseX - shipX;
+    const dy = mouseY - shipY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
-  onKeyDown("left", () => {
-    ship.move(-MOVE_RATE, 0);
-  });
-  onKeyDown("up", () => {
-    ship.move(0, -MOVE_RATE);
-  });
-  onKeyDown("down", () => {
-    ship.move(0, MOVE_RATE);
+    if (distance > 1) {
+      const dirX = dx / distance;
+      const dirY = dy / distance;
+      ship.move(dirX * MOVE_RATE, dirY * MOVE_RATE);
+    }
   });
 }
 

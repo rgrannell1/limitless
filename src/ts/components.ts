@@ -4,10 +4,11 @@ import {
   DIMENSION,
   LIMIT_TEXT_SIZE,
 } from "./constants";
+import { Context } from "./types";
 
 export function Ship() {
   return [
-    rect(32, 32),
+    rect(16, 16),
     pos(DIMENSION / 2, DIMENSION / 2),
     area(),
     "shape",
@@ -87,7 +88,7 @@ export function Enemy(params: EnemyParams) {
   ];
 }
 
-export function FiringPattern(params: EnemyParams) {
+export function FiringPattern(context: Context, params: EnemyParams) {
   const { position } = params;
 
   let angle = 0;
@@ -95,11 +96,25 @@ export function FiringPattern(params: EnemyParams) {
   setInterval(() => {
     angle += 15;
 
-    add(Bullet({
-      position,
+    const distance = 30;
+    const radians = (angle * Math.PI) / 180;
+    const outwardPosition = [
+      position[0] + distance * Math.cos(radians),
+      position[1] + distance * Math.sin(radians),
+    ];
+
+    const bullet = add(Bullet({
+      position: outwardPosition,
       angle,
       speed: 100,
+      rotation: 60,
     }));
+
+
+    bullet.onCollide("shape", () => {
+      context.state.ship.destroy();
+      bullet.destroy();
+    });
 
   }, 150);
 }
@@ -108,16 +123,17 @@ type BulletParams = {
   position: [number, number];
   angle: number;
   speed: number;
+  rotation: number
 }
 
 export function Bullet(params: BulletParams) {
-  const { position, angle, speed } = params;
+  const { position, angle, speed, rotation } = params;
 
   return [
     rect(8, 8),
     pos(...position),
     area(),
-    rotate(30),
+    rotate(params.rotation ?? 30),
     move(angle, speed),
     color(255, 192, 203),
 
