@@ -1,14 +1,15 @@
-import { renderLimitBarText } from "./components"
+import { renderLimitBarText } from "./components.ts"
+import { Context } from "./types.ts"
 
 const MOVE_RATE = 200;
 
-function bindShipEvents(context) {
+function bindShipEvents(context: Context) {
   const { ship } = context.state;
 
   console.log ( ship )
 
   onKeyDown("right", () => {
-      ship.movev(MOVE_RATE, 0);
+      ship.move(MOVE_RATE, 0);
   });
 
   onKeyDown("left", () => {
