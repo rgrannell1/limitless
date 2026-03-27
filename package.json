@@ -14,7 +14,6 @@
     "typescript": "^6.0.2"
   },
   "dependencies": {
-    "crab": "github:rgrannell1/crab",
     "kaplay": "^3001.0.19"
   }
 }
