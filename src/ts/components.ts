@@ -67,13 +67,22 @@ export function Cursor() {
   return [
     text("x", { size: CURSOR_SIZE }),
     pos(0, 0),
+    color(255, 255, 255),
   ];
 }
 
-export function Enemy() {
+type EnemyParams = {
+  position: [number, number]
+}
+
+export function Enemy(params: EnemyParams) {
+  const { position } = params;
+
   return [
-    rect(32, 32, {}),
-    pos(DIMENSION / 2, DIMENSION / 2),
+    rect(32, 32),
+    pos(...position),
+    area(),
+    color(255, 0, 0),
     "shape",
   ];
 }

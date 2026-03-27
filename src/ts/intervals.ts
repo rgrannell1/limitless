@@ -1,4 +1,5 @@
 import { renderTimerText } from "./components.ts";
+import { spawnToken } from "./scenes.ts";
 import { Context } from "./types.ts";
 
 export function bindIntervals(context: Context) {
@@ -12,4 +13,11 @@ export function bindIntervals(context: Context) {
       context.state.timer.text = renderTimerText(context.state.timer);
     }
   }, 1000);
+
+
+  setInterval(() => {
+
+      spawnToken(context);
+
+  }, 10_000);
 }

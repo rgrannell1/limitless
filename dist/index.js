@@ -5320,13 +5320,17 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function Cursor() {
     return [
       text("x", { size: CURSOR_SIZE }),
-      pos(0, 0)
+      pos(0, 0),
+      color(255, 255, 255)
     ];
   }
-  function Enemy() {
+  function Enemy(params) {
+    const { position } = params;
     return [
-      rect(32, 32, {}),
-      pos(DIMENSION / 2, DIMENSION / 2),
+      rect(32, 32),
+      pos(...position),
+      area(),
+      color(255, 0, 0),
       "shape"
     ];
   }
@@ -5359,10 +5363,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       const x = currentX + xDiff * (ith / steps);
       const y = currentY + yDiff * (ith / steps);
       add([
-        text("\u25A1", { size: 32 }),
+        text("\u25A1", { size: 38 }),
         pos(x, y),
         color(255, 255, 255),
-        lifespan(0.5, { fade: 0.5 }),
+        lifespan(0.5, { fade: 0.3 }),
         opacity(0.8),
         "jumpEffect"
       ]);
@@ -5376,9 +5380,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     if (limitsBar.value === 0) {
       return;
     }
-    console.log(
-      `decreasing limitsBar.value from ${limitsBar.value} to ${limitsBar.value - 1}`
-    );
     limitsBar.value -= 1;
     limitsBar.text = renderLimitBarText(limitsBar);
     const targetX = mousePos().x;
@@ -5422,6 +5423,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         context2.state.timer.text = renderTimerText(context2.state.timer);
       }
     }, 1e3);
+    setInterval(() => {
+      spawnToken(context2);
+    }, 1e4);
   }
 
   // src/ts/scenes.ts
@@ -5435,14 +5439,40 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     bindTokenEvent(context2, token);
     tokens.push(token);
   }
+  function getRegularPolygonVertex(centerX2, centerY2, vertexRadius, sideCount, vertexIndex, startAngleRadians = 0) {
+    const angle = startAngleRadians + 2 * Math.PI * vertexIndex / sideCount;
+    return {
+      x: centerX2 + vertexRadius * Math.cos(angle),
+      y: centerY2 + vertexRadius * Math.sin(angle)
+    };
+  }
+  var centerX = DIMENSION / 2;
+  var centerY = DIMENSION / 2;
+  var radius = DIMENSION / 3;
+  var sides = 3;
+  var startAngle = -Math.PI / 2;
+  var triangle = [
+    getRegularPolygonVertex(centerX, centerY, radius, sides, 0, startAngle),
+    getRegularPolygonVertex(centerX, centerY, radius, sides, 1, startAngle),
+    getRegularPolygonVertex(centerX, centerY, radius, sides, 2, startAngle)
+  ];
+  function spawnEnemy(context2) {
+    const { enemies } = context2.state;
+    const position = [
+      Math.floor(Math.random() * DIMENSION * 0.8 + 100),
+      Math.floor(Math.random() * DIMENSION * 0.8 + 100)
+    ];
+    for (const vertex of triangle) {
+      enemies.push(add(Enemy({ position: [vertex.x, vertex.y] })));
+    }
+  }
   function gameScene(context2) {
     context2.state.ship = add(Ship());
     context2.state.timer = add(Timer());
     context2.state.limitsBar = add(LimitsBar());
     context2.state.background = add(Background());
     context2.state.cursor = add(Cursor());
-    context2.state.enemies.push(Enemy());
-    spawnToken(context2);
+    spawnEnemy(context2);
     bindEvents(context2);
     bindIntervals(context2);
   }

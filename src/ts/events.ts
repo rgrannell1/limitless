@@ -47,10 +47,10 @@ function renderJumpEffect(
     const y = currentY + yDiff * (ith / steps);
 
     add([
-      text("□", { size: 32 }),
+      text("□", { size: 38 }),
       pos(x, y),
       color(255, 255, 255),
-      lifespan(0.5, { fade: 0.5 }),
+      lifespan(0.5, { fade: 0.3 }),
       opacity(0.8),
       "jumpEffect",
     ]);
@@ -69,12 +69,6 @@ function jumpShip(context: Context) {
     }
 
     // cool, so check we have points left then decrease them
-    console.log(
-      `decreasing limitsBar.value from ${limitsBar.value} to ${
-        limitsBar.value - 1
-      }`,
-    );
-
     limitsBar.value -= 1;
     limitsBar.text = renderLimitBarText(limitsBar);
 

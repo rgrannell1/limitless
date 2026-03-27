@@ -11,6 +11,9 @@ your chosing, maybe that's the main move mechanic
 
 `index.html` `index.ts`
 
+- [ ] add sound
+- [ ] add enemies
+
 ## Build
 
 ```sh
