@@ -25,7 +25,7 @@ function bindShipEvents(context) {
 
 function bindCursorEvents(context: Context) {
   onMouseMove(() => {
-    context.state.cursor.pos = [mousePos().x, mousePos().y]
+    context.state.cursor.pos = pos(mousePos().x, mousePos().y)
   });
 
 

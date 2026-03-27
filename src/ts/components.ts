@@ -31,11 +31,15 @@ export function Background() {
   ]
 }
 
-export function LimitTokens(params) {
+type ListTokensParams = {
+  position: [number, number]
+}
+
+export function LimitTokens(params: ListTokensParams) {
   const { position } = params
 
   return [
-    text("◈", { size: 32, styles: { fill: "yellow" } }),
+    text("◈", { size: 32, styles: {  } }),
     pos(...position)
   ]
 }

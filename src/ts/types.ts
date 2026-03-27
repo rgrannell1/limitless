@@ -3,6 +3,7 @@ import type { GameObj } from "kaplay"
 
 // Game state
 type State = {
+  background: GameObj
   ship: GameObj | null
   enemies: GameObj[]
   tokens: GameObj[]
@@ -14,7 +15,7 @@ type State = {
 // Context passed around generally
 type Context = {
   state: State
-}]
+}
 
 export type EnemyType = "line"
 

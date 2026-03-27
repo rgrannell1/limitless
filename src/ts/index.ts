@@ -1,18 +1,15 @@
 
-import kaplay from "kaplay"
+import scene from "kaplay"
 
 import "kaplay/global";
 import { Context, State } from './types.ts';
-import { bindEvents } from "./events.js";
-import { DIMENSION } from "./constants.ts";
-import { Background, Cursor, Enemy, LimitsBar, LimitTokens, Ship, Timer } from "./components.js";
-import { bindIntervals } from "./intervals.js";
 import { gameScene } from "./scenes.ts";
 
 const state: State = {
   ship: null,
   enemies: [],
-  tokens: []
+  tokens: [],
+  background: null
 }
 
 const context: Context = { state }
