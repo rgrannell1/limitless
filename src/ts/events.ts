@@ -29,7 +29,6 @@ function bindCursorEvents(context: Context) {
     context.state.cursor.pos = [mousePos().x, mousePos().y]
   });
 
-
   onMouseRelease(() => {
     const { ship, limitsBar } = context.state;
 
@@ -42,8 +41,7 @@ function bindCursorEvents(context: Context) {
     }
 
     // we do, so jump around, jump around
-
-    ship.pos = [mousePos().x, mousePos().y];
+    ship.pos = pos(mousePos().x, mousePos().y);
   })
 }
 
