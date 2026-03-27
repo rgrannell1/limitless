@@ -25,7 +25,9 @@ function main() {
 
   context.state.ship = add(Ship())
   context.state.timer = add(Timer())
-
+  context.state.limitsBar = add(LimitsBar())
+  context.state.background = add(Background())
+  context.state.cursor = add(Cursor())
 
   bindEvents(context)
   bindIntervals(context)
