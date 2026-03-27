@@ -8,6 +8,11 @@ function bindShipEvents(context: Context) {
   const { ship } = context.state;
 
   onUpdate(() => {
+    // nope.
+    if (context.state.hyperfocus) {
+      return;
+    }
+
     const mouseX = mousePos().x;
     const mouseY = mousePos().y;
     const shipX = ship.pos.x;
@@ -62,6 +67,9 @@ function startJumpShip(context: Context) {
   // slow down the time rate
   // pause movement
 
+  onKeyDown("space", () => {
+    context.state.hyperfocus = true;
+  });
 
 }
 
@@ -92,6 +100,8 @@ function jumpShip(context: Context) {
 
   // we do, so jump around, jump around
   ship.moveTo(targetX, targetY);
+
+  context.state.hyperfocus = false;
 }
 
 function bindCursorEvents(context: Context) {

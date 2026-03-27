@@ -54,6 +54,7 @@ function spawnEnemy(context: Context) {
 export function registerGameScene() {
   scene("game", (context: Context) => {
     context.state = {
+      hyperfocus: false,
       ship: add(Ship()),
       timer: add(Timer()),
       limitsBar: add(LimitsBar()),

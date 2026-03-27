@@ -5307,6 +5307,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return [
       text(renderTimerText({ value: 60 })),
       pos(TIMER_X, TIMER_Y),
+      color(0, 0, 0),
       { value: 60 }
     ];
   }
@@ -5414,6 +5415,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function bindShipEvents(context) {
     const { ship } = context.state;
     onUpdate(() => {
+      if (context.state.hyperfocus) {
+        return;
+      }
       const mouseX = mousePos().x;
       const mouseY = mousePos().y;
       const shipX = ship.pos.x;
@@ -5449,6 +5453,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
   }
   function startJumpShip(context) {
+    onKeyDown("space", () => {
+      context.state.hyperfocus = true;
+    });
   }
   function jumpShip(context) {
     const { ship, limitsBar } = context.state;
@@ -5467,6 +5474,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const currentY = ship.pos.y;
     renderJumpEffect(currentX, currentY, targetX, targetY);
     ship.moveTo(targetX, targetY);
+    context.state.hyperfocus = false;
   }
   function bindCursorEvents(context) {
     onMouseMove(() => {
@@ -5554,6 +5562,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function registerGameScene() {
     scene("game", (context) => {
       context.state = {
+        hyperfocus: false,
         ship: add(Ship()),
         timer: add(Timer()),
         limitsBar: add(LimitsBar()),

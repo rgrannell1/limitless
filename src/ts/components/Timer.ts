@@ -13,6 +13,7 @@ export function Timer() {
   return [
     text(renderTimerText({ value: 60 })),
     pos(TIMER_X, TIMER_Y),
+    color(0, 0, 0),
     { value: 60 },
   ];
 }
