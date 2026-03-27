@@ -5434,13 +5434,12 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const yDiff = targetY - currentY;
     const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
     const steps = Math.ceil(distance / 14);
-    console.log({ xDiff, yDiff, distance, steps });
     for (let ith = 0; ith < steps; ith++) {
       const x = currentX + xDiff * (ith / steps);
       const y = currentY + yDiff * (ith / steps);
       add([
         text("\u25A1", { size: 32 }),
-        pos(x, y),
+        pos(x, y - 8),
         color(249, 199, 255),
         lifespan(0.5, { fade: 0.3 }),
         opacity(0.8),
@@ -5465,7 +5464,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const targetY = mouse.y;
     const currentX = ship.pos.x;
     const currentY = ship.pos.y;
-    console.log({ currentX, currentY, targetX, targetY });
     renderJumpEffect(currentX, currentY, targetX, targetY);
     ship.moveTo(targetX, targetY);
   }
