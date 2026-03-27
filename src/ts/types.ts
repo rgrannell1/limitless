@@ -1,23 +1,22 @@
-
-import type { GameObj } from "kaplay"
+import type { GameObj } from "kaplay";
 
 // Game state
 type State = {
-  background: GameObj
+  background: GameObj;
   ship: GameObj;
-  enemies: GameObj[]
-  tokens: GameObj[]
-  timer?: GameObj
-  limitsBar?: GameObj
-  cursor?: GameObj
-}
+  enemies: GameObj[];
+  tokens: GameObj[];
+  timer?: GameObj;
+  limitsBar?: GameObj;
+  cursor?: GameObj;
+};
 
 // Context passed around generally
 type Context = {
-  state: State
-}
+  state: State;
+};
 
-export type EnemyType = "line"
+export type EnemyType = "line";
 
-export type { GameObj }
-export type { State, Context }
+export type { GameObj };
+export type { Context, State };
