@@ -49,7 +49,7 @@ function renderJumpEffect(
     const y = currentY + yDiff * (ith / steps);
 
     add([
-      text("□", { size: 38 }),
+      text("□", { size: 32 }),
       pos(x, y),
       color(220, 220, 220),
       lifespan(0.5, { fade: 0.3 }),

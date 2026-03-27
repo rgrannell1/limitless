@@ -3,7 +3,7 @@ import { CENTRE } from "../constants";
 
 export function Ship() {
   return [
-    rect(16, 16),
+    sprite("ship"),
     pos(CENTRE, CENTRE),
     area(),
     "shape",

@@ -5275,13 +5275,13 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var TIMER_X = DIMENSION - 120;
   var TIMER_Y = 30;
   var PALLETE = {
-    background: "#d46eb3"
+    background: "#ffb1e6"
   };
 
   // src/ts/components/Ship.ts
   function Ship() {
     return [
-      rect(16, 16),
+      sprite("ship"),
       pos(CENTRE, CENTRE),
       area(),
       "shape"
@@ -5359,9 +5359,11 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function Bullet(params) {
     const { position, angle, speed } = params;
     return [
-      rect(8, 8),
+      sprite("bullet"),
       pos(...position),
-      area(),
+      area({
+        // TODO smaller shape
+      }),
       rotate(params.rotation ?? 30),
       move(angle, speed),
       color(255, 192, 203),
@@ -5427,7 +5429,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       const x = currentX + xDiff * (ith / steps);
       const y = currentY + yDiff * (ith / steps);
       add([
-        text("\u25A1", { size: 38 }),
+        text("\u25A1", { size: 32 }),
         pos(x, y),
         color(220, 220, 220),
         lifespan(0.5, { fade: 0.3 }),
@@ -5561,6 +5563,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
 
   // src/ts/loaders.ts
   function loadAssets() {
+    loadSprite("ship", "assets/ship.png");
+    loadSprite("bullet", "assets/bullet.png");
   }
 
   // src/ts/index.ts

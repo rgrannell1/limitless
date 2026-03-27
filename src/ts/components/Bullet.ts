@@ -10,9 +10,11 @@ export function Bullet(params: BulletParams) {
   const { position, angle, speed } = params;
 
   return [
-    rect(8, 8),
+    sprite("bullet"),
     pos(...position),
-    area(),
+    area({
+      // TODO smaller shape
+    }),
     rotate(params.rotation ?? 30),
     move(angle, speed),
     color(255, 192, 203),
