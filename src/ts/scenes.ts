@@ -28,7 +28,6 @@ export function gameScene(context: Context) {
 
   context.state.enemies.push(Enemy())
 
-
   spawnToken(context)
 
   bindEvents(context)

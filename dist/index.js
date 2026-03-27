@@ -5349,7 +5349,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function bindCursorEvents(context2) {
     onMouseMove(() => {
-      context2.state.cursor.pos = pos(mousePos().x, mousePos().y);
+      context2.state.cursor.pos = [mousePos().x, mousePos().y];
     });
     onMouseRelease(() => {
       const { ship, limitsBar } = context2.state;
