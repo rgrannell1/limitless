@@ -2,7 +2,7 @@
 import { renderTimerText } from "./components/Timer.ts";
 import { TOKEN_SPAWN_RATE } from "./constants.ts";
 import { spawnToken } from "./scenes.ts";
-import { Context } from "./types.ts";
+import type { Context } from "./types.ts";
 
 export function bindIntervals(context: Context) {
   const state = context.state;

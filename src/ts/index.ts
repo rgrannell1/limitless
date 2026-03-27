@@ -1,20 +1,10 @@
 import kaplay from "kaplay";
 import "kaplay/global";
-import { Context, State } from "./types.ts";
-import { gameScene } from "./scenes.ts";
 import { DIMENSION, PALLETE } from "./constants.ts";
 import { loadAssets } from "./loaders.ts";
+import { register } from "./scenes.ts";
 
-// Initialize empty game state
-function initState(): State {
-  return {
-    ship: null as any,
-    enemies: [],
-    tokens: [],
-    background: null,
-  };
-}
-
+// Configure Kaplay engine
 function initKaplay(): void {
   kaplay({
     width: DIMENSION,
@@ -25,14 +15,13 @@ function initKaplay(): void {
   });
 }
 
+// Bootstrap the game
 function initGame(): void {
   initKaplay();
   loadAssets();
+  register();
 
-  const state = initState();
-  const context: Context = { state };
-
-  gameScene(context);
+  go("game", { });
 }
 
 initGame();

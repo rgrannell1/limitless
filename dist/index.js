@@ -4429,7 +4429,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       return Object.assign(super.serialize(), { keys: this.keys });
     }
   };
-  var go = class extends bn {
+  var go2 = class extends bn {
     keys;
     curves;
     dcurves;
@@ -4502,7 +4502,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       for (let i of e) s = i.update(this, n), s && !i.isFinished && (i.isFinished = true, this.trigger("animateChannelFinished", i.name)), o &&= s;
       o && !r && (r = true, this.trigger("animateFinished"));
     }, animate(o, s, i) {
-      r = false, this.unanimate(o), typeof s[0] == "number" ? e.push(new ho(o, s, i, t18.relative || false)) : s[0] instanceof E ? e.push(new go(o, s, i, t18.relative || false, o === "pos" && (t18.followMotion || false))) : s[0] instanceof j && e.push(new bo(o, s, i, t18.relative || false));
+      r = false, this.unanimate(o), typeof s[0] == "number" ? e.push(new ho(o, s, i, t18.relative || false)) : s[0] instanceof E ? e.push(new go2(o, s, i, t18.relative || false, o === "pos" && (t18.followMotion || false))) : s[0] instanceof j && e.push(new bo(o, s, i, t18.relative || false));
     }, unanimate(o) {
       let s = e.findIndex((i) => i.name === o);
       s >= 0 && e.splice(s, 1);
@@ -5278,6 +5278,12 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     background: "#fff0fa"
   };
 
+  // src/ts/loaders.ts
+  function loadAssets() {
+    loadSprite("ship", "assets/ship.png");
+    loadSprite("bullet", "assets/bullet.png");
+  }
+
   // src/ts/components/Ship.ts
   function Ship() {
     return [
@@ -5541,45 +5547,44 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   ];
   function spawnEnemy(context) {
     const { enemies } = context.state;
-    const position = [
-      Math.floor(Math.random() * DIMENSION * 0.8 + 100),
-      Math.floor(Math.random() * DIMENSION * 0.8 + 100)
-    ];
     for (const vertex of triangle) {
       enemies.push(add(Enemy({ position: [vertex.x, vertex.y] })));
       FiringPattern(context, { position: [vertex.x + 16, vertex.y + 16] });
     }
   }
-  function gameScene(context) {
-    context.state = {
-      ship: add(Ship()),
-      timer: add(Timer()),
-      limitsBar: add(LimitsBar()),
-      background: add(Background()),
-      cursor: add(Cursor()),
-      enemies: [],
-      tokens: []
-    };
-    spawnEnemy(context);
-    bindEvents(context);
-    bindIntervals(context);
+  function registerGameScene() {
+    scene("game", (context) => {
+      context.state = {
+        ship: add(Ship()),
+        timer: add(Timer()),
+        limitsBar: add(LimitsBar()),
+        background: add(Background()),
+        cursor: add(Cursor()),
+        enemies: [],
+        tokens: []
+      };
+      spawnEnemy(context);
+      bindEvents(context);
+      bindIntervals(context);
+    });
   }
-
-  // src/ts/loaders.ts
-  function loadAssets() {
-    loadSprite("ship", "assets/ship.png");
-    loadSprite("bullet", "assets/bullet.png");
+  function registerMenuScene() {
+    scene("menu", () => {
+      add([
+        text("Press Enter to Start", { size: 32 }),
+        pos(CENTRE, CENTRE)
+      ]);
+      onKeyPress("enter", () => {
+        go("game");
+      });
+    });
+  }
+  function register() {
+    registerGameScene();
+    registerMenuScene();
   }
 
   // src/ts/index.ts
-  function initState() {
-    return {
-      ship: null,
-      enemies: [],
-      tokens: [],
-      background: null
-    };
-  }
   function initKaplay() {
     hw({
       width: DIMENSION,
@@ -5592,9 +5597,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function initGame() {
     initKaplay();
     loadAssets();
-    const state = initState();
-    const context = { state };
-    gameScene(context);
+    register();
+    go("game", {});
   }
   initGame();
 })();

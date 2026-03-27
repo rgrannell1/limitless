@@ -12,7 +12,7 @@ import { CENTRE, DIMENSION } from "./constants.ts";
 import { bindEvents, bindTokenEvent } from "./events.ts";
 import { bindIntervals } from "./intervals.ts";
 import { getRegularPolygonVertex } from "./math.ts";
-import { Context } from "./types.ts";
+import type { Context } from "./types.ts";
 
 export function spawnToken(context: Context) {
   const { tokens } = context.state;
@@ -45,30 +45,45 @@ const triangle = [
 function spawnEnemy(context: Context) {
   const { enemies } = context.state;
 
-  const position: [number, number] = [
-    Math.floor((Math.random() * DIMENSION) * 0.8 + 100),
-    Math.floor((Math.random() * DIMENSION) * 0.8 + 100),
-  ];
-
   for (const vertex of triangle) {
     enemies.push(add(Enemy({ position: [vertex.x, vertex.y] })));
     FiringPattern(context, { position: [vertex.x + 16, vertex.y + 16] });
   }
 }
 
-export function gameScene(context: Context) {
-  context.state = {
-    ship: add(Ship()),
-    timer: add(Timer()),
-    limitsBar: add(LimitsBar()),
-    background: add(Background()),
-    cursor: add(Cursor()),
-    enemies: [],
-    tokens: [],
-  };
+export function registerGameScene() {
+  scene("game", (context: Context) => {
+    context.state = {
+      ship: add(Ship()),
+      timer: add(Timer()),
+      limitsBar: add(LimitsBar()),
+      background: add(Background()),
+      cursor: add(Cursor()),
+      enemies: [],
+      tokens: [],
+    };
 
-  spawnEnemy(context);
+    spawnEnemy(context);
 
-  bindEvents(context);
-  bindIntervals(context);
+    bindEvents(context);
+    bindIntervals(context);
+  });
+}
+
+export function registerMenuScene() {
+  scene("menu", () => {
+    add([
+      text("Press Enter to Start", { size: 32 }),
+      pos(CENTRE, CENTRE)
+    ]);
+
+    onKeyPress("enter", ( ) => {
+      go("game");
+    });
+  });
+}
+
+export function register() {
+  registerGameScene();
+  registerMenuScene();
 }
