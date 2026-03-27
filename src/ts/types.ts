@@ -4,7 +4,7 @@ import type { GameObj } from "kaplay"
 // Game state
 type State = {
   background: GameObj
-  ship: GameObj | null
+  ship: GameObj;
   enemies: GameObj[]
   tokens: GameObj[]
   timer?: GameObj

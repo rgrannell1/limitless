@@ -6,7 +6,7 @@ import { gameScene } from "./scenes.ts";
 import { DIMENSION } from "./constants.ts";
 
 const state: State = {
-  ship: null,
+  ship: null as any,
   enemies: [],
   tokens: [],
   background: null
