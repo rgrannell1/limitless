@@ -5358,7 +5358,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         limitsBar.value -= 1;
         limitsBar.text = renderLimitBarText(limitsBar);
       }
-      ship.pos = pos(mousePos().x, mousePos().y);
+      ship.pos = [mousePos().x, mousePos().y];
     });
   }
   function bindEvents(context2) {

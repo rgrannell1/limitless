@@ -41,7 +41,7 @@ function bindCursorEvents(context: Context) {
     }
 
     // we do, so jump around, jump around
-    ship.pos = pos(mousePos().x, mousePos().y);
+    ship.pos = [mousePos().x, mousePos().y];
   })
 }
 
