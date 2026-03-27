@@ -25,11 +25,18 @@ function bindShipEvents(context: Context) {
 
 function bindCursorEvents(context: Context) {
   onMouseMove(() => {
+    if (!context.state.cursor) {
+      throw new Error("cursor is not defined in state");
+    }
+
     context.state.cursor.pos = [mousePos().x, mousePos().y];
   });
 
   onMouseRelease(() => {
     const { ship, limitsBar } = context.state;
+    if (!limitsBar) {
+      throw new Error("limitsBar is not defined in state");
+    }
 
     if (limitsBar.value === 0) {
       return;

@@ -5310,7 +5310,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function LimitsBar() {
     return [
-      text(renderLimitBarText({ value: DEFAULT_LIMITS }), { size: LIMIT_TEXT_SIZE }),
+      text(renderLimitBarText({ value: DEFAULT_LIMITS }), {
+        size: LIMIT_TEXT_SIZE
+      }),
       pos(50, 25),
       { value: 3 }
     ];
@@ -5349,15 +5351,24 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function bindCursorEvents(context2) {
     onMouseMove(() => {
+      if (!context2.state.cursor) {
+        throw new Error("cursor is not defined in state");
+      }
       context2.state.cursor.pos = [mousePos().x, mousePos().y];
     });
     onMouseRelease(() => {
       const { ship, limitsBar } = context2.state;
-      if (limitsBar.value > 0) {
-        console.log(`decreasing limitsBar.value from ${limitsBar.value} to ${limitsBar.value - 1}`);
-        limitsBar.value -= 1;
-        limitsBar.text = renderLimitBarText(limitsBar);
+      if (!limitsBar) {
+        throw new Error("limitsBar is not defined in state");
       }
+      if (limitsBar.value === 0) {
+        return;
+      }
+      console.log(
+        `decreasing limitsBar.value from ${limitsBar.value} to ${limitsBar.value - 1}`
+      );
+      limitsBar.value -= 1;
+      limitsBar.text = renderLimitBarText(limitsBar);
       ship.moveTo(mousePos().x, mousePos().y);
     });
   }
