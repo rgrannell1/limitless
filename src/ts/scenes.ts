@@ -1,19 +1,21 @@
 import { Background, Cursor, Enemy, LimitsBar, LimitTokens, Ship, Timer } from "./components.ts";
 import { DIMENSION } from "./constants.ts";
-import { bindEvents } from "./events.ts";
+import { bindEvents, bindTokenEvent } from "./events.ts";
 import { bindIntervals } from "./intervals.ts";
 import { Context } from "./types.ts";
 
 function spawnToken(context: Context) {
   const { tokens } = context.state;
 
-  const position = [
+  const position: [number, number] = [
     Math.floor((Math.random() * DIMENSION) * 0.8 + 100),
     Math.floor((Math.random() * DIMENSION) * 0.8 + 100)
   ]
 
-  tokens.push(
-    add(LimitTokens({ position })))
+  const token = add(LimitTokens({ position }));
+  bindTokenEvent(context, token)
+
+  tokens.push(token)
 }
 
 export function gameScene(context: Context) {

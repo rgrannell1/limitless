@@ -52,3 +52,14 @@ export function bindEvents(context: Context) {
   bindShipEvents(context)
   bindCursorEvents(context)
 }
+
+export function bindTokenEvent(context: Context, token: any) {
+  const { limitsBar } = context.state;
+
+  token.onCollide("shape", () => {
+    limitsBar.value += 1;
+    limitsBar.text = renderLimitBarText(limitsBar)
+
+    token.destroy()
+  })
+}

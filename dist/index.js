@@ -5365,6 +5365,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     bindShipEvents(context2);
     bindCursorEvents(context2);
   }
+  function bindTokenEvent(context2, token) {
+    const { limitsBar } = context2.state;
+    token.onCollide("shape", () => {
+      limitsBar.value += 1;
+      limitsBar.text = renderLimitBarText(limitsBar);
+      token.destroy();
+    });
+  }
 
   // src/ts/intervals.ts
   function bindIntervals(context2) {
@@ -5384,9 +5392,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       Math.floor(Math.random() * DIMENSION * 0.8 + 100),
       Math.floor(Math.random() * DIMENSION * 0.8 + 100)
     ];
-    tokens.push(
-      add(LimitTokens({ position }))
-    );
+    const token = add(LimitTokens({ position }));
+    bindTokenEvent(context2, token);
+    tokens.push(token);
   }
   function gameScene(context2) {
     context2.state.ship = add(Ship());
