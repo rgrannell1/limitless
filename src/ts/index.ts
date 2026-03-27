@@ -5,7 +5,7 @@ import "kaplay/global";
 import { Context, State } from './types.ts';
 import { bindEvents } from "./events.js";
 import { DIMENSION } from "./constants.ts";
-import { Ship, Timer } from "./components.js";
+import { Background, Cursor, LimitsBar, Ship, Timer } from "./components.js";
 import { bindIntervals } from "./intervals.js";
 
 const state: State = {
@@ -25,6 +25,7 @@ function main() {
 
   context.state.ship = add(Ship())
   context.state.timer = add(Timer())
+
 
   bindEvents(context)
   bindIntervals(context)
