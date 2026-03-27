@@ -18,10 +18,16 @@ function bindShipEvents(context) {
       ship.move(0, MOVE_RATE);
   });
 
+}
 
+function bindCursorEvents(context) {
+  onMouseMove(() => {
+    context.state.cursor.pos = [mousePos().x, mousePos().y]
+  })
 }
 
 
 export function bindEvents(context: Context) {
   bindShipEvents(context)
+  bindCursorEvents(context)
 }

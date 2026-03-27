@@ -5,11 +5,12 @@ import "kaplay/global";
 import { Context, State } from './types.ts';
 import { bindEvents } from "./events.js";
 import { DIMENSION } from "./constants.ts";
-import { Background, Cursor, LimitsBar, Ship, Timer } from "./components.js";
+import { Background, Cursor, Enemy, LimitsBar, Ship, Timer } from "./components.js";
 import { bindIntervals } from "./intervals.js";
 
 const state: State = {
-  ship: null
+  ship: null,
+  enemies: []
 }
 
 const context: Context = { state }
@@ -28,6 +29,8 @@ function main() {
   context.state.limitsBar = add(LimitsBar())
   context.state.background = add(Background())
   context.state.cursor = add(Cursor())
+
+  context.state.enemies.push(Enemy())
 
   bindEvents(context)
   bindIntervals(context)

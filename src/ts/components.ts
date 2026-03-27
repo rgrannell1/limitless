@@ -1,4 +1,5 @@
-import { DIMENSION, LIMIT_TEXT_SIZE } from "./constants"
+import { CURSOR_SIZE, DIMENSION, LIMIT_TEXT_SIZE } from "./constants"
+import { EnemryType } from "./types";
 
 export function Ship() {
   return [
@@ -40,6 +41,18 @@ export function LimitsBar() {
 
 export function Cursor() {
   return [
-
+    text("x", { size: CURSOR_SIZE }),
+    pos(0, 0)
   ]
+}
+
+export function Enemy() {
+  return [
+    rect(32, 32, {
+
+    }),
+    pos(  DIMENSION / 2, DIMENSION / 2),
+    "shape"
+  ]
+
 }

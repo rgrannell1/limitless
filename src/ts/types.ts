@@ -8,3 +8,5 @@ type State = {
 type Context = {
   state: State
 }
+
+export type EnemryType = "line"
