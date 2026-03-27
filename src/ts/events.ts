@@ -38,7 +38,7 @@ function renderJumpEffect(
   const yDiff = targetY - currentY;
 
   const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-  const steps = Math.ceil(distance / 5);
+  const steps = Math.ceil(distance / 13);
 
   console.log({xDiff, yDiff, distance, steps});
 
@@ -47,7 +47,7 @@ function renderJumpEffect(
     const y = currentY + yDiff * (ith / steps);
 
     add([
-      rect(32, 32),
+      text("□", { size: 32 }),
       pos(x, y),
       color(255, 255, 255),
       lifespan(0.5, { fade: 0.5 }),

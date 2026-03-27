@@ -5353,13 +5353,13 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const xDiff = targetX - currentX;
     const yDiff = targetY - currentY;
     const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-    const steps = Math.ceil(distance / 5);
+    const steps = Math.ceil(distance / 13);
     console.log({ xDiff, yDiff, distance, steps });
     for (let ith = 0; ith < steps; ith++) {
       const x = currentX + xDiff * (ith / steps);
       const y = currentY + yDiff * (ith / steps);
       add([
-        rect(32, 32),
+        text("\u25A1", { size: 32 }),
         pos(x, y),
         color(255, 255, 255),
         lifespan(0.5, { fade: 0.5 }),
