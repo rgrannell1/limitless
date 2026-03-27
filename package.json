@@ -4,8 +4,7 @@
   "description": "`index.html` `index.ts` `esbuild` `bs`",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild src/ts/index.ts --bundle --outfile=dist/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",

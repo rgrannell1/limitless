@@ -1,12 +1,14 @@
-import { renderLimitBarText, renderTimerText } from "./components";
+import { renderLimitBarText } from "./components"
 
 const MOVE_RATE = 200;
 
 function bindShipEvents(context) {
-  const ship = context.state.ship;
+  const { ship } = context.state;
+
+  console.log ( ship )
 
   onKeyDown("right", () => {
-      ship.move(MOVE_RATE, 0);
+      ship.movev(MOVE_RATE, 0);
   });
 
   onKeyDown("left", () => {
@@ -21,7 +23,7 @@ function bindShipEvents(context) {
 
 }
 
-function bindCursorEvents(context) {
+function bindCursorEvents(context: Context) {
   onMouseMove(() => {
     context.state.cursor.pos = [mousePos().x, mousePos().y]
   });

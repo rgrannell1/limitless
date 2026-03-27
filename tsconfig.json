@@ -5,6 +5,15 @@
     "moduleResolution": "Bundler",
     "strict": true,
     "skipLibCheck": true,
-    "types": ["./node_modules/kaplay/dist/declaration/global.d.ts"]
+    "lib": ["ES2020", "DOM"],
+    "types": ["kaplay/global"],
+    "Declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noEmit": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

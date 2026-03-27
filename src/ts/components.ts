@@ -35,8 +35,8 @@ export function LimitTokens(params) {
   const { position } = params
 
   return [
-    text("◈", { size: 32 }),
-    position
+    text("◈", { size: 32, styles: { fill: "yellow" } }),
+    pos(...position)
   ]
 }
 
