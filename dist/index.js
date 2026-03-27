@@ -5267,22 +5267,28 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
 
   // src/ts/constants.ts
   var DIMENSION = 800;
+  var CENTRE = DIMENSION / 2;
   var LIMIT_TEXT_SIZE = 48;
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
+  var TOKEN_SPAWN_RATE = 7e3;
+  var TIMER_X = DIMENSION - 120;
+  var TIMER_Y = 30;
   var PALLETE = {
     background: "#d46eb3"
   };
 
-  // src/ts/components.ts
+  // src/ts/components/Ship.ts
   function Ship() {
     return [
       rect(16, 16),
-      pos(DIMENSION / 2, DIMENSION / 2),
+      pos(CENTRE, CENTRE),
       area(),
       "shape"
     ];
   }
+
+  // src/ts/components/Timer.ts
   function renderTimerText(timer) {
     const value = timer.value || 0;
     const minutes = Math.floor(value / 60);
@@ -5292,13 +5298,17 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function Timer() {
     return [
       text(renderTimerText({ value: 60 })),
-      pos(DIMENSION - 120, 30),
+      pos(TIMER_X, TIMER_Y),
       { value: 60 }
     ];
   }
+
+  // src/ts/components/Background.ts
   function Background() {
     return [];
   }
+
+  // src/ts/components/LimitTokens.ts
   function LimitTokens(params) {
     const { position } = params;
     return [
@@ -5307,6 +5317,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       area()
     ];
   }
+
+  // src/ts/components/LimitsBar.ts
   function renderLimitBarText(limitsBar) {
     const value = limitsBar.value || 0;
     return "\u25C8 ".repeat(value).padEnd(6, " ");
@@ -5320,6 +5332,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       { value: 3 }
     ];
   }
+
+  // src/ts/components/Cursor.ts
   function Cursor() {
     return [
       text("x", { size: CURSOR_SIZE }),
@@ -5327,6 +5341,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       color(255, 255, 255)
     ];
   }
+
+  // src/ts/components/Enemy.ts
   function Enemy(params) {
     const { position } = params;
     return [
@@ -5337,6 +5353,22 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       "shape"
     ];
   }
+
+  // src/ts/components/Bullet.ts
+  function Bullet(params) {
+    const { position, angle, speed, rotation } = params;
+    return [
+      rect(8, 8),
+      pos(...position),
+      area(),
+      rotate(params.rotation ?? 30),
+      move(angle, speed),
+      color(255, 192, 203),
+      offscreen({ destroy: true })
+    ];
+  }
+
+  // src/ts/components/FiringPattern.ts
   function FiringPattern(context2, params) {
     const { position } = params;
     let angle = 0;
@@ -5361,21 +5393,21 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       });
     }, 150);
   }
-  function Bullet(params) {
-    const { position, angle, speed, rotation } = params;
-    return [
-      rect(8, 8),
-      pos(...position),
-      area(),
-      rotate(params.rotation ?? 30),
-      move(angle, speed),
-      color(255, 192, 203),
-      offscreen({ destroy: true })
-    ];
+
+  // src/ts/components.ts
+  function renderTimerText2(timer) {
+    const value = timer.value || 0;
+    const minutes = Math.floor(value / 60);
+    const seconds = value % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  }
+  function renderLimitBarText2(limitsBar) {
+    const value = limitsBar.value || 0;
+    return "\u25C8 ".repeat(value).padEnd(6, " ");
   }
 
   // src/ts/events.ts
-  var MOVE_RATE = 200;
+  var MOVE_RATE = 100;
   function bindShipEvents(context2) {
     const { ship } = context2.state;
     onUpdate(() => {
@@ -5397,7 +5429,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const xDiff = targetX - currentX;
     const yDiff = targetY - currentY;
     const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-    const steps = Math.ceil(distance / 13);
+    const steps = Math.ceil(distance / 14);
     console.log({ xDiff, yDiff, distance, steps });
     for (let ith = 0; ith < steps; ith++) {
       const x = currentX + xDiff * (ith / steps);
@@ -5405,7 +5437,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       add([
         text("\u25A1", { size: 38 }),
         pos(x, y),
-        color(255, 255, 255),
+        color(220, 220, 220),
         lifespan(0.5, { fade: 0.3 }),
         opacity(0.8),
         "jumpEffect"
@@ -5421,9 +5453,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       return;
     }
     limitsBar.value -= 1;
-    limitsBar.text = renderLimitBarText(limitsBar);
-    const targetX = mousePos().x;
-    const targetY = mousePos().y;
+    limitsBar.text = renderLimitBarText2(limitsBar);
+    const mouse = mousePos();
+    const targetX = mouse.x;
+    const targetY = mouse.y;
     const currentX = ship.pos.x;
     const currentY = ship.pos.y;
     console.log({ currentX, currentY, targetX, targetY });
@@ -5445,27 +5478,32 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function bindTokenEvent(context2, token) {
     const { limitsBar } = context2.state;
+    if (!limitsBar) {
+      throw new Error("limitsBar is not defined in state");
+    }
     token.onCollide("shape", () => {
       limitsBar.value += 1;
-      limitsBar.text = renderLimitBarText(limitsBar);
+      limitsBar.text = renderLimitBarText2(limitsBar);
       token.destroy();
     });
   }
 
   // src/ts/intervals.ts
   function bindIntervals(context2) {
+    const state2 = context2.state;
     setInterval(() => {
-      if (!context2.state.timer) {
+      const timer = state2.timer;
+      if (!timer) {
         return;
       }
-      if (context2.state.timer.value > 0) {
-        context2.state.timer.value -= 1;
-        context2.state.timer.text = renderTimerText(context2.state.timer);
+      if (timer.value > 0) {
+        timer.value -= 1;
+        timer.text = renderTimerText2(timer);
       }
     }, 1e3);
     setInterval(() => {
       spawnToken(context2);
-    }, 1e4);
+    }, TOKEN_SPAWN_RATE);
   }
 
   // src/ts/scenes.ts
@@ -5508,14 +5546,22 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
   }
   function gameScene(context2) {
-    context2.state.ship = add(Ship());
-    context2.state.timer = add(Timer());
-    context2.state.limitsBar = add(LimitsBar());
-    context2.state.background = add(Background());
-    context2.state.cursor = add(Cursor());
+    context2.state = {
+      ship: add(Ship()),
+      timer: add(Timer()),
+      limitsBar: add(LimitsBar()),
+      background: add(Background()),
+      cursor: add(Cursor()),
+      enemies: [],
+      tokens: []
+    };
     spawnEnemy(context2);
     bindEvents(context2);
     bindIntervals(context2);
+  }
+
+  // src/ts/loaders.ts
+  function loadAssets() {
   }
 
   // src/ts/index.ts
@@ -5533,5 +5579,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     scale: 2,
     canvas: document.getElementById("canvas")
   });
+  loadAssets();
   gameScene(context);
 })();

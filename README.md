@@ -12,7 +12,11 @@ your chosing, maybe that's the main move mechanic
 `index.html` `index.ts`
 
 - [ ] add sound
-- [ ] add enemies
+- [x] add enemies
+- [ ] on space, slow to aim somewhere if tokens available
+- [ ] SVG assets
+- [ ] Level progression
+- [ ] Background art (probaby just an SVG moving around)
 
 ## Build
 

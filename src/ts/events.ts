@@ -1,7 +1,7 @@
 import { renderLimitBarText } from "./components.ts";
 import { Context } from "./types.ts";
 
-const MOVE_RATE = 200;
+const MOVE_RATE = 100;
 
 function bindShipEvents(context: Context) {
   const { ship } = context.state;
@@ -37,7 +37,7 @@ function renderJumpEffect(
   const yDiff = targetY - currentY;
 
   const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-  const steps = Math.ceil(distance / 13);
+  const steps = Math.ceil(distance / 14);
 
   console.log({ xDiff, yDiff, distance, steps });
 
@@ -48,7 +48,7 @@ function renderJumpEffect(
     add([
       text("□", { size: 38 }),
       pos(x, y),
-      color(255, 255, 255),
+      color(220, 220, 220),
       lifespan(0.5, { fade: 0.3 }),
       opacity(0.8),
       "jumpEffect",
@@ -70,8 +70,10 @@ function jumpShip(context: Context) {
   limitsBar.value -= 1;
   limitsBar.text = renderLimitBarText(limitsBar);
 
-  const targetX = mousePos().x;
-  const targetY = mousePos().y;
+  const mouse = mousePos();
+
+  const targetX = mouse.x;
+  const targetY = mouse.y;
 
   const currentX = ship.pos.x;
   const currentY = ship.pos.y;
@@ -102,6 +104,9 @@ export function bindEvents(context: Context) {
 
 export function bindTokenEvent(context: Context, token: any) {
   const { limitsBar } = context.state;
+  if (!limitsBar) {
+    throw new Error("limitsBar is not defined in state");
+  }
 
   token.onCollide("shape", () => {
     limitsBar.value += 1;

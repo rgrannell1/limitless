@@ -1,15 +1,18 @@
 import {
+  CENTRE,
   CURSOR_SIZE,
   DEFAULT_LIMITS,
   DIMENSION,
   LIMIT_TEXT_SIZE,
+  TIMER_X,
+  TIMER_Y,
 } from "./constants";
 import { Context } from "./types";
 
 export function Ship() {
   return [
     rect(16, 16),
-    pos(DIMENSION / 2, DIMENSION / 2),
+    pos(CENTRE, CENTRE),
     area(),
     "shape",
   ];
@@ -26,7 +29,7 @@ export function renderTimerText(timer: any) {
 export function Timer() {
   return [
     text(renderTimerText({ value: 60 })),
-    pos(DIMENSION - 120, 30),
+    pos(TIMER_X, TIMER_Y),
     { value: 60 },
   ];
 }
@@ -98,7 +101,7 @@ export function FiringPattern(context: Context, params: EnemyParams) {
 
     const distance = 30;
     const radians = (angle * Math.PI) / 180;
-    const outwardPosition = [
+    const outwardPosition: [number, number] = [
       position[0] + distance * Math.cos(radians),
       position[1] + distance * Math.sin(radians),
     ];
@@ -110,13 +113,11 @@ export function FiringPattern(context: Context, params: EnemyParams) {
       rotation: 60,
     }));
 
-
     bullet.onCollide("shape", (obj) => {
       if (obj === context.state.ship) {
         location.reload();
       }
     });
-
   }, 150);
 }
 
@@ -124,8 +125,8 @@ type BulletParams = {
   position: [number, number];
   angle: number;
   speed: number;
-  rotation: number
-}
+  rotation: number;
+};
 
 export function Bullet(params: BulletParams) {
   const { position, angle, speed, rotation } = params;

@@ -1,20 +1,25 @@
 import { renderTimerText } from "./components.ts";
+import { TOKEN_SPAWN_RATE } from "./constants.ts";
 import { spawnToken } from "./scenes.ts";
 import { Context } from "./types.ts";
 
 export function bindIntervals(context: Context) {
+  const state = context.state;
+
   setInterval(() => {
-    if (!context.state.timer) {
+    const timer = state.timer;
+    if (!timer) {
       return;
     }
 
-    if (context.state.timer.value > 0) {
-      context.state.timer.value -= 1;
-      context.state.timer.text = renderTimerText(context.state.timer);
+    if (timer.value > 0) {
+      timer.value -= 1;
+      timer.text = renderTimerText(timer);
     }
   }, 1000);
 
   setInterval(() => {
     spawnToken(context);
-  }, 10_000);
+
+  }, TOKEN_SPAWN_RATE);
 }
