@@ -1,3 +1,4 @@
+import { renderLimitBarText, renderTimerText } from "./components";
 
 const MOVE_RATE = 200;
 
@@ -23,6 +24,23 @@ function bindShipEvents(context) {
 function bindCursorEvents(context) {
   onMouseMove(() => {
     context.state.cursor.pos = [mousePos().x, mousePos().y]
+  });
+
+
+  onMouseRelease(() => {
+    const { ship, limitsBar } = context.state;
+
+    // cool, so check we have points left then decrease them
+    if (limitsBar.value > 0) {
+      console.log(`decreasing limitsBar.value from ${limitsBar.value} to ${limitsBar.value - 1}`)
+
+      limitsBar.value -= 1;
+      limitsBar.text = renderLimitBarText(limitsBar)
+    }
+
+    // we do, so jump around, jump around
+
+    ship.pos = [mousePos().x, mousePos().y];
   })
 }
 
