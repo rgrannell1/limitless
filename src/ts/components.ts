@@ -23,8 +23,18 @@ export function Timer() {
   ]
 }
 
-function background() {
+export function Background() {
   return [
 
   ]
+}
+
+export function LimitsBar() {
+  return [
+
+  ]
+}
+
+export function Cursor() {
+
 }

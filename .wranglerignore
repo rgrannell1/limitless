@@ -1,0 +1,12 @@
+node_modules
+.git
+.gitignore
+*.md
+.vscode
+dist
+src
+lib
+tsconfig.json
+package.json
+package-lock.json
+bs
