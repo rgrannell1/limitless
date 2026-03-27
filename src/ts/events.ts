@@ -32,15 +32,13 @@ function renderJumpEffect(
   targetX: number,
   targetY: number,
 ) {
-
-
   const xDiff = targetX - currentX;
   const yDiff = targetY - currentY;
 
   const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
   const steps = Math.ceil(distance / 13);
 
-  console.log({xDiff, yDiff, distance, steps});
+  console.log({ xDiff, yDiff, distance, steps });
 
   for (let ith = 0; ith < steps; ith++) {
     const x = currentX + xDiff * (ith / steps);
@@ -57,32 +55,31 @@ function renderJumpEffect(
   }
 }
 
-
 function jumpShip(context: Context) {
-    const { ship, limitsBar } = context.state;
-    if (!limitsBar) {
-      throw new Error("limitsBar is not defined in state");
-    }
+  const { ship, limitsBar } = context.state;
+  if (!limitsBar) {
+    throw new Error("limitsBar is not defined in state");
+  }
 
-    if (limitsBar.value === 0) {
-      return;
-    }
+  if (limitsBar.value === 0) {
+    return;
+  }
 
-    // cool, so check we have points left then decrease them
-    limitsBar.value -= 1;
-    limitsBar.text = renderLimitBarText(limitsBar);
+  // cool, so check we have points left then decrease them
+  limitsBar.value -= 1;
+  limitsBar.text = renderLimitBarText(limitsBar);
 
-    const targetX = mousePos().x;
-    const targetY = mousePos().y;
+  const targetX = mousePos().x;
+  const targetY = mousePos().y;
 
-    const currentX = ship.pos.x;
-    const currentY = ship.pos.y;
+  const currentX = ship.pos.x;
+  const currentY = ship.pos.y;
 
-    console.log(({ currentX, currentY, targetX, targetY }));
-    renderJumpEffect(currentX, currentY, targetX, targetY);
+  console.log({ currentX, currentY, targetX, targetY });
+  renderJumpEffect(currentX, currentY, targetX, targetY);
 
-    // we do, so jump around, jump around
-    ship.moveTo(targetX, targetY);
+  // we do, so jump around, jump around
+  ship.moveTo(targetX, targetY);
 }
 
 function bindCursorEvents(context: Context) {

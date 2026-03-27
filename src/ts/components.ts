@@ -72,8 +72,8 @@ export function Cursor() {
 }
 
 type EnemyParams = {
-  position: [number, number]
-}
+  position: [number, number];
+};
 
 export function Enemy(params: EnemyParams) {
   const { position } = params;
@@ -84,5 +84,43 @@ export function Enemy(params: EnemyParams) {
     area(),
     color(255, 0, 0),
     "shape",
+  ];
+}
+
+export function FiringPattern(params: EnemyParams) {
+  const { position } = params;
+
+  let angle = 0;
+
+  setInterval(() => {
+    angle += 15;
+
+    add(Bullet({
+      position,
+      angle,
+      speed: 100,
+    }));
+
+  }, 150);
+}
+
+type BulletParams = {
+  position: [number, number];
+  angle: number;
+  speed: number;
+}
+
+export function Bullet(params: BulletParams) {
+  const { position, angle, speed } = params;
+
+  return [
+    rect(8, 8),
+    pos(...position),
+    area(),
+    rotate(30),
+    move(angle, speed),
+    color(255, 192, 203),
+
+    offscreen({ destroy: true }),
   ];
 }

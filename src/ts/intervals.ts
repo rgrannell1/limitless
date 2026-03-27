@@ -14,10 +14,7 @@ export function bindIntervals(context: Context) {
     }
   }, 1000);
 
-
   setInterval(() => {
-
-      spawnToken(context);
-
+    spawnToken(context);
   }, 10_000);
 }

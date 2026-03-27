@@ -5270,6 +5270,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var LIMIT_TEXT_SIZE = 48;
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
+  var PALLETE = {
+    background: "#d46eb3"
+  };
 
   // src/ts/components.ts
   function Ship() {
@@ -5332,6 +5335,30 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       area(),
       color(255, 0, 0),
       "shape"
+    ];
+  }
+  function FiringPattern(params) {
+    const { position } = params;
+    let angle = 0;
+    setInterval(() => {
+      angle += 15;
+      add(Bullet({
+        position,
+        angle,
+        speed: 100
+      }));
+    }, 150);
+  }
+  function Bullet(params) {
+    const { position, angle, speed } = params;
+    return [
+      rect(8, 8),
+      pos(...position),
+      area(),
+      rotate(30),
+      move(angle, speed),
+      color(255, 192, 203),
+      offscreen({ destroy: true })
     ];
   }
 
@@ -5464,6 +5491,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     ];
     for (const vertex of triangle) {
       enemies.push(add(Enemy({ position: [vertex.x, vertex.y] })));
+      FiringPattern({ position: [vertex.x, vertex.y] });
     }
   }
   function gameScene(context2) {
@@ -5488,7 +5516,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   hw({
     width: DIMENSION,
     height: DIMENSION,
-    background: "#d46eb3",
+    background: PALLETE.background,
     scale: 2,
     canvas: document.getElementById("canvas")
   });
