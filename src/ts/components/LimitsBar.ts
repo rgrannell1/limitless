@@ -11,6 +11,7 @@ export function LimitsBar() {
       size: LIMIT_TEXT_SIZE,
     }),
     pos(50, 25),
+    color(66, 255, 233),
     { value: 3 },
   ];
 }

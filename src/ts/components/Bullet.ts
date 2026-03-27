@@ -13,7 +13,7 @@ export function Bullet(params: BulletParams) {
     sprite("bullet"),
     pos(...position),
     area({
-      // TODO smaller shape
+      shape: new Rect(vec2(0, 0), 4, 4),
     }),
     rotate(params.rotation ?? 30),
     move(angle, speed),

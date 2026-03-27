@@ -5275,7 +5275,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var TIMER_X = DIMENSION - 120;
   var TIMER_Y = 30;
   var PALLETE = {
-    background: "#ffb1e6"
+    background: "#fff0fa"
   };
 
   // src/ts/components/Ship.ts
@@ -5283,7 +5283,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return [
       sprite("ship"),
       pos(CENTRE, CENTRE),
-      area(),
+      area({
+        shape: new Rect(vec2(0, 0), 12, 12)
+      }),
       "shape"
     ];
   }
@@ -5315,6 +5317,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return [
       text(ICON, { size: 32, styles: {} }),
       pos(...position),
+      color(66, 255, 233),
       area()
     ];
   }
@@ -5330,6 +5333,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         size: LIMIT_TEXT_SIZE
       }),
       pos(50, 25),
+      color(66, 255, 233),
       { value: 3 }
     ];
   }
@@ -5338,8 +5342,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function Cursor() {
     return [
       text("x", { size: CURSOR_SIZE }),
-      pos(0, 0),
-      color(255, 255, 255)
+      pos(-100, -100),
+      color(249, 199, 255)
     ];
   }
 
@@ -5362,7 +5366,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       sprite("bullet"),
       pos(...position),
       area({
-        // TODO smaller shape
+        shape: new Rect(vec2(0, 0), 4, 4)
       }),
       rotate(params.rotation ?? 30),
       move(angle, speed),
@@ -5431,7 +5435,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       add([
         text("\u25A1", { size: 32 }),
         pos(x, y),
-        color(220, 220, 220),
+        color(249, 199, 255),
         lifespan(0.5, { fade: 0.3 }),
         opacity(0.8),
         "jumpEffect"

@@ -51,7 +51,7 @@ function renderJumpEffect(
     add([
       text("□", { size: 32 }),
       pos(x, y),
-      color(220, 220, 220),
+      color(249, 199, 255),
       lifespan(0.5, { fade: 0.3 }),
       opacity(0.8),
       "jumpEffect",

@@ -11,6 +11,7 @@ export function LimitTokens(params: ListTokensParams) {
   return [
     text(ICON, { size: 32, styles: {} }),
     pos(...position),
+    color(66, 255, 233),
     area(),
   ];
 }

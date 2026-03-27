@@ -10,5 +10,5 @@ export const TIMER_X = DIMENSION - 120;
 export const TIMER_Y = 30;
 
 export const PALLETE = {
-  background: "#ffb1e6",
+  background: "#fff0fa",
 };
