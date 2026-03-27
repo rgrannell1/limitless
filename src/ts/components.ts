@@ -31,6 +31,15 @@ export function Background() {
   ]
 }
 
+export function LimitTokens(params) {
+  const { position } = params
+
+  return [
+    text("◈", { size: 32 }),
+    position
+  ]
+}
+
 export function renderLimitBarText(limitsBar: any) {
   const value = limitsBar.value || 0;
   return "◈ ".repeat(value).padEnd(6, " ")
