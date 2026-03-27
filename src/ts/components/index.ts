@@ -1,9 +1,10 @@
-export { Ship } from "./Ship";
-export { Timer } from "./Timer";
-export { Background } from "./Background";
-export { LimitTokens } from "./LimitTokens";
-export { LimitsBar } from "./LimitsBar";
-export { Cursor } from "./Cursor";
-export { Enemy } from "./Enemy";
-export { Bullet } from "./Bullet";
-export { FiringPattern } from "./FiringPattern";
+
+export { Ship } from "./Ship.ts";
+export { Timer } from "./Timer.ts";
+export { Background } from "./Background.ts";
+export { LimitTokens } from "./LimitTokens.ts";
+export { LimitsBar } from "./LimitsBar.ts";
+export { Cursor } from "./Cursor.ts";
+export { Enemy } from "./Enemy.ts";
+export { Bullet } from "./Bullet.ts";
+export { FiringPattern } from "./FiringPattern.ts";

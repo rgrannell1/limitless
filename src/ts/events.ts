@@ -1,4 +1,5 @@
-import { renderLimitBarText } from "./components.ts";
+
+import { renderLimitBarText } from "./components/LimitsBar.ts";
 import { Context } from "./types.ts";
 
 const MOVE_RATE = 100;
@@ -22,6 +23,8 @@ function bindShipEvents(context: Context) {
       ship.move(dirX * MOVE_RATE, dirY * MOVE_RATE);
     }
   });
+
+  onKeyDown("space", () => startJumpShip(context));
 }
 
 /*
@@ -55,6 +58,14 @@ function renderJumpEffect(
     ]);
   }
 }
+
+function startJumpShip(context: Context) {
+  // slow down the time rate
+  // pause movement
+
+
+}
+
 
 function jumpShip(context: Context) {
   const { ship, limitsBar } = context.state;
@@ -109,6 +120,10 @@ export function bindTokenEvent(context: Context, token: any) {
   }
 
   token.onCollide("shape", () => {
+    if (limitsBar.value >= 5) {
+      return;
+    }
+
     limitsBar.value += 1;
     limitsBar.text = renderLimitBarText(limitsBar);
 

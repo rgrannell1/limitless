@@ -1,4 +1,5 @@
-type BulletParams = {
+
+export type BulletParams = {
   position: [number, number];
   angle: number;
   speed: number;
@@ -6,7 +7,7 @@ type BulletParams = {
 };
 
 export function Bullet(params: BulletParams) {
-  const { position, angle, speed, rotation } = params;
+  const { position, angle, speed } = params;
 
   return [
     rect(8, 8),

@@ -11,6 +11,7 @@ import {
 import { CENTRE, DIMENSION } from "./constants.ts";
 import { bindEvents, bindTokenEvent } from "./events.ts";
 import { bindIntervals } from "./intervals.ts";
+import { getRegularPolygonVertex } from "./math.ts";
 import { Context } from "./types.ts";
 
 export function spawnToken(context: Context) {
@@ -28,24 +29,8 @@ export function spawnToken(context: Context) {
   tokens.push(token);
 }
 
-function getRegularPolygonVertex(
-  centerX: number,
-  centerY: number,
-  vertexRadius: number,
-  sideCount: number,
-  vertexIndex: number,
-  startAngleRadians = 0,
-) {
-  const angle = startAngleRadians + (2 * Math.PI * vertexIndex) / sideCount;
-
-  return {
-    x: centerX + vertexRadius * Math.cos(angle),
-    y: centerY + vertexRadius * Math.sin(angle),
-  };
-}
-
-const centerX = DIMENSION / 2;
-const centerY = DIMENSION / 2;
+const centerX = CENTRE;
+const centerY = CENTRE;
 const radius = DIMENSION / 3;
 const sides = 3;
 

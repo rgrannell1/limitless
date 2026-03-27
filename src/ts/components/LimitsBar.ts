@@ -1,6 +1,6 @@
 import { DEFAULT_LIMITS, LIMIT_TEXT_SIZE } from "../constants";
 
-function renderLimitBarText(limitsBar: any) {
+export function renderLimitBarText(limitsBar: any) {
   const value = limitsBar.value || 0;
   return "◈ ".repeat(value).padEnd(6, " ");
 }

@@ -5309,10 +5309,11 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/components/LimitTokens.ts
+  var ICON = "\u25C8";
   function LimitTokens(params) {
     const { position } = params;
     return [
-      text("\u25C8", { size: 32, styles: {} }),
+      text(ICON, { size: 32, styles: {} }),
       pos(...position),
       area()
     ];
@@ -5356,7 +5357,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
 
   // src/ts/components/Bullet.ts
   function Bullet(params) {
-    const { position, angle, speed, rotation } = params;
+    const { position, angle, speed } = params;
     return [
       rect(8, 8),
       pos(...position),
@@ -5369,16 +5370,22 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/components/FiringPattern.ts
+  function bulletCollision(context2, obj) {
+    if (obj === context2.state.ship) {
+      location.reload();
+    }
+  }
   function FiringPattern(context2, params) {
     const { position } = params;
+    const [x, y] = position;
     let angle = 0;
     setInterval(() => {
       angle += 15;
       const distance = 30;
       const radians = angle * Math.PI / 180;
       const outwardPosition = [
-        position[0] + distance * Math.cos(radians),
-        position[1] + distance * Math.sin(radians)
+        x + distance * Math.cos(radians),
+        y + distance * Math.sin(radians)
       ];
       const bullet = add(Bullet({
         position: outwardPosition,
@@ -5386,24 +5393,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         speed: 100,
         rotation: 60
       }));
-      bullet.onCollide("shape", (obj) => {
-        if (obj === context2.state.ship) {
-          location.reload();
-        }
-      });
+      bullet.onCollide("shape", bulletCollision.bind(null, context2));
     }, 150);
-  }
-
-  // src/ts/components.ts
-  function renderTimerText2(timer) {
-    const value = timer.value || 0;
-    const minutes = Math.floor(value / 60);
-    const seconds = value % 60;
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  }
-  function renderLimitBarText2(limitsBar) {
-    const value = limitsBar.value || 0;
-    return "\u25C8 ".repeat(value).padEnd(6, " ");
   }
 
   // src/ts/events.ts
@@ -5424,6 +5415,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         ship.move(dirX * MOVE_RATE, dirY * MOVE_RATE);
       }
     });
+    onKeyDown("space", () => startJumpShip(context2));
   }
   function renderJumpEffect(currentX, currentY, targetX, targetY) {
     const xDiff = targetX - currentX;
@@ -5444,6 +5436,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       ]);
     }
   }
+  function startJumpShip(context2) {
+  }
   function jumpShip(context2) {
     const { ship, limitsBar } = context2.state;
     if (!limitsBar) {
@@ -5453,7 +5447,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       return;
     }
     limitsBar.value -= 1;
-    limitsBar.text = renderLimitBarText2(limitsBar);
+    limitsBar.text = renderLimitBarText(limitsBar);
     const mouse = mousePos();
     const targetX = mouse.x;
     const targetY = mouse.y;
@@ -5482,8 +5476,11 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       throw new Error("limitsBar is not defined in state");
     }
     token.onCollide("shape", () => {
+      if (limitsBar.value >= 5) {
+        return;
+      }
       limitsBar.value += 1;
-      limitsBar.text = renderLimitBarText2(limitsBar);
+      limitsBar.text = renderLimitBarText(limitsBar);
       token.destroy();
     });
   }
@@ -5498,12 +5495,21 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       }
       if (timer.value > 0) {
         timer.value -= 1;
-        timer.text = renderTimerText2(timer);
+        timer.text = renderTimerText(timer);
       }
     }, 1e3);
     setInterval(() => {
       spawnToken(context2);
     }, TOKEN_SPAWN_RATE);
+  }
+
+  // src/ts/math.ts
+  function getRegularPolygonVertex(centerX2, centerY2, vertexRadius, sideCount, vertexIndex, startAngleRadians = 0) {
+    const angle = startAngleRadians + 2 * Math.PI * vertexIndex / sideCount;
+    return {
+      x: centerX2 + vertexRadius * Math.cos(angle),
+      y: centerY2 + vertexRadius * Math.sin(angle)
+    };
   }
 
   // src/ts/scenes.ts
@@ -5517,15 +5523,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     bindTokenEvent(context2, token);
     tokens.push(token);
   }
-  function getRegularPolygonVertex(centerX2, centerY2, vertexRadius, sideCount, vertexIndex, startAngleRadians = 0) {
-    const angle = startAngleRadians + 2 * Math.PI * vertexIndex / sideCount;
-    return {
-      x: centerX2 + vertexRadius * Math.cos(angle),
-      y: centerY2 + vertexRadius * Math.sin(angle)
-    };
-  }
-  var centerX = DIMENSION / 2;
-  var centerY = DIMENSION / 2;
+  var centerX = CENTRE;
+  var centerY = CENTRE;
   var radius = DIMENSION / 3;
   var sides = 3;
   var startAngle = -Math.PI / 2;
@@ -5565,12 +5564,15 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/index.ts
-  var state = {
-    ship: null,
-    enemies: [],
-    tokens: [],
-    background: null
-  };
+  function initState() {
+    return {
+      ship: null,
+      enemies: [],
+      tokens: [],
+      background: null
+    };
+  }
+  var state = initState();
   var context = { state };
   hw({
     width: DIMENSION,

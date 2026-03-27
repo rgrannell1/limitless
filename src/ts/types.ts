@@ -17,6 +17,3 @@ type Context = {
 };
 
 export type EnemyType = "line";
-
-export type { GameObj };
-export type { Context, State };

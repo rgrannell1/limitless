@@ -5,13 +5,16 @@ import { gameScene } from "./scenes.ts";
 import { DIMENSION, PALLETE } from "./constants.ts";
 import { loadAssets } from "./loaders.ts";
 
-const state: State = {
-  ship: null as any,
-  enemies: [],
-  tokens: [],
-  background: null,
-};
+function initState (): State {
+  return {
+    ship: null as any,
+    enemies: [],
+    tokens: [],
+    background: null,
+  };
+}
 
+const state = initState();
 const context: Context = { state };
 kaplay({
   width: DIMENSION,

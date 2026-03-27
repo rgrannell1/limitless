@@ -1,6 +1,7 @@
-import { TIMER_X, TIMER_Y } from "../constants";
 
-function renderTimerText(timer: any) {
+import { TIMER_X, TIMER_Y } from "../constants.ts";
+
+export function renderTimerText(timer: any) {
   const value = timer.value || 0;
   const minutes = Math.floor(value / 60);
   const seconds = value % 60;

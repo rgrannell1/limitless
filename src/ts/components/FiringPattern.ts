@@ -1,5 +1,12 @@
-import { Context } from "../types";
-import { Bullet } from "./Bullet";
+
+import { Context } from "../types.ts";
+import { Bullet } from "./Bullet.ts";
+
+function bulletCollision(context: Context, obj: any) {
+  if (obj === context.state.ship) {
+    location.reload();
+  }
+}
 
 type EnemyParams = {
   position: [number, number];
@@ -7,6 +14,7 @@ type EnemyParams = {
 
 export function FiringPattern(context: Context, params: EnemyParams) {
   const { position } = params;
+  const [ x, y ] = position;
 
   let angle = 0;
 
@@ -16,8 +24,8 @@ export function FiringPattern(context: Context, params: EnemyParams) {
     const distance = 30;
     const radians = (angle * Math.PI) / 180;
     const outwardPosition: [number, number] = [
-      position[0] + distance * Math.cos(radians),
-      position[1] + distance * Math.sin(radians),
+      x + distance * Math.cos(radians),
+      y + distance * Math.sin(radians),
     ];
 
     const bullet = add(Bullet({
@@ -27,10 +35,6 @@ export function FiringPattern(context: Context, params: EnemyParams) {
       rotation: 60,
     }));
 
-    bullet.onCollide("shape", (obj) => {
-      if (obj === context.state.ship) {
-        location.reload();
-      }
-    });
+    bullet.onCollide("shape", bulletCollision.bind(null, context));
   }, 150);
 }
