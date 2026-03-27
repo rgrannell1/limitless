@@ -5,7 +5,8 @@ import { gameScene } from "./scenes.ts";
 import { DIMENSION, PALLETE } from "./constants.ts";
 import { loadAssets } from "./loaders.ts";
 
-function initState (): State {
+// Initialize empty game state
+function initState(): State {
   return {
     ship: null as any,
     enemies: [],
@@ -14,16 +15,24 @@ function initState (): State {
   };
 }
 
-const state = initState();
-const context: Context = { state };
-kaplay({
-  width: DIMENSION,
-  height: DIMENSION,
-  background: PALLETE.background,
-  scale: 2,
-  canvas: document.getElementById("canvas") as any,
-});
+function initKaplay(): void {
+  kaplay({
+    width: DIMENSION,
+    height: DIMENSION,
+    background: PALLETE.background,
+    scale: 2,
+    canvas: document.getElementById("canvas") as any,
+  });
+}
 
-loadAssets();
+function initGame(): void {
+  initKaplay();
+  loadAssets();
 
-gameScene(context);
+  const state = initState();
+  const context: Context = { state };
+
+  gameScene(context);
+}
+
+initGame();

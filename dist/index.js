@@ -5376,12 +5376,12 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/components/FiringPattern.ts
-  function bulletCollision(context2, obj) {
-    if (obj === context2.state.ship) {
+  function bulletCollision(context, obj) {
+    if (obj === context.state.ship) {
       location.reload();
     }
   }
-  function FiringPattern(context2, params) {
+  function FiringPattern(context, params) {
     const { position } = params;
     const [x, y] = position;
     let angle = 0;
@@ -5399,14 +5399,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         speed: 100,
         rotation: 60
       }));
-      bullet.onCollide("shape", bulletCollision.bind(null, context2));
+      bullet.onCollide("shape", bulletCollision.bind(null, context));
     }, 150);
   }
 
   // src/ts/events.ts
   var MOVE_RATE = 100;
-  function bindShipEvents(context2) {
-    const { ship } = context2.state;
+  function bindShipEvents(context) {
+    const { ship } = context.state;
     onUpdate(() => {
       const mouseX = mousePos().x;
       const mouseY = mousePos().y;
@@ -5421,7 +5421,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         ship.move(dirX * MOVE_RATE, dirY * MOVE_RATE);
       }
     });
-    onKeyDown("space", () => startJumpShip(context2));
+    onKeyDown("space", () => startJumpShip(context));
   }
   function renderJumpEffect(currentX, currentY, targetX, targetY) {
     const xDiff = targetX - currentX;
@@ -5442,10 +5442,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       ]);
     }
   }
-  function startJumpShip(context2) {
+  function startJumpShip(context) {
   }
-  function jumpShip(context2) {
-    const { ship, limitsBar } = context2.state;
+  function jumpShip(context) {
+    const { ship, limitsBar } = context.state;
     if (!limitsBar) {
       throw new Error("limitsBar is not defined in state");
     }
@@ -5463,21 +5463,21 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     renderJumpEffect(currentX, currentY, targetX, targetY);
     ship.moveTo(targetX, targetY);
   }
-  function bindCursorEvents(context2) {
+  function bindCursorEvents(context) {
     onMouseMove(() => {
-      if (!context2.state.cursor) {
+      if (!context.state.cursor) {
         throw new Error("cursor is not defined in state");
       }
-      context2.state.cursor.pos = [mousePos().x, mousePos().y];
+      context.state.cursor.pos = [mousePos().x, mousePos().y];
     });
-    onMouseRelease(() => jumpShip(context2));
+    onMouseRelease(() => jumpShip(context));
   }
-  function bindEvents(context2) {
-    bindShipEvents(context2);
-    bindCursorEvents(context2);
+  function bindEvents(context) {
+    bindShipEvents(context);
+    bindCursorEvents(context);
   }
-  function bindTokenEvent(context2, token) {
-    const { limitsBar } = context2.state;
+  function bindTokenEvent(context, token) {
+    const { limitsBar } = context.state;
     if (!limitsBar) {
       throw new Error("limitsBar is not defined in state");
     }
@@ -5492,10 +5492,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/intervals.ts
-  function bindIntervals(context2) {
-    const state2 = context2.state;
+  function bindIntervals(context) {
+    const state = context.state;
     setInterval(() => {
-      const timer = state2.timer;
+      const timer = state.timer;
       if (!timer) {
         return;
       }
@@ -5505,7 +5505,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       }
     }, 1e3);
     setInterval(() => {
-      spawnToken(context2);
+      spawnToken(context);
     }, TOKEN_SPAWN_RATE);
   }
 
@@ -5519,14 +5519,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/scenes.ts
-  function spawnToken(context2) {
-    const { tokens } = context2.state;
+  function spawnToken(context) {
+    const { tokens } = context.state;
     const position = [
       Math.floor(Math.random() * DIMENSION * 0.8 + 100),
       Math.floor(Math.random() * DIMENSION * 0.8 + 100)
     ];
     const token = add(LimitTokens({ position }));
-    bindTokenEvent(context2, token);
+    bindTokenEvent(context, token);
     tokens.push(token);
   }
   var centerX = CENTRE;
@@ -5539,19 +5539,19 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     getRegularPolygonVertex(centerX, centerY, radius, sides, 1, startAngle),
     getRegularPolygonVertex(centerX, centerY, radius, sides, 2, startAngle)
   ];
-  function spawnEnemy(context2) {
-    const { enemies } = context2.state;
+  function spawnEnemy(context) {
+    const { enemies } = context.state;
     const position = [
       Math.floor(Math.random() * DIMENSION * 0.8 + 100),
       Math.floor(Math.random() * DIMENSION * 0.8 + 100)
     ];
     for (const vertex of triangle) {
       enemies.push(add(Enemy({ position: [vertex.x, vertex.y] })));
-      FiringPattern(context2, { position: [vertex.x + 16, vertex.y + 16] });
+      FiringPattern(context, { position: [vertex.x + 16, vertex.y + 16] });
     }
   }
-  function gameScene(context2) {
-    context2.state = {
+  function gameScene(context) {
+    context.state = {
       ship: add(Ship()),
       timer: add(Timer()),
       limitsBar: add(LimitsBar()),
@@ -5560,9 +5560,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       enemies: [],
       tokens: []
     };
-    spawnEnemy(context2);
-    bindEvents(context2);
-    bindIntervals(context2);
+    spawnEnemy(context);
+    bindEvents(context);
+    bindIntervals(context);
   }
 
   // src/ts/loaders.ts
@@ -5580,15 +5580,21 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       background: null
     };
   }
-  var state = initState();
-  var context = { state };
-  hw({
-    width: DIMENSION,
-    height: DIMENSION,
-    background: PALLETE.background,
-    scale: 2,
-    canvas: document.getElementById("canvas")
-  });
-  loadAssets();
-  gameScene(context);
+  function initKaplay() {
+    hw({
+      width: DIMENSION,
+      height: DIMENSION,
+      background: PALLETE.background,
+      scale: 2,
+      canvas: document.getElementById("canvas")
+    });
+  }
+  function initGame() {
+    initKaplay();
+    loadAssets();
+    const state = initState();
+    const context = { state };
+    gameScene(context);
+  }
+  initGame();
 })();
