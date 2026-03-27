@@ -5280,8 +5280,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
 
   // src/ts/loaders.ts
   function loadAssets() {
-    loadSprite("ship", "assets/ship.png");
-    loadSprite("bullet", "assets/bullet.png");
+    loadSprite("ship", "/assets/ship.png");
+    loadSprite("bullet", "/assets/bullet.png");
   }
 
   // src/ts/components/Ship.ts
