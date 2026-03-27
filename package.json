@@ -1,0 +1,19 @@
+{
+  "name": "gamejam",
+  "version": "1.0.0",
+  "description": "`index.html` `index.ts` `esbuild` `bs`",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.27.4",
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "crab": "github:rgrannell1/crab",
+    "kaplay": "^3001.0.19"
+  }
+}
