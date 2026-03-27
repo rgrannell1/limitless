@@ -1,5 +1,5 @@
 
-import { Context } from "../types.ts";
+import type { Context } from "../types.ts";
 import { Bullet } from "./Bullet.ts";
 
 function bulletCollision(context: Context, obj: any) {
@@ -31,8 +31,8 @@ export function FiringPattern(context: Context, params: EnemyParams) {
     const bullet = add(Bullet({
       position: outwardPosition,
       angle,
-      speed: 100,
-      rotation: 60,
+      speed: 60,
+      rotation: angle * 1.2,
     }));
 
     bullet.onCollide("shape", bulletCollision.bind(null, context));

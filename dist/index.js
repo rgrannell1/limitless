@@ -5368,7 +5368,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       area({
         shape: new Rect(vec2(0, 0), 4, 4)
       }),
-      rotate(params.rotation ?? 30),
+      rotate(angle),
       move(angle, speed),
       color(255, 192, 203),
       offscreen({ destroy: true })
@@ -5396,8 +5396,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       const bullet = add(Bullet({
         position: outwardPosition,
         angle,
-        speed: 100,
-        rotation: 60
+        speed: 60,
+        rotation: angle * 1.2
       }));
       bullet.onCollide("shape", bulletCollision.bind(null, context));
     }, 150);

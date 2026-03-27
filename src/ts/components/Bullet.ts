@@ -15,10 +15,9 @@ export function Bullet(params: BulletParams) {
     area({
       shape: new Rect(vec2(0, 0), 4, 4),
     }),
-    rotate(params.rotation ?? 30),
+    rotate(angle),
     move(angle, speed),
     color(255, 192, 203),
-
     offscreen({ destroy: true }),
   ];
 }
