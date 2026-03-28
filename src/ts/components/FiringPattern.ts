@@ -10,10 +10,11 @@ function bulletCollision(context: Context, obj: any) {
   }
 }
 
+
 /*
  * Spray in a rotation around a central point
  */
-export function SprinklerFiringPattern(context: Context, enemy: GameObj): number {
+export function SprinklerFiringPattern(context: Context, params: FiringPatternParameters, enemy: GameObj): number {
   let angle = 0;
 
   const intervalId = setInterval(() => {
@@ -30,12 +31,12 @@ export function SprinklerFiringPattern(context: Context, enemy: GameObj): number
     const bullet = add(Bullet({
       position: outwardPosition,
       angle,
-      speed: 60,
-      rotation: angle * 1.2,
+      speed: params.speed,
+      rotation: angle * params.rotation,
     }));
 
     bullet.onCollide("shape", bulletCollision.bind(null, context));
-  }, 100);
+  }, params.interval);
 
   return intervalId;
 }

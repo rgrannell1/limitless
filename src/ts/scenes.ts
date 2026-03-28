@@ -30,11 +30,21 @@ const LEVELS: Level[] = [
     sides: 2,
     timer: 20,
     background: "level-1",
+    firingParams: {
+      interval: 100,
+      speed: 60,
+      rotation: 1.2,
+    },
   },
   {
     sides: 3,
     timer: 25,
-    background: "level-1",
+    background: "level-2",
+    firingParams: {
+      interval: 200,
+      speed: 50,
+      rotation: 1.5,
+    },
   }
 ]
 
@@ -76,7 +86,7 @@ function listSpawnPositions(sides: number) {
   return vertices;
 }
 
-function spawnEnemy(context: Context, sides: number = 2) {
+function spawnEnemy(context: Context, firingParams, sides: number = 2) {
   const { enemies, firingPatternIntervals } = context.state;
 
   for (const vertex of listSpawnPositions(sides)) {
@@ -89,7 +99,7 @@ function spawnEnemy(context: Context, sides: number = 2) {
     });
 
     enemies.push(enemy);
-    const intervalId = SprinklerFiringPattern(context, enemy);
+    const intervalId = SprinklerFiringPattern(context, firingParams, enemy);
     firingPatternIntervals.push(intervalId);
   }
 }
@@ -125,7 +135,7 @@ export function registerGameScene() {
       z(-2),
     ]);
 
-    spawnEnemy(context, sides);
+    spawnEnemy(context, levelConfig.firingParams, sides);
 
     bindEvents(context);
     bindIntervals(context);

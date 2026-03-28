@@ -27,6 +27,7 @@
       }
     });
     loadSprite("level-1", "./dist/assets/level-1.png");
+    loadSprite("level-2", "./dist/assets/level-2.png");
     loadSprite("ship", "./dist/assets/ship.png");
     loadSprite("sparkle", "./dist/assets/sparkle.png");
     loadSprite("level_one_background", "./dist/assets/level-one.png");
@@ -5581,7 +5582,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       explode(context2);
     }
   }
-  function SprinklerFiringPattern(context2, enemy) {
+  function SprinklerFiringPattern(context2, params, enemy) {
     let angle = 0;
     const intervalId = setInterval(() => {
       angle += 10 * PHI;
@@ -5594,11 +5595,11 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       const bullet = add(Bullet({
         position: outwardPosition,
         angle,
-        speed: 60,
-        rotation: angle * 1.2
+        speed: params.speed,
+        rotation: angle * params.rotation
       }));
       bullet.onCollide("shape", bulletCollision.bind(null, context2));
-    }, 100);
+    }, params.interval);
     return intervalId;
   }
 
@@ -5652,12 +5653,22 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     {
       sides: 2,
       timer: 20,
-      background: "level-1"
+      background: "level-1",
+      firingParams: {
+        interval: 100,
+        speed: 60,
+        rotation: 1.2
+      }
     },
     {
       sides: 3,
       timer: 25,
-      background: "level-1"
+      background: "level-2",
+      firingParams: {
+        interval: 200,
+        speed: 50,
+        rotation: 1.5
+      }
     }
   ];
   function spawnToken(context2) {
@@ -5687,7 +5698,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
     return vertices;
   }
-  function spawnEnemy(context2, sides = 2) {
+  function spawnEnemy(context2, firingParams, sides = 2) {
     const { enemies, firingPatternIntervals } = context2.state;
     for (const vertex of listSpawnPositions(sides)) {
       const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
@@ -5697,7 +5708,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         }
       });
       enemies.push(enemy);
-      const intervalId = SprinklerFiringPattern(context2, enemy);
+      const intervalId = SprinklerFiringPattern(context2, firingParams, enemy);
       firingPatternIntervals.push(intervalId);
     }
   }
@@ -5725,7 +5736,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         pos(0, 0),
         z(-2)
       ]);
-      spawnEnemy(context, sides);
+      spawnEnemy(context, levelConfig.firingParams, sides);
       bindEvents(context);
       bindIntervals(context);
     });
