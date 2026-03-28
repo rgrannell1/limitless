@@ -6,7 +6,7 @@ export function getAssetBasePath(): string {
     return "/dist/assets/";
   }
 
-  return "./dist/assets/";
+  return "/assets/";
 }
 
 export function getAssetPath(filename: string): string {

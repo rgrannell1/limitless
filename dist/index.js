@@ -5,7 +5,7 @@
     if (window.location.hostname === "limitless.rgrannell.xyz") {
       return "/dist/assets/";
     }
-    return "./dist/assets/";
+    return "/assets/";
   }
   function getAssetPath(filename) {
     return getAssetBasePath() + filename;
