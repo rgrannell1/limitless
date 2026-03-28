@@ -1,10 +1,12 @@
 
 // In string format so I can tweak 'em more easily
+import { parseRgbString } from "./commons/colours.ts";
+
 const COLORS_CSS = {
   cyan: "rgb(66, 255, 233)",
   pink: "rgb(255, 192, 203)",
   magenta: "rgb(249, 199, 255)",
-  black: "rgb(0, 0, 0)",
+  text: "rgb(149, 35, 255)",
   red: "rgb(255, 0, 0)",
 };
 
@@ -28,16 +30,6 @@ export const TIMER_Y = 10;
 export const LIMIT_TEXT_X = 30;
 export const LIMIT_TEXT_Y = 10;
 
-export function parseRgbString(rgbString: string): [number, number, number] {
-  const match = rgbString.match(/\d+/g);
-  if (!match) {
-    throw new Error(`Invalid RGB string do better: ${rgbString}`);
-  }
-
-  const [r, g, b] = match;
-  return [parseInt(r), parseInt(g), parseInt(b)];
-}
-
 const COLORS = Object.fromEntries(
   Object.entries(COLORS_CSS).map(([name, rgbString]) => [
     name,
@@ -49,6 +41,9 @@ export const PALLETE = {
   ...COLORS_CSS,
 };
 
+/*
+ *  Convert from vscode friendly strings to the kaplay datatype please
+ */
 export function paletteColor(colorName: keyof typeof PALLETE) {
   const [r, g, b] = COLORS[colorName];
   return color(r, g, b);

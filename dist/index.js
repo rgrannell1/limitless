@@ -5265,12 +5265,22 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   };
   var hw = ic;
 
+  // src/ts/commons/colours.ts
+  function parseRgbString(rgbString) {
+    const match = rgbString.match(/\d+/g);
+    if (!match) {
+      throw new Error(`Invalid RGB string do better: ${rgbString}`);
+    }
+    const [r, g, b] = match;
+    return [parseInt(r), parseInt(g), parseInt(b)];
+  }
+
   // src/ts/constants.ts
   var COLORS_CSS = {
     cyan: "rgb(66, 255, 233)",
     pink: "rgb(255, 192, 203)",
     magenta: "rgb(249, 199, 255)",
-    black: "rgb(0, 0, 0)",
+    text: "rgb(149, 35, 255)",
     red: "rgb(255, 0, 0)"
   };
   var BACKGROUNDS = {
@@ -5287,14 +5297,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var TIMER_Y = 10;
   var LIMIT_TEXT_X = 30;
   var LIMIT_TEXT_Y = 10;
-  function parseRgbString(rgbString) {
-    const match = rgbString.match(/\d+/g);
-    if (!match) {
-      throw new Error(`Invalid RGB string do better: ${rgbString}`);
-    }
-    const [r, g, b] = match;
-    return [parseInt(r), parseInt(g), parseInt(b)];
-  }
   var COLORS = Object.fromEntries(
     Object.entries(COLORS_CSS).map(([name, rgbString]) => [
       name,
@@ -5343,7 +5345,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return [
       text(timerText, { size: TIMER_TEXT_SIZE, font: "pixelpurl" }),
       pos(TIMER_X, TIMER_Y),
-      paletteColor("black"),
+      paletteColor("text"),
       { value: seconds }
     ];
   }

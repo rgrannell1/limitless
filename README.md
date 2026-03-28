@@ -16,7 +16,17 @@ your chosing, maybe that's the main move mechanic
 - [x] on space, slow to aim somewhere if tokens available
 - [x] SVG assets
 - [ ] Level progression
-- [ ] Background art (probaby just an SVG moving around)
+- [ ] Background art
+- [ ] Better ship
+- [ ] Better cherry bullet
+- [ ] Lemon bullet
+- [ ] Two enemy designs
+- [ ] Missile design
+- [ ] Bullets
+- [ ] Menu song
+- [ ] Level song
+
+
 
 ## Build
 

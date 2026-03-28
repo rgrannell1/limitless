@@ -10,6 +10,9 @@ function bulletCollision(context: Context, obj: any) {
   }
 }
 
+/*
+ * Spray in a rotation around a central point
+ */
 export function SprinklerFiringPattern(context: Context, enemy: GameObj) {
   let angle = 0;
 
@@ -24,6 +27,7 @@ export function SprinklerFiringPattern(context: Context, enemy: GameObj) {
       enemy.pos.y + distance * Math.sin(radians),
     ];
 
+
     const bullet = add(Bullet({
       position: outwardPosition,
       angle,
@@ -33,4 +37,21 @@ export function SprinklerFiringPattern(context: Context, enemy: GameObj) {
 
     bullet.onCollide("shape", bulletCollision.bind(null, context));
   }, 100);
+}
+
+/*
+ * Shoot at the player's ship
+ */
+export function TargetedFiringPattern(context: Context, enemy: GameObj) {
+
+
+
+}
+
+/*
+ * THE MISSILE KNOWS WHERE IT IS AT ALL TIMES. IT KNOWS THIS BECAUSE IT
+ * KNOWS WHERE IT ISN't
+ */
+export function MissileFiringPattern(context: Context, enemy: GameObj) {
+
 }

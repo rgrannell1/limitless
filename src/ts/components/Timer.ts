@@ -17,7 +17,7 @@ export function Timer(seconds: number) {
   return [
     text(timerText, { size: TIMER_TEXT_SIZE, font: "pixelpurl" }),
     pos(TIMER_X, TIMER_Y),
-    paletteColor("black"),
+    paletteColor("text"),
     { value: seconds },
   ];
 }
