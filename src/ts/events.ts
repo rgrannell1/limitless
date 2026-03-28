@@ -64,6 +64,10 @@ function renderJumpTrail(
 }
 
 function startJumpShip(context: Context) {
+  if (context.state.limitsBar.value <= 0) {
+    return;
+  }
+
   // slow down the time rate
   // pause movement
 
