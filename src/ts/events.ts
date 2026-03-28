@@ -68,7 +68,7 @@ function startJumpShip(context: Context) {
   // slow down the time rate
   // pause movement
 
-  onKeyDown("space", () => {
+  onKeyPress("space", () => {
     context.state.hyperfocus = true;
 
     const currentX = context.state.ship.pos.x - 8;
@@ -84,7 +84,23 @@ function startJumpShip(context: Context) {
     jumper.play("jump");
 
   });
+}
 
+export function explode(context: Context) {
+    const currentX = context.state.ship.pos.x - 8;
+    const currentY = context.state.ship.pos.y - 8;
+
+    context.state.ship.destroy()
+
+    const bang = add([
+      sprite("bang"),
+      pos(currentX, currentY),
+      lifespan(0.5, { fade: 0.3 }),
+      opacity(0.6),
+    ])
+    bang.play("bang");
+
+    setTimeout(() => location.reload(), 1000)
 }
 
 

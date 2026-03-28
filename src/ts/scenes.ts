@@ -8,7 +8,7 @@ import {
   Timer,
 } from "./components/index.ts";
 import { CENTRE, DIMENSION } from "./commons/constants.ts";
-import { bindEvents, bindTokenEvent } from "./events.ts";
+import { bindEvents, bindTokenEvent, explode } from "./events.ts";
 import { bindIntervals } from "./intervals.ts";
 import { getRegularPolygonVertex } from "./commons/math.ts";
 import type { Context } from "./commons/types.ts";
@@ -60,7 +60,7 @@ function spawnEnemy(context: Context) {
 
     enemy.onCollide("shape", obj => {
       if (obj === context.state.ship) {
-        location.reload();
+        explode(context);
       }
     });
 

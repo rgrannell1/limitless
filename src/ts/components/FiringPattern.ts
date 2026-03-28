@@ -3,10 +3,11 @@ import type { Context } from "../commons/types.ts";
 import type { GameObj } from "kaplay";
 import { Bullet } from "./Bullet.ts";
 import { PHI } from "../commons/constants.ts";
+import { explode } from "../events.ts";
 
 function bulletCollision(context: Context, obj: any) {
   if (obj === context.state.ship) {
-    location.reload();
+      explode(context);
   }
 }
 

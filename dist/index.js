@@ -5314,7 +5314,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
 
   // src/ts/loaders.ts
   function loadAssets() {
-    loadSprite("jump", "/assets/jump-animation.png", {
+    loadSprite("jump", "./dist/assets/jump-animation.png", {
       sliceX: 2,
       sliceY: 2,
       anims: {
@@ -5326,10 +5326,22 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         }
       }
     });
-    loadSprite("ship", "/assets/ship.png");
-    loadSprite("level_one_background", "/assets/level-one.png");
-    loadSprite("bullet", "/assets/bullet.png");
-    loadFont("pixelpurl", "/assets/fonts/pixelpurl/PixelPurl.ttf");
+    loadSprite("bang", "./dist/assets/bang.png", {
+      sliceX: 2,
+      sliceY: 2,
+      anims: {
+        "bang": {
+          from: 0,
+          to: 3,
+          loop: false,
+          speed: 8
+        }
+      }
+    });
+    loadSprite("ship", "./dist/assets/ship.png");
+    loadSprite("level_one_background", "./dist/assets/level-one.png");
+    loadSprite("bullet", "./dist/assets/bullet.png");
+    loadFont("pixelpurl", "./dist/assets/fonts/pixelpurl/PixelPurl.ttf");
   }
 
   // src/ts/components/Ship.ts
@@ -5431,32 +5443,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     ];
   }
 
-  // src/ts/components/FiringPattern.ts
-  function bulletCollision(context, obj) {
-    if (obj === context.state.ship) {
-      location.reload();
-    }
-  }
-  function SprinklerFiringPattern(context, enemy) {
-    let angle = 0;
-    setInterval(() => {
-      angle += 10 * PHI;
-      const distance = 30;
-      const radians = angle * Math.PI / 180;
-      const outwardPosition = [
-        enemy.pos.x + distance * Math.cos(radians),
-        enemy.pos.y + distance * Math.sin(radians)
-      ];
-      const bullet = add(Bullet({
-        position: outwardPosition,
-        angle,
-        speed: 60,
-        rotation: angle * 1.2
-      }));
-      bullet.onCollide("shape", bulletCollision.bind(null, context));
-    }, 100);
-  }
-
   // src/ts/events.ts
   var MOVE_RATE = 100;
   function bindShipEvents(context) {
@@ -5500,7 +5486,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
   }
   function startJumpShip(context) {
-    onKeyDown("space", () => {
+    onKeyPress("space", () => {
       context.state.hyperfocus = true;
       const currentX = context.state.ship.pos.x - 8;
       const currentY = context.state.ship.pos.y - 8;
@@ -5512,6 +5498,19 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       ]);
       jumper.play("jump");
     });
+  }
+  function explode(context) {
+    const currentX = context.state.ship.pos.x - 8;
+    const currentY = context.state.ship.pos.y - 8;
+    context.state.ship.destroy();
+    const bang = add([
+      sprite("bang"),
+      pos(currentX, currentY),
+      lifespan(0.5, { fade: 0.3 }),
+      opacity(0.6)
+    ]);
+    bang.play("bang");
+    setTimeout(() => location.reload(), 1e3);
   }
   function jumpShip(context) {
     const { ship, limitsBar } = context.state;
@@ -5561,6 +5560,32 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       limitsBar.text = renderLimitBarText(limitsBar);
       token.destroy();
     });
+  }
+
+  // src/ts/components/FiringPattern.ts
+  function bulletCollision(context, obj) {
+    if (obj === context.state.ship) {
+      explode(context);
+    }
+  }
+  function SprinklerFiringPattern(context, enemy) {
+    let angle = 0;
+    setInterval(() => {
+      angle += 10 * PHI;
+      const distance = 30;
+      const radians = angle * Math.PI / 180;
+      const outwardPosition = [
+        enemy.pos.x + distance * Math.cos(radians),
+        enemy.pos.y + distance * Math.sin(radians)
+      ];
+      const bullet = add(Bullet({
+        position: outwardPosition,
+        angle,
+        speed: 60,
+        rotation: angle * 1.2
+      }));
+      bullet.onCollide("shape", bulletCollision.bind(null, context));
+    }, 100);
   }
 
   // src/ts/intervals.ts
@@ -5624,7 +5649,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
       enemy.onCollide("shape", (obj) => {
         if (obj === context.state.ship) {
-          location.reload();
+          explode(context);
         }
       });
       enemies.push(enemy);
