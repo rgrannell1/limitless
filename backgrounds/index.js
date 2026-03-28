@@ -1,4 +1,3 @@
-
 const colors = {
   levelOne: {
     stroke: "#fec7ed",
@@ -55,12 +54,10 @@ function level(ctx, palette, tiler) {
   }
 }
 
-
-
 function levelOne(ctx) {
   const tiler = (ctx, x, y, size) => {
     ngon(ctx, x, y, size, 3);
-  }
+  };
 
   level(ctx, colors.levelOne, tiler);
 }
@@ -68,7 +65,7 @@ function levelOne(ctx) {
 function levelTwo(ctx) {
   const tiler = (ctx, x, y, size) => {
     ngon(ctx, x, y, size, 4);
-  }
+  };
 
   level(ctx, colors.levelTwo, tiler);
 }
@@ -76,7 +73,7 @@ function levelTwo(ctx) {
 function levelThree(ctx) {
   const tiler = (ctx, x, y, size) => {
     ngon(ctx, x, y, size, 5);
-  }
+  };
 
   level(ctx, colors.levelThree, tiler);
 }
@@ -84,7 +81,7 @@ function levelThree(ctx) {
 function levelFour(ctx) {
   const tiler = (ctx, x, y, size) => {
     ngon(ctx, x, y, size, 6);
-  }
+  };
 
   level(ctx, colors.levelFour, tiler);
 }
@@ -92,11 +89,10 @@ function levelFour(ctx) {
 function levelFive(ctx) {
   const tiler = (ctx, x, y, size) => {
     ngon(ctx, x, y, size, 8);
-  }
+  };
 
   level(ctx, colors.levelFive, tiler);
 }
-
 
 const $bg1 = document.getElementById("bg1");
 levelOne($bg1.getContext("2d"));

@@ -1,5 +1,5 @@
 import { renderLimitBarText } from "./components/LimitsBar.ts";
-import { paletteColor, GOD_MODE } from "./commons/constants.ts";
+import { GOD_MODE, paletteColor } from "./commons/constants.ts";
 import type { Context } from "./commons/types.ts";
 
 const MOVE_RATE = 100;
@@ -64,7 +64,6 @@ function renderJumpTrail(
 }
 
 function startJumpShip(context: Context) {
-
   onKeyDown("space", () => {
     if (context.state.limitsBar.value <= 0) {
       return;

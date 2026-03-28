@@ -1,4 +1,4 @@
-import type { Context } from "../commons/types.ts";
+import type { Context, FiringPatternParameters } from "../commons/types.ts";
 import type { GameObj } from "kaplay";
 import { Bullet } from "./Bullet.ts";
 import { PHI } from "../commons/constants.ts";
@@ -10,11 +10,14 @@ function bulletCollision(context: Context, obj: any) {
   }
 }
 
-
 /*
  * Spray in a rotation around a central point
  */
-export function SprinklerFiringPattern(context: Context, params: FiringPatternParameters, enemy: GameObj): number {
+export function SprinklerFiringPattern(
+  context: Context,
+  params: FiringPatternParameters,
+  enemy: GameObj,
+): number {
   let angle = 0;
 
   const intervalId = setInterval(() => {

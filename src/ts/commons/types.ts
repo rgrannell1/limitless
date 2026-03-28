@@ -20,11 +20,11 @@ export type Context = {
 
 export type EnemyType = "line";
 
-type FiringPatternParameters = {
+export type FiringPatternParameters = {
   interval: number;
   speed: number;
   rotation: number;
-}
+};
 
 export type Level = {
   sides: number;

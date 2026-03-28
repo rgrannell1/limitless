@@ -1,4 +1,3 @@
-
 import kaplay from "kaplay";
 import "kaplay/global";
 
@@ -76,7 +75,7 @@ const LEVELS: Level[] = [
       rotation: 1.0,
     },
   },
-]
+];
 
 export function spawnToken(context: Context) {
   const { tokens } = context.state;
@@ -122,7 +121,7 @@ function spawnEnemy(context: Context, firingParams, sides: number = 2) {
   for (const vertex of listSpawnPositions(sides)) {
     const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
 
-    enemy.onCollide("shape", obj => {
+    enemy.onCollide("shape", (obj) => {
       if (obj === context.state.ship) {
         explode(context);
       }
@@ -153,7 +152,6 @@ export function registerGameScene() {
     context.state.limitsBar = add(LimitsBar());
     context.state.cursor = add(Cursor());
 
-
     context.state.timer = add(Timer(timer));
     context.state.enemies = [];
     context.state.tokens = [];
@@ -174,14 +172,13 @@ export function registerGameScene() {
 
 export function registerMenuScene() {
   scene("menu", () => {
-
     add([
       text("LIMITLESS ∞", {
         size: 50,
         font: "pixelpurl",
       }),
       pos(120, 60),
-    ])
+    ]);
 
     add([
       text("[ Press Enter to Start ]", {

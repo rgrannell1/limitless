@@ -20,7 +20,9 @@ export function bindIntervals(context: Context) {
       timer.value = -1;
 
       // Clear all intervals before transitioning
-      state.intervals.forEach((intervalId: number) => clearInterval(intervalId));
+      state.intervals.forEach((intervalId: number) =>
+        clearInterval(intervalId)
+      );
       state.intervals = [];
 
       context.state.level += 1;

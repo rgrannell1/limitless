@@ -34,7 +34,6 @@ export function loadAssets() {
   loadSprite("level-4", "./dist/assets/level-4.png");
   loadSprite("level-5", "./dist/assets/level-5.png");
 
-
   loadSprite("ship", "./dist/assets/ship.png");
   loadSprite("sparkle", "./dist/assets/sparkle.png");
   loadSprite("level_one_background", "./dist/assets/level-one.png");
