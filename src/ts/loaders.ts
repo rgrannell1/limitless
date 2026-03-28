@@ -1,7 +1,7 @@
 export function loadAssets() {
 
-  loadSprite("ship", "/assets/ship.png")
-  loadSprite("bullet", "/assets/bullet.png")
-  loadFont("pixelpurl", "/assets/fonts/PixelPurl.ttf")
+  loadSprite("ship", "./dist/assets/ship.png")
+  loadSprite("bullet", "./dist/assets/bullet.png")
+  loadFont("pixelpurl", "./dist/assets/fonts/pixelpurl/PixelPurl.ttf")
 
 }

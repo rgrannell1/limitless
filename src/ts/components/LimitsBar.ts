@@ -1,8 +1,8 @@
-import { DEFAULT_LIMITS, LIMIT_TEXT_SIZE } from "../constants";
+import { DEFAULT_LIMITS, LIMIT_TEXT_SIZE, LIMIT_TEXT_X, LIMIT_TEXT_Y, paletteColor } from "../constants";
 
 export function renderLimitBarText(limitsBar: any) {
   const value = limitsBar.value || 0;
-  return "◈ ".repeat(value).padEnd(6, " ");
+  return "◈".repeat(value).padEnd(6, " ");
 }
 
 export function LimitsBar() {
@@ -10,8 +10,8 @@ export function LimitsBar() {
     text(renderLimitBarText({ value: DEFAULT_LIMITS }), {
       size: LIMIT_TEXT_SIZE,
     }),
-    pos(25, 10),
-    color(66, 255, 233),
+    pos(LIMIT_TEXT_X, LIMIT_TEXT_Y),
+    paletteColor("cyan"),
     { value: 3 },
   ];
 }

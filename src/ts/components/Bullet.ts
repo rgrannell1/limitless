@@ -1,3 +1,4 @@
+import { paletteColor } from "../constants.ts";
 
 export type BulletParams = {
   position: [number, number];
@@ -17,7 +18,7 @@ export function Bullet(params: BulletParams) {
     }),
     rotate(angle),
     move(angle, speed),
-    color(255, 192, 203),
+    paletteColor("pink"),
     offscreen({ destroy: true }),
   ];
 }

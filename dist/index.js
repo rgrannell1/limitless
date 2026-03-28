@@ -5266,24 +5266,55 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var hw = ic;
 
   // src/ts/constants.ts
+  var COLORS_CSS = {
+    cyan: "rgb(66, 255, 233)",
+    pink: "rgb(255, 192, 203)",
+    magenta: "rgb(249, 199, 255)",
+    black: "rgb(0, 0, 0)",
+    red: "rgb(255, 0, 0)"
+  };
+  var BACKGROUNDS = {
+    LEVEL_ONE: "#fff0fa"
+  };
   var DIMENSION = 400;
   var CENTRE = DIMENSION / 2;
   var LIMIT_TEXT_SIZE = 30;
+  var TIMER_TEXT_SIZE = 30;
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
   var TOKEN_SPAWN_RATE = 7e3;
-  var TIMER_X = DIMENSION - 120;
-  var TIMER_Y = 30;
+  var TIMER_X = DIMENSION - 60;
+  var TIMER_Y = 10;
+  var LIMIT_TEXT_X = 30;
+  var LIMIT_TEXT_Y = 10;
+  function parseRgbString(rgbString) {
+    const match = rgbString.match(/\d+/g);
+    if (!match) {
+      throw new Error(`Invalid RGB string do better: ${rgbString}`);
+    }
+    const [r, g, b] = match;
+    return [parseInt(r), parseInt(g), parseInt(b)];
+  }
+  var COLORS = Object.fromEntries(
+    Object.entries(COLORS_CSS).map(([name, rgbString]) => [
+      name,
+      parseRgbString(rgbString)
+    ])
+  );
   var PALLETE = {
-    background: "#fff0fa"
+    ...COLORS_CSS
   };
+  function paletteColor(colorName) {
+    const [r, g, b] = COLORS[colorName];
+    return color(r, g, b);
+  }
   var PHI = 1.61803399;
 
   // src/ts/loaders.ts
   function loadAssets() {
-    loadSprite("ship", "/assets/ship.png");
-    loadSprite("bullet", "/assets/bullet.png");
-    loadFont("pixelpurl", "/assets/fonts/PixelPurl.ttf");
+    loadSprite("ship", "./dist/assets/ship.png");
+    loadSprite("bullet", "./dist/assets/bullet.png");
+    loadFont("pixelpurl", "./dist/assets/fonts/pixelpurl/PixelPurl.ttf");
   }
 
   // src/ts/components/Ship.ts
@@ -5306,13 +5337,13 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
   function Timer(seconds) {
+    const timerText = renderTimerText({
+      value: seconds
+    });
     return [
-      text(renderTimerText({
-        value: seconds,
-        font: "pixelpurl"
-      })),
+      text(timerText, { size: TIMER_TEXT_SIZE, font: "pixelpurl" }),
       pos(TIMER_X, TIMER_Y),
-      color(0, 0, 0),
+      paletteColor("black"),
       { value: seconds }
     ];
   }
@@ -5329,7 +5360,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return [
       text(ICON, { size: 32, styles: {} }),
       pos(...position),
-      color(66, 255, 233),
+      paletteColor("cyan"),
       area()
     ];
   }
@@ -5337,15 +5368,15 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   // src/ts/components/LimitsBar.ts
   function renderLimitBarText(limitsBar) {
     const value = limitsBar.value || 0;
-    return "\u25C8 ".repeat(value).padEnd(6, " ");
+    return "\u25C8".repeat(value).padEnd(6, " ");
   }
   function LimitsBar() {
     return [
       text(renderLimitBarText({ value: DEFAULT_LIMITS }), {
         size: LIMIT_TEXT_SIZE
       }),
-      pos(25, 10),
-      color(66, 255, 233),
+      pos(LIMIT_TEXT_X, LIMIT_TEXT_Y),
+      paletteColor("cyan"),
       { value: 3 }
     ];
   }
@@ -5355,7 +5386,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return [
       text("x", { size: CURSOR_SIZE }),
       pos(-100, -100),
-      color(249, 199, 255)
+      paletteColor("magenta")
     ];
   }
 
@@ -5369,7 +5400,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       area({
         shape: new Rect(vec2(0, 0), 40, 40)
       }),
-      color(255, 0, 0),
+      paletteColor("red"),
       "shape"
     ];
   }
@@ -5385,7 +5416,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       }),
       rotate(angle),
       move(angle, speed),
-      color(255, 192, 203),
+      paletteColor("pink"),
       offscreen({ destroy: true })
     ];
   }
@@ -5451,7 +5482,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       add([
         text("\u25A1", { size: 32 }),
         pos(x, y - 8),
-        color(249, 199, 255),
+        paletteColor("magenta"),
         lifespan(0.5, { fade: 0.3 }),
         opacity(0.8 * progress),
         "jumpEffect"
@@ -5613,7 +5644,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     hw({
       width: DIMENSION,
       height: DIMENSION,
-      background: PALLETE.background,
+      background: BACKGROUNDS.LEVEL_ONE,
       scale: 3,
       canvas: document.getElementById("canvas")
     });

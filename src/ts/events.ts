@@ -1,5 +1,6 @@
 
 import { renderLimitBarText } from "./components/LimitsBar.ts";
+import { paletteColor } from "./constants.ts";
 import { Context } from "./types.ts";
 
 const MOVE_RATE = 100;
@@ -55,7 +56,7 @@ function renderJumpEffect(
     add([
       text("□", { size: 32 }),
       pos(x, y - 8),
-      color(249, 199, 255),
+      paletteColor("magenta"),
       lifespan(0.5, { fade: 0.3 }),
       opacity(0.8 * progress),
       "jumpEffect",

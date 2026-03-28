@@ -1,6 +1,6 @@
 import kaplay from "kaplay";
 import "kaplay/global";
-import { DIMENSION, PALLETE } from "./constants.ts";
+import { DIMENSION, BACKGROUND_COLOR, BACKGROUNDS } from "./constants.ts";
 import { loadAssets } from "./loaders.ts";
 import { register } from "./scenes.ts";
 
@@ -9,7 +9,7 @@ function initKaplay(): void {
   kaplay({
     width: DIMENSION,
     height: DIMENSION,
-    background: PALLETE.background,
+    background: BACKGROUNDS.LEVEL_ONE,
     scale: 3,
     canvas: document.getElementById("canvas") as any,
   });

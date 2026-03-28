@@ -1,5 +1,5 @@
 
-import { TIMER_X, TIMER_Y } from "../constants.ts";
+import { paletteColor, TIMER_TEXT_SIZE, TIMER_X, TIMER_Y } from "../constants.ts";
 
 export function renderTimerText(timer: any) {
   const value = timer.value || 0;
@@ -10,13 +10,14 @@ export function renderTimerText(timer: any) {
 }
 
 export function Timer(seconds: number) {
+  const timerText = renderTimerText({
+    value: seconds
+  });
+
   return [
-    text(renderTimerText({
-      value: seconds,
-      font: "pixelpurl",
-     })),
+    text(timerText, { size: TIMER_TEXT_SIZE, font: "pixelpurl" }),
     pos(TIMER_X, TIMER_Y),
-    color(0, 0, 0),
+    paletteColor("black"),
     { value: seconds },
   ];
 }
