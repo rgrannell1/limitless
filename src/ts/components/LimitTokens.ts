@@ -14,6 +14,6 @@ export function LimitTokens(params: ListTokensParams) {
     pos(...position),
     paletteColor("cyan"),
     area(),
-    z(-1)
+    z(-1),
   ];
 }

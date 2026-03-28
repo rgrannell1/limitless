@@ -1,4 +1,3 @@
-
 import type { Context } from "../commons/types.ts";
 import type { GameObj } from "kaplay";
 import { Bullet } from "./Bullet.ts";
@@ -7,7 +6,7 @@ import { explode } from "../events.ts";
 
 function bulletCollision(context: Context, obj: any) {
   if (obj === context.state.ship) {
-      explode(context);
+    explode(context);
   }
 }
 
@@ -28,7 +27,6 @@ export function SprinklerFiringPattern(context: Context, enemy: GameObj) {
       enemy.pos.y + distance * Math.sin(radians),
     ];
 
-
     const bullet = add(Bullet({
       position: outwardPosition,
       angle,
@@ -44,9 +42,6 @@ export function SprinklerFiringPattern(context: Context, enemy: GameObj) {
  * Shoot at the player's ship
  */
 export function TargetedFiringPattern(context: Context, enemy: GameObj) {
-
-
-
 }
 
 /*
@@ -54,5 +49,4 @@ export function TargetedFiringPattern(context: Context, enemy: GameObj) {
  * KNOWS WHERE IT ISN't
  */
 export function MissileFiringPattern(context: Context, enemy: GameObj) {
-
 }

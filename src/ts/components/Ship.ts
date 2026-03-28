@@ -1,4 +1,3 @@
-
 import { CENTRE } from "../commons/constants";
 
 /*
@@ -15,13 +14,12 @@ export function Ship() {
   ];
 }
 
-
-export function ShipSparkle(position: { x: number, y: number }) {
+export function ShipSparkle(position: { x: number; y: number }) {
   return [
     sprite("sparkle"),
     pos(position.x + 8, position.y + 8),
     opacity(0.2),
     lifespan(0.5, { fade: 0.5 }),
-    z(-1)
+    z(-1),
   ];
 }

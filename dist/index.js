@@ -5611,6 +5611,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       if (timer.value > 0) {
         timer.value -= 1;
         timer.text = renderTimerText(timer);
+      } else if (timer.value === 0) {
+        timer.value = -1;
+        setLevelConfig({ sides: 3, timer: 25 });
+        go("game");
       }
     }, 1e3);
     setInterval(() => {
@@ -5633,6 +5637,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/scenes.ts
+  var levelConfig = { sides: 2, timer: 20 };
+  function setLevelConfig(config) {
+    levelConfig = config;
+  }
   function spawnToken(context) {
     const { tokens } = context.state;
     const shipX = context.state.ship.pos.x;
@@ -5660,9 +5668,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
     return vertices;
   }
-  function spawnEnemy(context) {
+  function spawnEnemy(context, sides = 2) {
     const { enemies } = context.state;
-    for (const vertex of listSpawnPositions(2)) {
+    for (const vertex of listSpawnPositions(sides)) {
       const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
       enemy.onCollide("shape", (obj) => {
         if (obj === context.state.ship) {
@@ -5674,12 +5682,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
   }
   function registerGameScene() {
-    scene("game", (context) => {
-      let levelTimer = 20;
+    scene("game", () => {
+      console.log("Loading scene with config:", levelConfig);
+      const context = {};
+      const { timer, sides } = levelConfig;
       context.state = {
         hyperfocus: false,
         ship: add(Ship()),
-        timer: add(Timer(levelTimer)),
+        timer: add(Timer(timer)),
         limitsBar: add(LimitsBar()),
         cursor: add(Cursor()),
         enemies: [],
@@ -5690,7 +5700,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         pos(0, 0),
         z(-2)
       ]);
-      spawnEnemy(context);
+      spawnEnemy(context, sides);
       bindEvents(context);
       bindIntervals(context);
     });
@@ -5702,6 +5712,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         pos(CENTRE, CENTRE)
       ]);
       onKeyPress("enter", () => {
+        setLevelConfig({ sides: 2, timer: 20 });
         go("game");
       });
     });

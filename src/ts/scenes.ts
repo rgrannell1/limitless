@@ -1,10 +1,10 @@
 import {
   Cursor,
   Enemy,
-  SprinklerFiringPattern,
   LimitsBar,
   LimitTokens,
   Ship,
+  SprinklerFiringPattern,
   Timer,
 } from "./components/index.ts";
 import { CENTRE, DIMENSION } from "./commons/constants.ts";
@@ -12,6 +12,17 @@ import { bindEvents, bindTokenEvent, explode } from "./events.ts";
 import { bindIntervals } from "./intervals.ts";
 import { getRegularPolygonVertex } from "./commons/math.ts";
 import type { Context } from "./commons/types.ts";
+
+export type Level = {
+  sides: number;
+  timer: number;
+};
+
+let levelConfig: Level = { sides: 2, timer: 20 };
+
+export function setLevelConfig(config: Level) {
+  levelConfig = config;
+}
 
 export function spawnToken(context: Context) {
   const { tokens } = context.state;
@@ -51,14 +62,13 @@ function listSpawnPositions(sides: number) {
   return vertices;
 }
 
-
-function spawnEnemy(context: Context) {
+function spawnEnemy(context: Context, sides: number = 2) {
   const { enemies } = context.state;
 
-  for (const vertex of listSpawnPositions(2)) {
+  for (const vertex of listSpawnPositions(sides)) {
     const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
 
-    enemy.onCollide("shape", obj => {
+    enemy.onCollide("shape", (obj) => {
       if (obj === context.state.ship) {
         explode(context);
       }
@@ -70,14 +80,16 @@ function spawnEnemy(context: Context) {
 }
 
 export function registerGameScene() {
-  scene("game", (context: Context) => {
+  scene("game", () => {
+    console.log("Loading scene with config:", levelConfig);
+    const context: Context = {} as Context;
 
-    let levelTimer = 20;
+    const { timer, sides } = levelConfig;
 
     context.state = {
       hyperfocus: false,
       ship: add(Ship()),
-      timer: add(Timer(levelTimer)),
+      timer: add(Timer(timer)),
       limitsBar: add(LimitsBar()),
       cursor: add(Cursor()),
       enemies: [],
@@ -90,7 +102,7 @@ export function registerGameScene() {
       z(-2),
     ]);
 
-    spawnEnemy(context);
+    spawnEnemy(context, sides);
 
     bindEvents(context);
     bindIntervals(context);
@@ -101,10 +113,11 @@ export function registerMenuScene() {
   scene("menu", () => {
     add([
       text("Press Enter to Start", { size: 32 }),
-      pos(CENTRE, CENTRE)
+      pos(CENTRE, CENTRE),
     ]);
 
-    onKeyPress("enter", ( ) => {
+    onKeyPress("enter", () => {
+      setLevelConfig({ sides: 2, timer: 20 });
       go("game");
     });
   });

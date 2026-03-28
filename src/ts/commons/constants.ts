@@ -1,4 +1,3 @@
-
 // In string format so I can tweak 'em more easily
 import { parseRgbString } from "./colours.ts";
 
@@ -11,8 +10,8 @@ const COLORS_CSS = {
 };
 
 export const BACKGROUNDS = {
-  LEVEL_ONE: "#fff0fa"
-}
+  LEVEL_ONE: "#fff0fa",
+};
 
 export const DIMENSION = 400;
 export const CENTRE = DIMENSION / 2;

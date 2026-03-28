@@ -26,8 +26,6 @@ your chosing, maybe that's the main move mechanic
 - [ ] Menu song
 - [ ] Level song
 
-
-
 ## Build
 
 ```sh

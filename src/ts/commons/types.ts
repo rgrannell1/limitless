@@ -4,6 +4,7 @@ import type { GameObj } from "kaplay";
 type State = {
   hyperfocus: boolean;
   ship: GameObj;
+  level: number;
   enemies: GameObj[];
   tokens: GameObj[];
   timer?: GameObj;

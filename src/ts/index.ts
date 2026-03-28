@@ -1,6 +1,6 @@
 import kaplay from "kaplay";
 import "kaplay/global";
-import { DIMENSION, BACKGROUNDS } from "./commons/constants.ts";
+import { BACKGROUNDS, DIMENSION } from "./commons/constants.ts";
 import { loadAssets } from "./loaders.ts";
 import { register } from "./scenes.ts";
 
@@ -19,7 +19,7 @@ function initGame(): void {
   loadAssets();
   register();
 
-  go("game", { });
+  go("game", {});
 }
 
 initGame();
