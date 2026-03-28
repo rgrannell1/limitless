@@ -5498,7 +5498,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function startJumpShip(context2) {
     onKeyDown("space", () => {
-      if (!context2.state.limitsBar || context2.state.limitsBar.value <= 0) {
+      if (context2.state.limitsBar.value <= 0) {
         return;
       }
       context2.state.hyperfocus = true;
