@@ -22,6 +22,9 @@ export const DEFAULT_LIMITS = 3;
 
 export const TOKEN_SPAWN_RATE = 5000;
 
+// Testing !
+export const GOD_MODE = true;
+
 // Positioning things
 export const TIMER_X = DIMENSION - 60;
 export const TIMER_Y = 10;

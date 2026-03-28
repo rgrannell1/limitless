@@ -1,5 +1,5 @@
 import { renderLimitBarText } from "./components/LimitsBar.ts";
-import { paletteColor } from "./commons/constants.ts";
+import { paletteColor, GOD_MODE } from "./commons/constants.ts";
 import { Context } from "./commons/types.ts";
 
 const MOVE_RATE = 100;
@@ -85,6 +85,10 @@ function startJumpShip(context: Context) {
 }
 
 export function explode(context: Context) {
+  if (GOD_MODE) {
+    return;
+  }
+
   const currentX = context.state.ship.pos.x - 8;
   const currentY = context.state.ship.pos.y - 8;
 

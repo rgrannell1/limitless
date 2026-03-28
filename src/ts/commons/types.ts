@@ -10,6 +10,7 @@ type State = {
   timer?: GameObj;
   limitsBar?: GameObj;
   cursor?: GameObj;
+  firingPatternIntervals: number[];
 };
 
 // Context passed around generally

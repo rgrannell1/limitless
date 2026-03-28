@@ -63,19 +63,20 @@ function listSpawnPositions(sides: number) {
 }
 
 function spawnEnemy(context: Context, sides: number = 2) {
-  const { enemies } = context.state;
+  const { enemies, firingPatternIntervals } = context.state;
 
   for (const vertex of listSpawnPositions(sides)) {
     const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
 
-    enemy.onCollide("shape", (obj) => {
+    enemy.onCollide("shape", obj => {
       if (obj === context.state.ship) {
         explode(context);
       }
     });
 
     enemies.push(enemy);
-    SprinklerFiringPattern(context, enemy);
+    const intervalId = SprinklerFiringPattern(context, enemy);
+    firingPatternIntervals.push(intervalId);
   }
 }
 
@@ -94,6 +95,7 @@ export function registerGameScene() {
       cursor: add(Cursor()),
       enemies: [],
       tokens: [],
+      firingPatternIntervals: [],
     };
 
     add([

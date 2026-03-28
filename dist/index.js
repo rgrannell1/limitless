@@ -5293,6 +5293,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
   var TOKEN_SPAWN_RATE = 5e3;
+  var GOD_MODE = true;
   var TIMER_X = DIMENSION - 60;
   var TIMER_Y = 10;
   var LIMIT_TEXT_X = 30;
@@ -5512,6 +5513,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     });
   }
   function explode(context) {
+    if (GOD_MODE) {
+      return;
+    }
     const currentX = context.state.ship.pos.x - 8;
     const currentY = context.state.ship.pos.y - 8;
     context.state.ship.destroy();
@@ -5582,7 +5586,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function SprinklerFiringPattern(context, enemy) {
     let angle = 0;
-    setInterval(() => {
+    const intervalId = setInterval(() => {
       angle += 10 * PHI;
       const distance = 30;
       const radians = angle * Math.PI / 180;
@@ -5598,6 +5602,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       }));
       bullet.onCollide("shape", bulletCollision.bind(null, context));
     }, 100);
+    return intervalId;
   }
 
   // src/ts/intervals.ts
@@ -5613,6 +5618,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         timer.text = renderTimerText(timer);
       } else if (timer.value === 0) {
         timer.value = -1;
+        state.firingPatternIntervals.forEach((intervalId) => clearInterval(intervalId));
+        state.firingPatternIntervals = [];
         setLevelConfig({ sides: 3, timer: 25 });
         go("game");
       }
@@ -5669,7 +5676,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return vertices;
   }
   function spawnEnemy(context, sides = 2) {
-    const { enemies } = context.state;
+    const { enemies, firingPatternIntervals } = context.state;
     for (const vertex of listSpawnPositions(sides)) {
       const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
       enemy.onCollide("shape", (obj) => {
@@ -5678,7 +5685,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         }
       });
       enemies.push(enemy);
-      SprinklerFiringPattern(context, enemy);
+      const intervalId = SprinklerFiringPattern(context, enemy);
+      firingPatternIntervals.push(intervalId);
     }
   }
   function registerGameScene() {
@@ -5693,7 +5701,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         limitsBar: add(LimitsBar()),
         cursor: add(Cursor()),
         enemies: [],
-        tokens: []
+        tokens: [],
+        firingPatternIntervals: []
       };
       add([
         sprite("level-1"),

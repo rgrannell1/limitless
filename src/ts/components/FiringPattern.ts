@@ -13,10 +13,10 @@ function bulletCollision(context: Context, obj: any) {
 /*
  * Spray in a rotation around a central point
  */
-export function SprinklerFiringPattern(context: Context, enemy: GameObj) {
+export function SprinklerFiringPattern(context: Context, enemy: GameObj): number {
   let angle = 0;
 
-  setInterval(() => {
+  const intervalId = setInterval(() => {
     // to avoid recurring patterns, our friend phi
     angle += 10 * PHI;
 
@@ -36,6 +36,8 @@ export function SprinklerFiringPattern(context: Context, enemy: GameObj) {
 
     bullet.onCollide("shape", bulletCollision.bind(null, context));
   }, 100);
+
+  return intervalId;
 }
 
 /*

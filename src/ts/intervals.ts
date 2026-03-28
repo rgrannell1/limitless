@@ -19,6 +19,9 @@ export function bindIntervals(context: Context) {
     } else if (timer.value === 0) {
       timer.value = -1;
 
+      state.firingPatternIntervals.forEach(intervalId => clearInterval(intervalId));
+      state.firingPatternIntervals = [];
+
       setLevelConfig({ sides: 3, timer: 25 });
       go("game");
     }
