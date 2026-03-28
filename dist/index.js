@@ -5497,10 +5497,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
   }
   function startJumpShip(context2) {
-    if (context2.state.limitsBar.value <= 0) {
-      return;
-    }
     onKeyDown("space", () => {
+      if (!context2.state.limitsBar || context2.state.limitsBar.value <= 0) {
+        return;
+      }
       context2.state.hyperfocus = true;
       const currentX = context2.state.ship.pos.x - 8;
       const currentY = context2.state.ship.pos.y - 8;

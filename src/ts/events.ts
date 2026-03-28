@@ -64,14 +64,12 @@ function renderJumpTrail(
 }
 
 function startJumpShip(context: Context) {
-  if (context.state.limitsBar.value <= 0) {
-    return;
-  }
-
-  // slow down the time rate
-  // pause movement
 
   onKeyDown("space", () => {
+    if (context.state.limitsBar.value <= 0) {
+      return;
+    }
+
     context.state.hyperfocus = true;
 
     const currentX = context.state.ship.pos.x - 8;
