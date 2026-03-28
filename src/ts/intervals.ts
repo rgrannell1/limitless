@@ -21,7 +21,9 @@ export function bindIntervals(context: Context) {
   }, 1000);
 
   setInterval(() => {
-    spawnToken(context);
+    if (state.limitsBar.value < 5) {
+      spawnToken(context);
+    }
   }, TOKEN_SPAWN_RATE);
 
 

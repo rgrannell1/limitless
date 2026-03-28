@@ -84,6 +84,12 @@ export function registerGameScene() {
       tokens: [],
     };
 
+    add([
+      sprite("level-1"),
+      pos(0, 0),
+      z(-2),
+    ]);
+
     spawnEnemy(context);
 
     bindEvents(context);

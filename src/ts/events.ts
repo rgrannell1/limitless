@@ -68,7 +68,7 @@ function startJumpShip(context: Context) {
   // slow down the time rate
   // pause movement
 
-  onKeyPress("space", () => {
+  onKeyDown("space", () => {
     context.state.hyperfocus = true;
 
     const currentX = context.state.ship.pos.x - 8;

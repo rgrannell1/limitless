@@ -29,6 +29,7 @@ export function loadAssets() {
     },
   })
 
+  loadSprite("level-1", "./dist/assets/level-1.png")
   loadSprite("ship", "./dist/assets/ship.png")
   loadSprite("sparkle", "./dist/assets/sparkle.png")
   loadSprite("level_one_background", "./dist/assets/level-one.png")

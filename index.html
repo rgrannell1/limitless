@@ -3,12 +3,36 @@
     <script src="./dist/index.js" type="module"></script>
 
     <style>
+      @font-face {
+        font-family: 'PixelPurl';
+        src: url('./fonts/pixelpurl/PixelPurl.ttf') format('truetype');
+      }
       * {
         cursor: none !important;
+        font-family: 'PixelPurl', sans-serif;
+        margin: 0;
+        padding: 0;
       }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      h1 {
+        font-family: 'PixelPurl', sans-serif;
+        text-align: center;
+        font-size: 60px;
+        padding-top: 100px;
+      }
+
     </style>
   </head>
   <body>
+    <h1>Limitless</h1>
     <canvas id="game"></canvas>
   </body>
 </html>
