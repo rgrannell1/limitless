@@ -3,7 +3,7 @@
  * Pull in game assets
  */
 export function loadAssets() {
-  loadSprite("jump", "./dist/assets/jump-animation.png", {
+  loadSprite("jump", "/assets/jump-animation.png", {
     sliceX: 2,
     sliceY: 2,
     anims: {
@@ -15,8 +15,8 @@ export function loadAssets() {
       },
     },
   })
-  loadSprite("ship", "./dist/assets/ship.png")
-  loadSprite("level_one_background", "./dist/assets/level-one.png")
-  loadSprite("bullet", "./dist/assets/bullet.png")
-  loadFont("pixelpurl", "./dist/assets/fonts/pixelpurl/PixelPurl.ttf")
+  loadSprite("ship", "/assets/ship.png")
+  loadSprite("level_one_background", "/assets/level-one.png")
+  loadSprite("bullet", "/assets/bullet.png")
+  loadFont("pixelpurl", "/assets/fonts/pixelpurl/PixelPurl.ttf")
 }
