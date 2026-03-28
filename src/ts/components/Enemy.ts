@@ -1,4 +1,4 @@
-import { paletteColor } from "../constants.ts";
+import { paletteColor } from "../commons/constants.ts";
 
 type EnemyParams = {
   position: [number, number];

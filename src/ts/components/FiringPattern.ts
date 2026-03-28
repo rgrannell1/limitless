@@ -1,8 +1,8 @@
 
-import type { Context } from "../types.ts";
+import type { Context } from "../commons/types.ts";
 import type { GameObj } from "kaplay";
 import { Bullet } from "./Bullet.ts";
-import { PHI } from "../constants.ts";
+import { PHI } from "../commons/constants.ts";
 
 function bulletCollision(context: Context, obj: any) {
   if (obj === context.state.ship) {

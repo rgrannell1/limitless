@@ -5275,7 +5275,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return [parseInt(r), parseInt(g), parseInt(b)];
   }
 
-  // src/ts/constants.ts
+  // src/ts/commons/constants.ts
   var COLORS_CSS = {
     cyan: "rgb(66, 255, 233)",
     pink: "rgb(255, 192, 203)",
@@ -5292,7 +5292,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var TIMER_TEXT_SIZE = 30;
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
-  var TOKEN_SPAWN_RATE = 7e3;
+  var TOKEN_SPAWN_RATE = 5e3;
   var TIMER_X = DIMENSION - 60;
   var TIMER_Y = 10;
   var LIMIT_TEXT_X = 30;
@@ -5314,6 +5314,18 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
 
   // src/ts/loaders.ts
   function loadAssets() {
+    loadSprite("jump", "./dist/assets/jump-animation.png", {
+      sliceX: 2,
+      sliceY: 2,
+      anims: {
+        "jump": {
+          from: 0,
+          to: 3,
+          loop: false,
+          speed: 10
+        }
+      }
+    });
     loadSprite("ship", "./dist/assets/ship.png");
     loadSprite("level_one_background", "./dist/assets/level-one.png");
     loadSprite("bullet", "./dist/assets/bullet.png");
@@ -5349,11 +5361,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       paletteColor("text"),
       { value: seconds }
     ];
-  }
-
-  // src/ts/components/Background.ts
-  function Background() {
-    return [];
   }
 
   // src/ts/components/LimitTokens.ts
@@ -5473,7 +5480,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     });
     onKeyDown("space", () => startJumpShip(context));
   }
-  function renderJumpEffect(currentX, currentY, targetX, targetY) {
+  function renderJumpTrail(currentX, currentY, targetX, targetY) {
     const xDiff = targetX - currentX;
     const yDiff = targetY - currentY;
     const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
@@ -5495,10 +5502,22 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function startJumpShip(context) {
     onKeyDown("space", () => {
       context.state.hyperfocus = true;
+      const currentX = context.state.ship.pos.x - 8;
+      const currentY = context.state.ship.pos.y - 8;
+      const jumper = add([
+        sprite("jump"),
+        pos(currentX, currentY),
+        lifespan(0.5, { fade: 0.3 }),
+        opacity(0.6)
+      ]);
+      jumper.play("jump");
     });
   }
   function jumpShip(context) {
     const { ship, limitsBar } = context.state;
+    if (!context.state.hyperfocus) {
+      return;
+    }
     if (!limitsBar) {
       throw new Error("limitsBar is not defined in state");
     }
@@ -5512,7 +5531,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const targetY = mouse.y;
     const currentX = ship.pos.x;
     const currentY = ship.pos.y;
-    renderJumpEffect(currentX, currentY, targetX, targetY);
+    renderJumpTrail(currentX, currentY, targetX, targetY);
     ship.moveTo(targetX, targetY);
     context.state.hyperfocus = false;
   }
@@ -5562,7 +5581,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }, TOKEN_SPAWN_RATE);
   }
 
-  // src/ts/math.ts
+  // src/ts/commons/math.ts
   function getRegularPolygonVertex(centerX, centerY, vertexRadius, sideCount, vertexIndex, startAngleRadians = 0) {
     const angle = startAngleRadians + 2 * Math.PI * vertexIndex / sideCount;
     return {
@@ -5574,9 +5593,13 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   // src/ts/scenes.ts
   function spawnToken(context) {
     const { tokens } = context.state;
+    const shipX = context.state.ship.pos.x;
+    const shipY = context.state.ship.pos.y;
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * (DIMENSION / 8);
     const position = [
-      Math.floor(Math.random() * DIMENSION * 0.8 + 100),
-      Math.floor(Math.random() * DIMENSION * 0.8 + 100)
+      shipX + Math.cos(angle) * distance,
+      shipY + Math.sin(angle) * distance
     ];
     const token = add(LimitTokens({ position }));
     bindTokenEvent(context, token);
@@ -5616,7 +5639,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         ship: add(Ship()),
         timer: add(Timer(levelTimer)),
         limitsBar: add(LimitsBar()),
-        background: add(Background()),
         cursor: add(Cursor()),
         enemies: [],
         tokens: []

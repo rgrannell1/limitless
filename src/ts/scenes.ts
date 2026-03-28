@@ -1,5 +1,4 @@
 import {
-  Background,
   Cursor,
   Enemy,
   SprinklerFiringPattern,
@@ -8,19 +7,25 @@ import {
   Ship,
   Timer,
 } from "./components/index.ts";
-import { CENTRE, DIMENSION } from "./constants.ts";
+import { CENTRE, DIMENSION } from "./commons/constants.ts";
 import { bindEvents, bindTokenEvent } from "./events.ts";
 import { bindIntervals } from "./intervals.ts";
-import { getRegularPolygonVertex } from "./math.ts";
-import type { Context } from "./types.ts";
+import { getRegularPolygonVertex } from "./commons/math.ts";
+import type { Context } from "./commons/types.ts";
 
 export function spawnToken(context: Context) {
   const { tokens } = context.state;
 
-  // spawn within radius of centre
+  const shipX = context.state.ship.pos.x;
+  const shipY = context.state.ship.pos.y;
+
+  // spawn it pretty close to the player, otherwise it's not worth the risk
+  const angle = Math.random() * Math.PI * 2;
+  const distance = Math.random() * (DIMENSION / 8);
+
   const position: [number, number] = [
-    Math.floor((Math.random() * DIMENSION) * 0.8 + 100),
-    Math.floor((Math.random() * DIMENSION) * 0.8 + 100),
+    shipX + Math.cos(angle) * distance,
+    shipY + Math.sin(angle) * distance,
   ];
 
   const token = add(LimitTokens({ position }));
@@ -74,7 +79,6 @@ export function registerGameScene() {
       ship: add(Ship()),
       timer: add(Timer(levelTimer)),
       limitsBar: add(LimitsBar()),
-      background: add(Background()),
       cursor: add(Cursor()),
       enemies: [],
       tokens: [],

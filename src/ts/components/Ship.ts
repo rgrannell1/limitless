@@ -1,6 +1,9 @@
 
-import { CENTRE } from "../constants";
+import { CENTRE } from "../commons/constants";
 
+/*
+ * Our player. Small hitbox because we're nice.
+ */
 export function Ship() {
   return [
     sprite("ship"),

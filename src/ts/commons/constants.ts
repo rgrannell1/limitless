@@ -1,6 +1,6 @@
 
 // In string format so I can tweak 'em more easily
-import { parseRgbString } from "./commons/colours.ts";
+import { parseRgbString } from "./colours.ts";
 
 const COLORS_CSS = {
   cyan: "rgb(66, 255, 233)",
@@ -21,7 +21,7 @@ export const TIMER_TEXT_SIZE = 30;
 export const CURSOR_SIZE = 32;
 export const DEFAULT_LIMITS = 3;
 
-export const TOKEN_SPAWN_RATE = 7000; // in ms
+export const TOKEN_SPAWN_RATE = 5000;
 
 // Positioning things
 export const TIMER_X = DIMENSION - 60;

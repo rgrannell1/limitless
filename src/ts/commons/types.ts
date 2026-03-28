@@ -3,7 +3,6 @@ import type { GameObj } from "kaplay";
 // Game state
 type State = {
   hyperfocus: boolean;
-  background: GameObj;
   ship: GameObj;
   enemies: GameObj[];
   tokens: GameObj[];

@@ -1,10 +1,9 @@
 import kaplay from "kaplay";
 import "kaplay/global";
-import { DIMENSION, BACKGROUND_COLOR, BACKGROUNDS } from "./constants.ts";
+import { DIMENSION, BACKGROUNDS } from "./commons/constants.ts";
 import { loadAssets } from "./loaders.ts";
 import { register } from "./scenes.ts";
 
-// Configure Kaplay engine
 function initKaplay(): void {
   kaplay({
     width: DIMENSION,
@@ -15,7 +14,6 @@ function initKaplay(): void {
   });
 }
 
-// Bootstrap the game
 function initGame(): void {
   initKaplay();
   loadAssets();

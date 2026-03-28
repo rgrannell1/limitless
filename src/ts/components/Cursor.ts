@@ -1,4 +1,4 @@
-import { CURSOR_SIZE, paletteColor } from "../constants";
+import { CURSOR_SIZE, paletteColor } from "../commons/constants";
 
 export function Cursor() {
   return [

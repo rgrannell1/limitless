@@ -1,7 +1,7 @@
 
 import { renderLimitBarText } from "./components/LimitsBar.ts";
-import { paletteColor } from "./constants.ts";
-import { Context } from "./types.ts";
+import { paletteColor } from "./commons/constants.ts";
+import { Context } from "./commons/types.ts";
 
 const MOVE_RATE = 100;
 
@@ -36,7 +36,7 @@ function bindShipEvents(context: Context) {
 /*
  * Render a jump effect
  */
-function renderJumpEffect(
+function renderJumpTrail(
   currentX: number,
   currentY: number,
   targetX: number,
@@ -70,6 +70,19 @@ function startJumpShip(context: Context) {
 
   onKeyDown("space", () => {
     context.state.hyperfocus = true;
+
+    const currentX = context.state.ship.pos.x - 8;
+    const currentY = context.state.ship.pos.y - 8;
+
+    // render a little animation beneath the ship
+    const jumper = add([
+      sprite("jump"),
+      pos(currentX, currentY),
+      lifespan(0.5, { fade: 0.3 }),
+      opacity(0.6),
+    ])
+    jumper.play("jump");
+
   });
 
 }
@@ -77,6 +90,11 @@ function startJumpShip(context: Context) {
 
 function jumpShip(context: Context) {
   const { ship, limitsBar } = context.state;
+
+  if (!context.state.hyperfocus) {
+    return;
+  }
+
   if (!limitsBar) {
     throw new Error("limitsBar is not defined in state");
   }
@@ -97,7 +115,7 @@ function jumpShip(context: Context) {
   const currentX = ship.pos.x;
   const currentY = ship.pos.y;
 
-  renderJumpEffect(currentX, currentY, targetX, targetY);
+  renderJumpTrail(currentX, currentY, targetX, targetY);
 
   // we do, so jump around, jump around
   ship.moveTo(targetX, targetY);
