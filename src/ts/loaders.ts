@@ -1,8 +1,10 @@
 /*
  * Pull in game assets
  */
+import { getAssetPath } from "./commons/assetPath.ts";
+
 export function loadAssets() {
-  loadSprite("jump", "./dist/assets/jump-animation.png", {
+  loadSprite("jump", getAssetPath("jump-animation.png"), {
     sliceX: 2,
     sliceY: 2,
     anims: {
@@ -15,7 +17,7 @@ export function loadAssets() {
     },
   });
 
-  loadSprite("bang", "./dist/assets/bang.png", {
+  loadSprite("bang", getAssetPath("bang.png"), {
     sliceX: 2,
     sliceY: 2,
     anims: {
@@ -28,15 +30,15 @@ export function loadAssets() {
     },
   });
 
-  loadSprite("level-1", "./dist/assets/level-1.png");
-  loadSprite("level-2", "./dist/assets/level-2.png");
-  loadSprite("level-3", "./dist/assets/level-3.png");
-  loadSprite("level-4", "./dist/assets/level-4.png");
-  loadSprite("level-5", "./dist/assets/level-5.png");
+  loadSprite("level-1", getAssetPath("level-1.png"));
+  loadSprite("level-2", getAssetPath("level-2.png"));
+  loadSprite("level-3", getAssetPath("level-3.png"));
+  loadSprite("level-4", getAssetPath("level-4.png"));
+  loadSprite("level-5", getAssetPath("level-5.png"));
 
-  loadSprite("ship", "./dist/assets/ship.png");
-  loadSprite("sparkle", "./dist/assets/sparkle.png");
-  loadSprite("level_one_background", "./dist/assets/level-one.png");
-  loadSprite("bullet", "./dist/assets/bullet.png");
-  loadFont("pixelpurl", "./dist/assets/fonts/pixelpurl/PixelPurl.ttf");
+  loadSprite("ship", getAssetPath("ship.png"));
+  loadSprite("sparkle", getAssetPath("sparkle.png"));
+  loadSprite("level_one_background", getAssetPath("level-one.png"));
+  loadSprite("bullet", getAssetPath("bullet.png"));
+  loadFont("pixelpurl", getAssetPath("fonts/pixelpurl/PixelPurl.ttf"));
 }

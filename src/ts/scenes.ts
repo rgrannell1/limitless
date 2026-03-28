@@ -21,7 +21,7 @@ kaplay({
   height: DIMENSION,
   scale: 3,
   background: "#000000",
-  canvas: document.getElementById("canvas") as any,
+  canvas: document.getElementById("canvas") as any
 });
 
 const LEVELS: Level[] = [
