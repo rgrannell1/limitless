@@ -19,7 +19,7 @@ export const DEFAULT_LIMITS = 3;
 export const TOKEN_SPAWN_RATE = 5000;
 
 // Testing !
-export const GOD_MODE = true;
+export const GOD_MODE = true && window.location.hostname !== "limitless.rgrannell.xyz";
 
 // Positioning things
 export const TIMER_X = DIMENSION - 60;
