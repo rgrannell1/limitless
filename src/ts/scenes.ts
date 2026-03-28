@@ -1,3 +1,7 @@
+
+import kaplay from "kaplay";
+import "kaplay/global";
+
 import {
   Cursor,
   Enemy,
@@ -11,18 +15,28 @@ import { CENTRE, DIMENSION } from "./commons/constants.ts";
 import { bindEvents, bindTokenEvent, explode } from "./events.ts";
 import { bindIntervals } from "./intervals.ts";
 import { getRegularPolygonVertex } from "./commons/math.ts";
-import type { Context } from "./commons/types.ts";
+import type { Context, Level } from "./commons/types.ts";
 
-export type Level = {
-  sides: number;
-  timer: number;
-};
+kaplay({
+  width: DIMENSION,
+  height: DIMENSION,
+  scale: 3,
+  background: "#000000",
+  canvas: document.getElementById("canvas") as any,
+});
 
-let levelConfig: Level = { sides: 2, timer: 20 };
-
-export function setLevelConfig(config: Level) {
-  levelConfig = config;
-}
+const LEVELS: Level[] = [
+  {
+    sides: 2,
+    timer: 20,
+    background: "level-1",
+  },
+  {
+    sides: 3,
+    timer: 25,
+    background: "level-1",
+  }
+]
 
 export function spawnToken(context: Context) {
   const { tokens } = context.state;
@@ -80,26 +94,28 @@ function spawnEnemy(context: Context, sides: number = 2) {
   }
 }
 
+const context: Context = {} as Context;
+context.state = {
+  hyperfocus: false,
+  level: 0,
+  ship: add(Ship()),
+  limitsBar: add(LimitsBar()),
+  cursor: add(Cursor()),
+  enemies: [],
+  tokens: [],
+  firingPatternIntervals: [],
+};
+
 export function registerGameScene() {
   scene("game", () => {
-    console.log("Loading scene with config:", levelConfig);
-    const context: Context = {} as Context;
+    const levelConfig = LEVELS[context.state.level];
 
     const { timer, sides } = levelConfig;
 
-    context.state = {
-      hyperfocus: false,
-      ship: add(Ship()),
-      timer: add(Timer(timer)),
-      limitsBar: add(LimitsBar()),
-      cursor: add(Cursor()),
-      enemies: [],
-      tokens: [],
-      firingPatternIntervals: [],
-    };
+    context.state.timer = add(Timer(timer));
 
     add([
-      sprite("level-1"),
+      sprite(levelConfig.background),
       pos(0, 0),
       z(-2),
     ]);
@@ -113,13 +129,32 @@ export function registerGameScene() {
 
 export function registerMenuScene() {
   scene("menu", () => {
+
     add([
-      text("Press Enter to Start", { size: 32 }),
-      pos(CENTRE, CENTRE),
+      text("LIMITLESS", {
+        size: 50,
+        font: "pixelpurl",
+      }),
+      pos(120, 60),
+    ])
+
+    add([
+      text("[ Press Enter to Start ]", {
+        size: 27,
+        font: "pixelpurl",
+      }),
+      pos(100, CENTRE),
+    ]);
+
+    add([
+      text("[ space ] => click    hyperjump. ", {
+        size: 20,
+        font: "pixelpurl",
+      }),
+      pos(100, CENTRE + 40),
     ]);
 
     onKeyPress("enter", () => {
-      setLevelConfig({ sides: 2, timer: 20 });
       go("game");
     });
   });

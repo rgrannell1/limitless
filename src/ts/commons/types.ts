@@ -19,3 +19,10 @@ type Context = {
 };
 
 export type EnemyType = "line";
+
+
+export type Level = {
+  sides: number;
+  timer: number;
+  background: string;
+};

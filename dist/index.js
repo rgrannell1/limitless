@@ -1,5 +1,39 @@
 "use strict";
 (() => {
+  // src/ts/loaders.ts
+  function loadAssets() {
+    loadSprite("jump", "./dist/assets/jump-animation.png", {
+      sliceX: 2,
+      sliceY: 2,
+      anims: {
+        "jump": {
+          from: 0,
+          to: 3,
+          loop: false,
+          speed: 10
+        }
+      }
+    });
+    loadSprite("bang", "./dist/assets/bang.png", {
+      sliceX: 2,
+      sliceY: 2,
+      anims: {
+        "bang": {
+          from: 0,
+          to: 3,
+          loop: false,
+          speed: 8
+        }
+      }
+    });
+    loadSprite("level-1", "./dist/assets/level-1.png");
+    loadSprite("ship", "./dist/assets/ship.png");
+    loadSprite("sparkle", "./dist/assets/sparkle.png");
+    loadSprite("level_one_background", "./dist/assets/level-one.png");
+    loadSprite("bullet", "./dist/assets/bullet.png");
+    loadFont("pixelpurl", "./dist/assets/fonts/pixelpurl/PixelPurl.ttf");
+  }
+
   // node_modules/kaplay/dist/kaplay.mjs
   var Oo = (() => {
     for (var t18 = new Uint8Array(128), e = 0; e < 64; e++) t18[e < 26 ? e + 65 : e < 52 ? e + 71 : e < 62 ? e - 4 : e * 4 - 205] = e;
@@ -5283,9 +5317,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     text: "rgb(149, 35, 255)",
     red: "rgb(255, 0, 0)"
   };
-  var BACKGROUNDS = {
-    LEVEL_ONE: "#fff0fa"
-  };
   var DIMENSION = 400;
   var CENTRE = DIMENSION / 2;
   var LIMIT_TEXT_SIZE = 30;
@@ -5312,40 +5343,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return color(r, g, b);
   }
   var PHI = 1.61803399;
-
-  // src/ts/loaders.ts
-  function loadAssets() {
-    loadSprite("jump", "./dist/assets/jump-animation.png", {
-      sliceX: 2,
-      sliceY: 2,
-      anims: {
-        "jump": {
-          from: 0,
-          to: 3,
-          loop: false,
-          speed: 10
-        }
-      }
-    });
-    loadSprite("bang", "./dist/assets/bang.png", {
-      sliceX: 2,
-      sliceY: 2,
-      anims: {
-        "bang": {
-          from: 0,
-          to: 3,
-          loop: false,
-          speed: 8
-        }
-      }
-    });
-    loadSprite("level-1", "./dist/assets/level-1.png");
-    loadSprite("ship", "./dist/assets/ship.png");
-    loadSprite("sparkle", "./dist/assets/sparkle.png");
-    loadSprite("level_one_background", "./dist/assets/level-one.png");
-    loadSprite("bullet", "./dist/assets/bullet.png");
-    loadFont("pixelpurl", "./dist/assets/fonts/pixelpurl/PixelPurl.ttf");
-  }
 
   // src/ts/components/Ship.ts
   function Ship() {
@@ -5458,10 +5455,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
 
   // src/ts/events.ts
   var MOVE_RATE = 100;
-  function bindShipEvents(context) {
-    const { ship } = context.state;
+  function bindShipEvents(context2) {
+    const { ship } = context2.state;
     onUpdate(() => {
-      if (context.state.hyperfocus) {
+      if (context2.state.hyperfocus) {
         return;
       }
       const mouseX = mousePos().x;
@@ -5477,7 +5474,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         ship.move(dirX * MOVE_RATE, dirY * MOVE_RATE);
       }
     });
-    onKeyDown("space", () => startJumpShip(context));
+    onKeyDown("space", () => startJumpShip(context2));
   }
   function renderJumpTrail(currentX, currentY, targetX, targetY) {
     const xDiff = targetX - currentX;
@@ -5498,11 +5495,11 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       ]);
     }
   }
-  function startJumpShip(context) {
+  function startJumpShip(context2) {
     onKeyDown("space", () => {
-      context.state.hyperfocus = true;
-      const currentX = context.state.ship.pos.x - 8;
-      const currentY = context.state.ship.pos.y - 8;
+      context2.state.hyperfocus = true;
+      const currentX = context2.state.ship.pos.x - 8;
+      const currentY = context2.state.ship.pos.y - 8;
       const jumper = add([
         sprite("jump"),
         pos(currentX, currentY),
@@ -5512,13 +5509,13 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       jumper.play("jump");
     });
   }
-  function explode(context) {
+  function explode(context2) {
     if (GOD_MODE) {
       return;
     }
-    const currentX = context.state.ship.pos.x - 8;
-    const currentY = context.state.ship.pos.y - 8;
-    context.state.ship.destroy();
+    const currentX = context2.state.ship.pos.x - 8;
+    const currentY = context2.state.ship.pos.y - 8;
+    context2.state.ship.destroy();
     const bang = add([
       sprite("bang"),
       pos(currentX, currentY),
@@ -5528,9 +5525,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     bang.play("bang");
     setTimeout(() => location.reload(), 1e3);
   }
-  function jumpShip(context) {
-    const { ship, limitsBar } = context.state;
-    if (!context.state.hyperfocus) {
+  function jumpShip(context2) {
+    const { ship, limitsBar } = context2.state;
+    if (!context2.state.hyperfocus) {
       return;
     }
     if (!limitsBar) {
@@ -5548,23 +5545,23 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const currentY = ship.pos.y;
     renderJumpTrail(currentX, currentY, targetX, targetY);
     ship.moveTo(targetX, targetY);
-    context.state.hyperfocus = false;
+    context2.state.hyperfocus = false;
   }
-  function bindCursorEvents(context) {
+  function bindCursorEvents(context2) {
     onMouseMove(() => {
-      if (!context.state.cursor) {
+      if (!context2.state.cursor) {
         throw new Error("cursor is not defined in state");
       }
-      context.state.cursor.pos = [mousePos().x, mousePos().y];
+      context2.state.cursor.pos = [mousePos().x, mousePos().y];
     });
-    onMouseRelease(() => jumpShip(context));
+    onMouseRelease(() => jumpShip(context2));
   }
-  function bindEvents(context) {
-    bindShipEvents(context);
-    bindCursorEvents(context);
+  function bindEvents(context2) {
+    bindShipEvents(context2);
+    bindCursorEvents(context2);
   }
-  function bindTokenEvent(context, token) {
-    const { limitsBar } = context.state;
+  function bindTokenEvent(context2, token) {
+    const { limitsBar } = context2.state;
     if (!limitsBar) {
       throw new Error("limitsBar is not defined in state");
     }
@@ -5579,12 +5576,12 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/components/FiringPattern.ts
-  function bulletCollision(context, obj) {
-    if (obj === context.state.ship) {
-      explode(context);
+  function bulletCollision(context2, obj) {
+    if (obj === context2.state.ship) {
+      explode(context2);
     }
   }
-  function SprinklerFiringPattern(context, enemy) {
+  function SprinklerFiringPattern(context2, enemy) {
     let angle = 0;
     const intervalId = setInterval(() => {
       angle += 10 * PHI;
@@ -5600,14 +5597,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         speed: 60,
         rotation: angle * 1.2
       }));
-      bullet.onCollide("shape", bulletCollision.bind(null, context));
+      bullet.onCollide("shape", bulletCollision.bind(null, context2));
     }, 100);
     return intervalId;
   }
 
   // src/ts/intervals.ts
-  function bindIntervals(context) {
-    const state = context.state;
+  function bindIntervals(context2) {
+    const state = context2.state;
     setInterval(() => {
       const timer = state.timer;
       if (!timer) {
@@ -5620,17 +5617,17 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         timer.value = -1;
         state.firingPatternIntervals.forEach((intervalId) => clearInterval(intervalId));
         state.firingPatternIntervals = [];
-        setLevelConfig({ sides: 3, timer: 25 });
+        context2.state.level += 1;
         go("game");
       }
     }, 1e3);
     setInterval(() => {
       if (state.limitsBar.value < 5) {
-        spawnToken(context);
+        spawnToken(context2);
       }
     }, TOKEN_SPAWN_RATE);
     setInterval(() => {
-      add(ShipSparkle(context.state.ship.pos));
+      add(ShipSparkle(context2.state.ship.pos));
     }, 50);
   }
 
@@ -5644,14 +5641,29 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/scenes.ts
-  var levelConfig = { sides: 2, timer: 20 };
-  function setLevelConfig(config) {
-    levelConfig = config;
-  }
-  function spawnToken(context) {
-    const { tokens } = context.state;
-    const shipX = context.state.ship.pos.x;
-    const shipY = context.state.ship.pos.y;
+  hw({
+    width: DIMENSION,
+    height: DIMENSION,
+    scale: 3,
+    background: "#000000",
+    canvas: document.getElementById("canvas")
+  });
+  var LEVELS = [
+    {
+      sides: 2,
+      timer: 20,
+      background: "level-1"
+    },
+    {
+      sides: 3,
+      timer: 25,
+      background: "level-1"
+    }
+  ];
+  function spawnToken(context2) {
+    const { tokens } = context2.state;
+    const shipX = context2.state.ship.pos.x;
+    const shipY = context2.state.ship.pos.y;
     const angle = Math.random() * Math.PI * 2;
     const distance = Math.random() * (DIMENSION / 8);
     const position = [
@@ -5659,7 +5671,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       shipY + Math.sin(angle) * distance
     ];
     const token = add(LimitTokens({ position }));
-    bindTokenEvent(context, token);
+    bindTokenEvent(context2, token);
     tokens.push(token);
   }
   function listSpawnPositions(sides) {
@@ -5675,37 +5687,39 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
     return vertices;
   }
-  function spawnEnemy(context, sides = 2) {
-    const { enemies, firingPatternIntervals } = context.state;
+  function spawnEnemy(context2, sides = 2) {
+    const { enemies, firingPatternIntervals } = context2.state;
     for (const vertex of listSpawnPositions(sides)) {
       const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
       enemy.onCollide("shape", (obj) => {
-        if (obj === context.state.ship) {
-          explode(context);
+        if (obj === context2.state.ship) {
+          explode(context2);
         }
       });
       enemies.push(enemy);
-      const intervalId = SprinklerFiringPattern(context, enemy);
+      const intervalId = SprinklerFiringPattern(context2, enemy);
       firingPatternIntervals.push(intervalId);
     }
   }
+  var context = {};
+  context.state = {
+    hyperfocus: false,
+    level: 0,
+    ship: add(Ship()),
+    limitsBar: add(LimitsBar()),
+    cursor: add(Cursor()),
+    enemies: [],
+    tokens: [],
+    firingPatternIntervals: []
+  };
   function registerGameScene() {
     scene("game", () => {
+      const levelConfig = LEVELS[context.state.level];
       console.log("Loading scene with config:", levelConfig);
-      const context = {};
       const { timer, sides } = levelConfig;
-      context.state = {
-        hyperfocus: false,
-        ship: add(Ship()),
-        timer: add(Timer(timer)),
-        limitsBar: add(LimitsBar()),
-        cursor: add(Cursor()),
-        enemies: [],
-        tokens: [],
-        firingPatternIntervals: []
-      };
+      context.state.timer = add(Timer(timer));
       add([
-        sprite("level-1"),
+        sprite(levelConfig.background),
         pos(0, 0),
         z(-2)
       ]);
@@ -5717,11 +5731,27 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function registerMenuScene() {
     scene("menu", () => {
       add([
-        text("Press Enter to Start", { size: 32 }),
-        pos(CENTRE, CENTRE)
+        text("LIMITLESS", {
+          size: 50,
+          font: "pixelpurl"
+        }),
+        pos(120, 60)
+      ]);
+      add([
+        text("[ Press Enter to Start ]", {
+          size: 27,
+          font: "pixelpurl"
+        }),
+        pos(100, CENTRE)
+      ]);
+      add([
+        text("[ space ] => click    hyperjump. ", {
+          size: 20,
+          font: "pixelpurl"
+        }),
+        pos(100, CENTRE + 40)
       ]);
       onKeyPress("enter", () => {
-        setLevelConfig({ sides: 2, timer: 20 });
         go("game");
       });
     });
@@ -5732,20 +5762,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/index.ts
-  function initKaplay() {
-    hw({
-      width: DIMENSION,
-      height: DIMENSION,
-      background: BACKGROUNDS.LEVEL_ONE,
-      scale: 3,
-      canvas: document.getElementById("canvas")
-    });
-  }
   function initGame() {
-    initKaplay();
     loadAssets();
     register();
-    go("game", {});
+    go("menu", {});
   }
   initGame();
 })();

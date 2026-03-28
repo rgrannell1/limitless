@@ -1,6 +1,6 @@
 import { renderTimerText } from "./components/Timer.ts";
 import { TOKEN_SPAWN_RATE } from "./commons/constants.ts";
-import { type Level, setLevelConfig, spawnToken } from "./scenes.ts";
+import { spawnToken } from "./scenes.ts";
 import type { Context } from "./commons/types.ts";
 import { ShipSparkle } from "./components/Ship.ts";
 
@@ -22,7 +22,7 @@ export function bindIntervals(context: Context) {
       state.firingPatternIntervals.forEach(intervalId => clearInterval(intervalId));
       state.firingPatternIntervals = [];
 
-      setLevelConfig({ sides: 3, timer: 25 });
+      context.state.level += 1;
       go("game");
     }
   }, 1000);

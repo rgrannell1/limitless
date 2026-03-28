@@ -9,10 +9,6 @@ const COLORS_CSS = {
   red: "rgb(255, 0, 0)",
 };
 
-export const BACKGROUNDS = {
-  LEVEL_ONE: "#fff0fa",
-};
-
 export const DIMENSION = 400;
 export const CENTRE = DIMENSION / 2;
 export const LIMIT_TEXT_SIZE = 30;
