@@ -3,9 +3,9 @@
   // src/ts/commons/assetPath.ts
   function getAssetBasePath() {
     if (window.location.hostname === "limitless.rgrannell.xyz") {
-      return "/dist/assets/";
+      return "/assets/";
     }
-    return "/assets/";
+    return "/dist/assets/";
   }
   function getAssetPath(filename) {
     return getAssetBasePath() + filename;
