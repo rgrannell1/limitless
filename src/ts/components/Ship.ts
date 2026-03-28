@@ -14,3 +14,13 @@ export function Ship() {
     "shape",
   ];
 }
+
+
+export function ShipSparkle(position: { x: number, y: number }) {
+  return [
+    sprite("sparkle"),
+    pos(position.x + 8, position.y + 8),
+    opacity(0.2),
+    lifespan(0.5, { fade: 0.5 }),
+  ];
+}

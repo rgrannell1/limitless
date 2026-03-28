@@ -3,6 +3,7 @@ import { renderTimerText } from "./components/Timer.ts";
 import { TOKEN_SPAWN_RATE } from "./commons/constants.ts";
 import { spawnToken } from "./scenes.ts";
 import type { Context } from "./commons/types.ts";
+import { ShipSparkle } from "./components/Ship.ts";
 
 export function bindIntervals(context: Context) {
   const state = context.state;
@@ -22,4 +23,9 @@ export function bindIntervals(context: Context) {
   setInterval(() => {
     spawnToken(context);
   }, TOKEN_SPAWN_RATE);
+
+
+  setInterval(() => {
+    add(ShipSparkle(context.state.ship.pos));
+  }, 50)
 }

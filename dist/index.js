@@ -5339,6 +5339,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       }
     });
     loadSprite("ship", "./dist/assets/ship.png");
+    loadSprite("sparkle", "./dist/assets/sparkle.png");
     loadSprite("level_one_background", "./dist/assets/level-one.png");
     loadSprite("bullet", "./dist/assets/bullet.png");
     loadFont("pixelpurl", "./dist/assets/fonts/pixelpurl/PixelPurl.ttf");
@@ -5353,6 +5354,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         shape: new Rect(vec2(0, 0), 12, 12)
       }),
       "shape"
+    ];
+  }
+  function ShipSparkle(position) {
+    return [
+      sprite("sparkle"),
+      pos(position.x + 8, position.y + 8),
+      opacity(0.2),
+      lifespan(0.5, { fade: 0.5 })
     ];
   }
 
@@ -5604,6 +5613,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     setInterval(() => {
       spawnToken(context);
     }, TOKEN_SPAWN_RATE);
+    setInterval(() => {
+      add(ShipSparkle(context.state.ship.pos));
+    }, 50);
   }
 
   // src/ts/commons/math.ts
