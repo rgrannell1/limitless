@@ -19,7 +19,7 @@ export function bindIntervals(context: Context) {
     } else if (timer.value === 0) {
       timer.value = -1;
 
-      state.firingPatternIntervals.forEach(intervalId => clearInterval(intervalId));
+      state.firingPatternIntervals.forEach((intervalId: number) => clearInterval(intervalId));
       state.firingPatternIntervals = [];
 
       context.state.level += 1;

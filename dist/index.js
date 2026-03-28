@@ -5705,9 +5705,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   context.state = {
     hyperfocus: false,
     level: 0,
-    ship: add(Ship()),
-    limitsBar: add(LimitsBar()),
-    cursor: add(Cursor()),
     enemies: [],
     tokens: [],
     firingPatternIntervals: []
@@ -5715,9 +5712,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function registerGameScene() {
     scene("game", () => {
       const levelConfig = LEVELS[context.state.level];
-      console.log("Loading scene with config:", levelConfig);
       const { timer, sides } = levelConfig;
+      context.state.ship = add(Ship());
+      context.state.limitsBar = add(LimitsBar());
+      context.state.cursor = add(Cursor());
       context.state.timer = add(Timer(timer));
+      context.state.enemies = [];
+      context.state.tokens = [];
+      context.state.firingPatternIntervals = [];
       add([
         sprite(levelConfig.background),
         pos(0, 0),

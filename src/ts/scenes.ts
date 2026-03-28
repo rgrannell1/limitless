@@ -98,9 +98,6 @@ const context: Context = {} as Context;
 context.state = {
   hyperfocus: false,
   level: 0,
-  ship: add(Ship()),
-  limitsBar: add(LimitsBar()),
-  cursor: add(Cursor()),
   enemies: [],
   tokens: [],
   firingPatternIntervals: [],
@@ -112,7 +109,15 @@ export function registerGameScene() {
 
     const { timer, sides } = levelConfig;
 
+    context.state.ship = add(Ship());
+    context.state.limitsBar = add(LimitsBar());
+    context.state.cursor = add(Cursor());
+
+
     context.state.timer = add(Timer(timer));
+    context.state.enemies = [];
+    context.state.tokens = [];
+    context.state.firingPatternIntervals = [];
 
     add([
       sprite(levelConfig.background),

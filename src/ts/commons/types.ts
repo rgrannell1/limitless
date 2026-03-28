@@ -1,9 +1,9 @@
 import type { GameObj } from "kaplay";
 
 // Game state
-type State = {
+export type State = {
   hyperfocus: boolean;
-  ship: GameObj;
+  ship?: GameObj;
   level: number;
   enemies: GameObj[];
   tokens: GameObj[];
@@ -14,7 +14,7 @@ type State = {
 };
 
 // Context passed around generally
-type Context = {
+export type Context = {
   state: State;
 };
 

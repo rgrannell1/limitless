@@ -1,6 +1,6 @@
 import { renderLimitBarText } from "./components/LimitsBar.ts";
 import { paletteColor, GOD_MODE } from "./commons/constants.ts";
-import { Context } from "./commons/types.ts";
+import type { Context } from "./commons/types.ts";
 
 const MOVE_RATE = 100;
 
