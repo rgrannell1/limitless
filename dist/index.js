@@ -28,6 +28,9 @@
     });
     loadSprite("level-1", "./dist/assets/level-1.png");
     loadSprite("level-2", "./dist/assets/level-2.png");
+    loadSprite("level-3", "./dist/assets/level-3.png");
+    loadSprite("level-4", "./dist/assets/level-4.png");
+    loadSprite("level-5", "./dist/assets/level-5.png");
     loadSprite("ship", "./dist/assets/ship.png");
     loadSprite("sparkle", "./dist/assets/sparkle.png");
     loadSprite("level_one_background", "./dist/assets/level-one.png");
@@ -5609,7 +5612,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   // src/ts/intervals.ts
   function bindIntervals(context2) {
     const state = context2.state;
-    setInterval(() => {
+    const timerIntervalId = setInterval(() => {
       const timer = state.timer;
       if (!timer) {
         return;
@@ -5619,20 +5622,21 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         timer.text = renderTimerText(timer);
       } else if (timer.value === 0) {
         timer.value = -1;
-        state.firingPatternIntervals.forEach((intervalId) => clearInterval(intervalId));
-        state.firingPatternIntervals = [];
+        state.intervals.forEach((intervalId) => clearInterval(intervalId));
+        state.intervals = [];
         context2.state.level += 1;
         go("game");
       }
     }, 1e3);
-    setInterval(() => {
+    const tokenIntervalId = setInterval(() => {
       if (state.limitsBar.value < 5) {
         spawnToken(context2);
       }
     }, TOKEN_SPAWN_RATE);
-    setInterval(() => {
+    const sparkleIntervalId = setInterval(() => {
       add(ShipSparkle(context2.state.ship.pos));
     }, 50);
+    state.intervals.push(timerIntervalId, tokenIntervalId, sparkleIntervalId);
   }
 
   // src/ts/commons/math.ts
@@ -5672,6 +5676,36 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         speed: 50,
         rotation: 1.5
       }
+    },
+    {
+      sides: 4,
+      timer: 30,
+      background: "level-3",
+      firingParams: {
+        interval: 250,
+        speed: 40,
+        rotation: 1.3
+      }
+    },
+    {
+      sides: 5,
+      timer: 35,
+      background: "level-4",
+      firingParams: {
+        interval: 120,
+        speed: 30,
+        rotation: 1.1
+      }
+    },
+    {
+      sides: 6,
+      timer: 40,
+      background: "level-5",
+      firingParams: {
+        interval: 300,
+        speed: 20,
+        rotation: 1
+      }
     }
   ];
   function spawnToken(context2) {
@@ -5702,7 +5736,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return vertices;
   }
   function spawnEnemy(context2, firingParams, sides = 2) {
-    const { enemies, firingPatternIntervals } = context2.state;
+    const { enemies, intervals } = context2.state;
     for (const vertex of listSpawnPositions(sides)) {
       const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
       enemy.onCollide("shape", (obj) => {
@@ -5712,7 +5746,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       });
       enemies.push(enemy);
       const intervalId = SprinklerFiringPattern(context2, firingParams, enemy);
-      firingPatternIntervals.push(intervalId);
+      intervals.push(intervalId);
     }
   }
   var context = {};
@@ -5721,7 +5755,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     level: 0,
     enemies: [],
     tokens: [],
-    firingPatternIntervals: []
+    intervals: []
   };
   function registerGameScene() {
     scene("game", () => {
@@ -5733,7 +5767,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       context.state.timer = add(Timer(timer));
       context.state.enemies = [];
       context.state.tokens = [];
-      context.state.firingPatternIntervals = [];
+      context.state.intervals = [];
       add([
         sprite(levelConfig.background),
         pos(0, 0),
@@ -5747,7 +5781,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function registerMenuScene() {
     scene("menu", () => {
       add([
-        text("LIMITLESS", {
+        text("LIMITLESS \u221E", {
           size: 50,
           font: "pixelpurl"
         }),

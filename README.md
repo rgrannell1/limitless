@@ -25,6 +25,8 @@ your chosing, maybe that's the main move mechanic
 - [ ] Bullets
 - [ ] Menu song
 - [ ] Level song
+- [ ] spawn token animation flash
+- [ ] pickup token clear
 
 ## Build
 

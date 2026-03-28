@@ -10,7 +10,7 @@ export type State = {
   timer?: GameObj;
   limitsBar?: GameObj;
   cursor?: GameObj;
-  firingPatternIntervals: number[];
+  intervals: number[];
 };
 
 // Context passed around generally

@@ -45,7 +45,37 @@ const LEVELS: Level[] = [
       speed: 50,
       rotation: 1.5,
     },
-  }
+  },
+  {
+    sides: 4,
+    timer: 30,
+    background: "level-3",
+    firingParams: {
+      interval: 250,
+      speed: 40,
+      rotation: 1.3,
+    },
+  },
+  {
+    sides: 5,
+    timer: 35,
+    background: "level-4",
+    firingParams: {
+      interval: 120,
+      speed: 30,
+      rotation: 1.1,
+    },
+  },
+  {
+    sides: 6,
+    timer: 40,
+    background: "level-5",
+    firingParams: {
+      interval: 300,
+      speed: 20,
+      rotation: 1.0,
+    },
+  },
 ]
 
 export function spawnToken(context: Context) {
@@ -87,7 +117,7 @@ function listSpawnPositions(sides: number) {
 }
 
 function spawnEnemy(context: Context, firingParams, sides: number = 2) {
-  const { enemies, firingPatternIntervals } = context.state;
+  const { enemies, intervals } = context.state;
 
   for (const vertex of listSpawnPositions(sides)) {
     const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
@@ -100,7 +130,7 @@ function spawnEnemy(context: Context, firingParams, sides: number = 2) {
 
     enemies.push(enemy);
     const intervalId = SprinklerFiringPattern(context, firingParams, enemy);
-    firingPatternIntervals.push(intervalId);
+    intervals.push(intervalId);
   }
 }
 
@@ -110,8 +140,8 @@ context.state = {
   level: 0,
   enemies: [],
   tokens: [],
-  firingPatternIntervals: [],
-};
+  intervals: [],
+} as any;
 
 export function registerGameScene() {
   scene("game", () => {
@@ -127,7 +157,7 @@ export function registerGameScene() {
     context.state.timer = add(Timer(timer));
     context.state.enemies = [];
     context.state.tokens = [];
-    context.state.firingPatternIntervals = [];
+    context.state.intervals = [];
 
     add([
       sprite(levelConfig.background),
@@ -146,7 +176,7 @@ export function registerMenuScene() {
   scene("menu", () => {
 
     add([
-      text("LIMITLESS", {
+      text("LIMITLESS ∞", {
         size: 50,
         font: "pixelpurl",
       }),

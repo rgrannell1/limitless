@@ -7,7 +7,7 @@ import { ShipSparkle } from "./components/Ship.ts";
 export function bindIntervals(context: Context) {
   const state = context.state;
 
-  setInterval(() => {
+  const timerIntervalId = setInterval(() => {
     const timer = state.timer;
     if (!timer) {
       return;
@@ -19,21 +19,25 @@ export function bindIntervals(context: Context) {
     } else if (timer.value === 0) {
       timer.value = -1;
 
-      state.firingPatternIntervals.forEach((intervalId: number) => clearInterval(intervalId));
-      state.firingPatternIntervals = [];
+      // Clear all intervals before transitioning
+      state.intervals.forEach((intervalId: number) => clearInterval(intervalId));
+      state.intervals = [];
 
       context.state.level += 1;
       go("game");
     }
   }, 1000);
 
-  setInterval(() => {
+  const tokenIntervalId = setInterval(() => {
     if (state.limitsBar.value < 5) {
       spawnToken(context);
     }
   }, TOKEN_SPAWN_RATE);
 
-  setInterval(() => {
+  const sparkleIntervalId = setInterval(() => {
     add(ShipSparkle(context.state.ship.pos));
   }, 50);
+
+  // Store all intervals so they can be cleared on level change
+  state.intervals.push(timerIntervalId, tokenIntervalId, sparkleIntervalId);
 }
