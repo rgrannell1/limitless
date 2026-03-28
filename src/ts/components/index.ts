@@ -7,4 +7,4 @@ export { LimitsBar } from "./LimitsBar.ts";
 export { Cursor } from "./Cursor.ts";
 export { Enemy } from "./Enemy.ts";
 export { Bullet } from "./Bullet.ts";
-export { FiringPattern } from "./FiringPattern.ts";
+export { SprinklerFiringPattern } from "./FiringPattern.ts";

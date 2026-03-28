@@ -13,5 +13,9 @@
     "titleBar.inactiveForeground": "#15202b99"
   },
   "peacock.color": "#f9e64f",
-  "cSpell.enabled": false
+  "cSpell.enabled": false,
+  "search.exclude": {
+    "dist/**": true,
+    "node_modules/**": true
+  }
 }

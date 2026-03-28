@@ -13,8 +13,8 @@ your chosing, maybe that's the main move mechanic
 
 - [ ] add sound
 - [x] add enemies
-- [ ] on space, slow to aim somewhere if tokens available
-- [ ] SVG assets
+- [x] on space, slow to aim somewhere if tokens available
+- [x] SVG assets
 - [ ] Level progression
 - [ ] Background art (probaby just an SVG moving around)
 

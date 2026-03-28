@@ -5266,9 +5266,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var hw = ic;
 
   // src/ts/constants.ts
-  var DIMENSION = 800;
+  var DIMENSION = 400;
   var CENTRE = DIMENSION / 2;
-  var LIMIT_TEXT_SIZE = 48;
+  var LIMIT_TEXT_SIZE = 30;
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
   var TOKEN_SPAWN_RATE = 7e3;
@@ -5277,11 +5277,13 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var PALLETE = {
     background: "#fff0fa"
   };
+  var PHI = 1.61803399;
 
   // src/ts/loaders.ts
   function loadAssets() {
     loadSprite("ship", "/assets/ship.png");
     loadSprite("bullet", "/assets/bullet.png");
+    loadFont("pixelpurl", "/assets/fonts/PixelPurl.ttf");
   }
 
   // src/ts/components/Ship.ts
@@ -5303,12 +5305,15 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const seconds = value % 60;
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
-  function Timer() {
+  function Timer(seconds) {
     return [
-      text(renderTimerText({ value: 60 })),
+      text(renderTimerText({
+        value: seconds,
+        font: "pixelpurl"
+      })),
       pos(TIMER_X, TIMER_Y),
       color(0, 0, 0),
-      { value: 60 }
+      { value: seconds }
     ];
   }
 
@@ -5339,7 +5344,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       text(renderLimitBarText({ value: DEFAULT_LIMITS }), {
         size: LIMIT_TEXT_SIZE
       }),
-      pos(50, 25),
+      pos(25, 10),
       color(66, 255, 233),
       { value: 3 }
     ];
@@ -5360,7 +5365,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return [
       rect(32, 32),
       pos(...position),
-      area(),
+      // larger collision to avoid people hiding inside the springler fire-patterns
+      area({
+        shape: new Rect(vec2(0, 0), 40, 40)
+      }),
       color(255, 0, 0),
       "shape"
     ];
@@ -5388,17 +5396,15 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       location.reload();
     }
   }
-  function FiringPattern(context, params) {
-    const { position } = params;
-    const [x, y] = position;
+  function SprinklerFiringPattern(context, enemy) {
     let angle = 0;
     setInterval(() => {
-      angle += 10 * 1.61803399;
+      angle += 10 * PHI;
       const distance = 30;
       const radians = angle * Math.PI / 180;
       const outwardPosition = [
-        x + distance * Math.cos(radians),
-        y + distance * Math.sin(radians)
+        enemy.pos.x + distance * Math.cos(radians),
+        enemy.pos.y + distance * Math.sin(radians)
       ];
       const bullet = add(Bullet({
         position: outwardPosition,
@@ -5407,7 +5413,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         rotation: angle * 1.2
       }));
       bullet.onCollide("shape", bulletCollision.bind(null, context));
-    }, 150);
+    }, 100);
   }
 
   // src/ts/events.ts
@@ -5523,11 +5529,11 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/math.ts
-  function getRegularPolygonVertex(centerX2, centerY2, vertexRadius, sideCount, vertexIndex, startAngleRadians = 0) {
+  function getRegularPolygonVertex(centerX, centerY, vertexRadius, sideCount, vertexIndex, startAngleRadians = 0) {
     const angle = startAngleRadians + 2 * Math.PI * vertexIndex / sideCount;
     return {
-      x: centerX2 + vertexRadius * Math.cos(angle),
-      y: centerY2 + vertexRadius * Math.sin(angle)
+      x: centerX + vertexRadius * Math.cos(angle),
+      y: centerY + vertexRadius * Math.sin(angle)
     };
   }
 
@@ -5542,29 +5548,39 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     bindTokenEvent(context, token);
     tokens.push(token);
   }
-  var centerX = CENTRE;
-  var centerY = CENTRE;
-  var radius = DIMENSION / 3;
-  var sides = 3;
-  var startAngle = -Math.PI / 2;
-  var triangle = [
-    getRegularPolygonVertex(centerX, centerY, radius, sides, 0, startAngle),
-    getRegularPolygonVertex(centerX, centerY, radius, sides, 1, startAngle),
-    getRegularPolygonVertex(centerX, centerY, radius, sides, 2, startAngle)
-  ];
+  function listSpawnPositions(sides) {
+    const centerX = CENTRE;
+    const centerY = CENTRE;
+    const radius = DIMENSION / 3;
+    const startAngle = -Math.PI / 2;
+    const vertices = [];
+    for (let idx = 0; idx < sides; idx++) {
+      vertices.push(
+        getRegularPolygonVertex(centerX, centerY, radius, sides, idx, startAngle)
+      );
+    }
+    return vertices;
+  }
   function spawnEnemy(context) {
     const { enemies } = context.state;
-    for (const vertex of triangle) {
-      enemies.push(add(Enemy({ position: [vertex.x, vertex.y] })));
-      FiringPattern(context, { position: [vertex.x + 16, vertex.y + 16] });
+    for (const vertex of listSpawnPositions(2)) {
+      const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
+      enemy.onCollide("shape", (obj) => {
+        if (obj === context.state.ship) {
+          location.reload();
+        }
+      });
+      enemies.push(enemy);
+      SprinklerFiringPattern(context, enemy);
     }
   }
   function registerGameScene() {
     scene("game", (context) => {
+      let levelTimer = 25;
       context.state = {
         hyperfocus: false,
         ship: add(Ship()),
-        timer: add(Timer()),
+        timer: add(Timer(levelTimer)),
         limitsBar: add(LimitsBar()),
         background: add(Background()),
         cursor: add(Cursor()),
@@ -5598,7 +5614,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       width: DIMENSION,
       height: DIMENSION,
       background: PALLETE.background,
-      scale: 2,
+      scale: 3,
       canvas: document.getElementById("canvas")
     });
   }

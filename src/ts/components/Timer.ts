@@ -9,11 +9,14 @@ export function renderTimerText(timer: any) {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
-export function Timer() {
+export function Timer(seconds: number) {
   return [
-    text(renderTimerText({ value: 60 })),
+    text(renderTimerText({
+      value: seconds,
+      font: "pixelpurl",
+     })),
     pos(TIMER_X, TIMER_Y),
     color(0, 0, 0),
-    { value: 60 },
+    { value: seconds },
   ];
 }

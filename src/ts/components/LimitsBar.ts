@@ -10,7 +10,7 @@ export function LimitsBar() {
     text(renderLimitBarText({ value: DEFAULT_LIMITS }), {
       size: LIMIT_TEXT_SIZE,
     }),
-    pos(50, 25),
+    pos(25, 10),
     color(66, 255, 233),
     { value: 3 },
   ];

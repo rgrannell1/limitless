@@ -10,7 +10,7 @@ function initKaplay(): void {
     width: DIMENSION,
     height: DIMENSION,
     background: PALLETE.background,
-    scale: 2,
+    scale: 3,
     canvas: document.getElementById("canvas") as any,
   });
 }

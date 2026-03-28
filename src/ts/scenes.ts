@@ -2,7 +2,7 @@ import {
   Background,
   Cursor,
   Enemy,
-  FiringPattern,
+  SprinklerFiringPattern,
   LimitsBar,
   LimitTokens,
   Ship,
@@ -29,34 +29,50 @@ export function spawnToken(context: Context) {
   tokens.push(token);
 }
 
-const centerX = CENTRE;
-const centerY = CENTRE;
-const radius = DIMENSION / 3;
-const sides = 3;
+function listSpawnPositions(sides: number) {
+  const centerX = CENTRE;
+  const centerY = CENTRE;
+  const radius = DIMENSION / 3;
 
-const startAngle = -Math.PI / 2;
+  const startAngle = -Math.PI / 2;
 
-const triangle = [
-  getRegularPolygonVertex(centerX, centerY, radius, sides, 0, startAngle),
-  getRegularPolygonVertex(centerX, centerY, radius, sides, 1, startAngle),
-  getRegularPolygonVertex(centerX, centerY, radius, sides, 2, startAngle),
-];
+  const vertices: { x: number; y: number }[] = [];
+  for (let idx = 0; idx < sides; idx++) {
+    vertices.push(
+      getRegularPolygonVertex(centerX, centerY, radius, sides, idx, startAngle),
+    );
+  }
+
+  return vertices;
+}
+
 
 function spawnEnemy(context: Context) {
   const { enemies } = context.state;
 
-  for (const vertex of triangle) {
-    enemies.push(add(Enemy({ position: [vertex.x, vertex.y] })));
-    FiringPattern(context, { position: [vertex.x + 16, vertex.y + 16] });
+  for (const vertex of listSpawnPositions(2)) {
+    const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
+
+    enemy.onCollide("shape", obj => {
+      if (obj === context.state.ship) {
+        location.reload();
+      }
+    });
+
+    enemies.push(enemy);
+    SprinklerFiringPattern(context, enemy);
   }
 }
 
 export function registerGameScene() {
   scene("game", (context: Context) => {
+
+    let levelTimer = 25;
+
     context.state = {
       hyperfocus: false,
       ship: add(Ship()),
-      timer: add(Timer()),
+      timer: add(Timer(levelTimer)),
       limitsBar: add(LimitsBar()),
       background: add(Background()),
       cursor: add(Cursor()),

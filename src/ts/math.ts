@@ -1,6 +1,6 @@
 
 /*
- * Compute the vertices on an n-gon
+ * Compute the vertices on an n-gon. Trace along the circle.
  */
 export function getRegularPolygonVertex(
   centerX: number,
