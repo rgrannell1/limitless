@@ -72,7 +72,7 @@ function spawnEnemy(context: Context) {
 export function registerGameScene() {
   scene("game", (context: Context) => {
 
-    let levelTimer = 25;
+    let levelTimer = 20;
 
     context.state = {
       hyperfocus: false,

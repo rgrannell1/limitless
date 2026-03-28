@@ -5633,7 +5633,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function registerGameScene() {
     scene("game", (context) => {
-      let levelTimer = 25;
+      let levelTimer = 20;
       context.state = {
         hyperfocus: false,
         ship: add(Ship()),
