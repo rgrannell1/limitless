@@ -5966,6 +5966,23 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
 
   // src/ts/scenes/menu.ts
+  function spawnMenuPatterns(context2) {
+    const spectrum = [
+      paletteColor("magenta1"),
+      paletteColor("yellow"),
+      paletteColor("green"),
+      paletteColor("cyan1"),
+      paletteColor("blue1")
+    ];
+    for (let idx = 0; idx < 5; idx++) {
+      let offset = idx * DIMENSION / 5;
+      context2.state.intervals.push(MenuFirePattern([0, offset], spectrum[idx]));
+    }
+    for (let jdx = 0; jdx < 5; jdx++) {
+      let offset = jdx * DIMENSION / 5;
+      context2.state.intervals.push(MenuFirePattern([offset, 0], spectrum[jdx]));
+    }
+  }
   function registerMenuScene(context2) {
     scene("menu", () => {
       add([
@@ -6004,22 +6021,8 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         clearIntervals(context2);
         go("game");
       });
+      setTimeout(() => spawnMenuPatterns(context2), 250);
     });
-    const spectrum = [
-      paletteColor("magenta1"),
-      paletteColor("yellow"),
-      paletteColor("green"),
-      paletteColor("cyan1"),
-      paletteColor("blue1")
-    ];
-    for (let idx = 0; idx < 5; idx++) {
-      let offset = idx * DIMENSION / 5;
-      context2.state.intervals.push(MenuFirePattern([0, offset], spectrum[idx]));
-    }
-    for (let jdx = 0; jdx < 5; jdx++) {
-      let offset = jdx * DIMENSION / 5;
-      context2.state.intervals.push(MenuFirePattern([offset, 0], spectrum[jdx]));
-    }
     context2.state.menuMusic = play("menu-song");
   }
 

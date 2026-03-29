@@ -6,6 +6,28 @@ import { MenuFirePattern } from "../components/FiringPattern.ts";
 import { Context } from "../commons/types.ts";
 import { clearIntervals } from "../teardown.ts";
 
+function spawnMenuPatterns(context: Context) {
+  const spectrum = [
+    paletteColor("magenta1"),
+    paletteColor("yellow"),
+    paletteColor("green"),
+    paletteColor("cyan1"),
+    paletteColor("blue1"),
+  ];
+
+  for (let idx = 0; idx < 5; idx++) {
+    let offset = idx * DIMENSION / 5;
+    context.state.intervals.push(MenuFirePattern([0, offset], spectrum[idx]));
+  }
+
+  for (let jdx = 0; jdx < 5; jdx++) {
+    let offset = jdx * DIMENSION / 5;
+    context.state.intervals.push(MenuFirePattern([offset, 0], spectrum[jdx]));
+  }
+
+}
+
+
 export function registerMenuScene(context: Context) {
   scene("menu", () => {
     add([
@@ -48,25 +70,10 @@ export function registerMenuScene(context: Context) {
       clearIntervals(context);
       go("game");
     });
+
+    // idk, bug?
+    setTimeout(() => spawnMenuPatterns(context), 250);
   });
-
-  const spectrum = [
-    paletteColor("magenta1"),
-    paletteColor("yellow"),
-    paletteColor("green"),
-    paletteColor("cyan1"),
-    paletteColor("blue1"),
-  ];
-
-  for (let idx = 0; idx < 5; idx++) {
-    let offset = idx * DIMENSION / 5;
-    context.state.intervals.push(MenuFirePattern([0, offset], spectrum[idx]));
-  }
-
-  for (let jdx = 0; jdx < 5; jdx++) {
-    let offset = jdx * DIMENSION / 5;
-    context.state.intervals.push(MenuFirePattern([offset, 0], spectrum[jdx]));
-  }
 
   context.state.menuMusic = play("menu-song")
 }
