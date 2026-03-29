@@ -15,7 +15,6 @@ export function Enemy(params: EnemyParams) {
     area({
       shape: new Rect(vec2(0, 0), 40, 40),
     }),
-    paletteColor("red"),
     "shape",
   ];
 }
