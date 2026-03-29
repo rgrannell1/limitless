@@ -5366,7 +5366,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
   var TOKEN_SPAWN_RATE = 5e3;
-  var GOD_MODE = false;
+  var GOD_MODE = window.location.hostname !== "limitless.rgrannell.xyz";
   var TIMER_X = DIMENSION - 60;
   var TIMER_Y = 10;
   var LIMIT_TEXT_X = 30;
@@ -5572,7 +5572,6 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       }),
       rotate(angle),
       move(angle, speed),
-      paletteColor("pink"),
       offscreen({ destroy: true })
     ];
   }

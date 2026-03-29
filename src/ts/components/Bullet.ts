@@ -19,7 +19,6 @@ export function Bullet(params: BulletParams) {
     }),
     rotate(angle),
     move(angle, speed),
-    paletteColor("pink"),
     offscreen({ destroy: true }),
   ];
 }
