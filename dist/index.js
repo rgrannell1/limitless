@@ -5943,6 +5943,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     scene("game", () => {
       const levelConfig = LEVELS[context2.state.level];
       const { timer, sides } = levelConfig;
+      if (context2.state.level === 0) {
+        context2.state.startTime = Date.now();
+      }
       context2.state.ship = add(Ship());
       context2.state.limitsBar = add(LimitsBar());
       context2.state.cursor = add(Cursor());

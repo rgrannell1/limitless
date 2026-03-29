@@ -14,6 +14,11 @@ export function registerGameScene(context: Context) {
 
     const { timer, sides } = levelConfig;
 
+    // so people can't hang out on the menu for an hour (like me, accidentally)
+    if (context.state.level === 0) {
+      context.state.startTime = Date.now();
+    }
+
     context.state.ship = add(Ship());
     context.state.limitsBar = add(LimitsBar());
     context.state.cursor = add(Cursor());
