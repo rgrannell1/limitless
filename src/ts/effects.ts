@@ -35,6 +35,10 @@ export function renderJumpTrail(
       "jumpEffect",
     ]);
   }
+
+  play("jump-around", {
+    volume: 0.25,
+  })
 }
 
 /**

@@ -69,6 +69,7 @@ export function loadAssets() {
 
   loadSound("ship-dead", getAssetPath("audio/ship-dood.flac"));
   loadSound("limitup", getAssetPath("audio/limitup.mp3"));
+  loadSound("jump-around", getAssetPath("audio/jump-around-jump-around.mp3"));
 
   loadFont("pixelpurl", getAssetPath("fonts/pixelpurl/PixelPurl.ttf"));
 }

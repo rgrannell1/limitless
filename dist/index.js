@@ -71,6 +71,7 @@
     }
     loadSound("ship-dead", getAssetPath("audio/ship-dood.flac"));
     loadSound("limitup", getAssetPath("audio/limitup.mp3"));
+    loadSound("jump-around", getAssetPath("audio/jump-around-jump-around.mp3"));
     loadFont("pixelpurl", getAssetPath("fonts/pixelpurl/PixelPurl.ttf"));
   }
 
@@ -5365,7 +5366,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
   var TOKEN_SPAWN_RATE = 5e3;
-  var GOD_MODE = window.location.hostname !== "limitless.rgrannell.xyz";
+  var GOD_MODE = false;
   var TIMER_X = DIMENSION - 60;
   var TIMER_Y = 10;
   var LIMIT_TEXT_X = 30;
@@ -5596,6 +5597,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         "jumpEffect"
       ]);
     }
+    play("jump-around", {
+      volume: 0.25
+    });
   }
   function playJumpAnimation(context2) {
     const currentX = context2.state.ship.pos.x - 8;
@@ -5961,7 +5965,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         z(1)
       ]);
       add([
-        text("[ space ] then click =>    hyperjump. ", {
+        text("[ space ] then click =>    hyperjump", {
           size: 20,
           font: "pixelpurl"
         }),

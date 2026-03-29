@@ -27,7 +27,7 @@ export function registerMenuScene(context: Context) {
     ]);
 
     add([
-      text("[ space ] then click =>    hyperjump. ", {
+      text("[ space ] then click =>    hyperjump", {
         size: 20,
         font: "pixelpurl",
       }),
