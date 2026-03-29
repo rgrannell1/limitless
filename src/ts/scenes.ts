@@ -4,6 +4,7 @@ import "kaplay/global";
 import { DIMENSION } from "./commons/constants.ts";
 import { registerGameScene } from "./scenes/game.ts";
 import { registerMenuScene } from "./scenes/menu.ts";
+import type { Context } from "./commons/types.ts";
 
 kaplay({
   width: DIMENSION,
@@ -13,7 +14,7 @@ kaplay({
   canvas: document.getElementById("canvas") as any,
 });
 
-export function register() {
-  registerGameScene();
-  registerMenuScene();
+export function register(context: Context) {
+  registerGameScene(context);
+  registerMenuScene(context);
 }

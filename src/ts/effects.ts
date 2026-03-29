@@ -1,4 +1,3 @@
-
 // ok lets have effects in a single file
 
 import kaplay from "kaplay";

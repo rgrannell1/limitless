@@ -1,7 +1,8 @@
 import { renderLimitBarText } from "./components/LimitsBar.ts";
 import { playExplosionEffect } from "./effects.ts";
-import { startJump, executeJump } from "./hyperfocus.ts";
+import { executeJump, startJump } from "./hyperfocus.ts";
 import type { Context } from "./commons/types.ts";
+import { Banner, BannerText } from "./components/Banner.ts";
 
 const MOVE_RATE = 100;
 
@@ -61,6 +62,9 @@ function bindCursorMovement(context: Context) {
  */
 export function explode(context: Context) {
   playExplosionEffect(context);
+
+  add(BannerText(context));
+  add(Banner(context));
 }
 
 /**
@@ -91,7 +95,7 @@ export function bindTokenEvent(context: Context, token: any) {
     ]);
 
     play("limitup", {
-      volume: 0.5
+      volume: 0.5,
     });
     sparkle.play("token-sparkle");
   });

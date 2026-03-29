@@ -3,7 +3,7 @@ import "kaplay/global";
 
 import { renderLimitBarText } from "./components/LimitsBar.ts";
 import type { Context } from "./commons/types.ts";
-import { renderJumpTrail, playJumpAnimation } from "./effects.ts";
+import { playJumpAnimation, renderJumpTrail } from "./effects.ts";
 
 /**
  * Start the jump/hyperfocus mode - called when space is pressed

@@ -76,3 +76,16 @@ export function ShooterFiringPattern(
 
   return intervalId;
 }
+
+export function MenuFirePattern(position: [number, number]) {
+  const intervalId = setInterval(() => {
+    add(Bullet({
+      position,
+      angle: 45,
+      speed: 50,
+      rotation: 0,
+    }));
+  }, 1000);
+
+  return intervalId;
+}

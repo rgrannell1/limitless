@@ -11,6 +11,7 @@ export type State = {
   limitsBar?: GameObj;
   cursor?: GameObj;
   intervals: number[];
+  startTime: number;
 };
 
 // Context passed around generally

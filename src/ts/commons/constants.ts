@@ -8,6 +8,7 @@ const COLORS_CSS = {
   magenta: "rgb(249, 199, 255)",
   text: "rgb(149, 35, 255)",
   red: "rgb(255, 0, 0)",
+  bannerText: "rgb(255, 102, 204)",
 };
 
 export const DIMENSION = 400;

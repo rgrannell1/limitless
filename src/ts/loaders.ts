@@ -3,7 +3,6 @@
  */
 import { getAssetPath } from "./commons/assetPath.ts";
 
-
 const BASIC_SPRITES = [
   "level-1",
   "level-2",
@@ -15,7 +14,7 @@ const BASIC_SPRITES = [
   "sparkle",
   "level_one_background",
   "bullet",
-]
+];
 
 // or, load four crappy paint frames :)
 export function loadAnimations() {
