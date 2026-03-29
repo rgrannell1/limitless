@@ -35,6 +35,7 @@ export function loadAssets() {
   loadSprite("level-3", getAssetPath("level-3.png"));
   loadSprite("level-4", getAssetPath("level-4.png"));
   loadSprite("level-5", getAssetPath("level-5.png"));
+  loadSprite("targeted-bullet", getAssetPath("targeted-bullet.png"));
 
   loadSprite("ship", getAssetPath("ship.png"));
   loadSprite("sparkle", getAssetPath("sparkle.png"));

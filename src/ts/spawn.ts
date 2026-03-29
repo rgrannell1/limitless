@@ -6,10 +6,15 @@ import {
   LimitTokens,
   SprinklerFiringPattern,
 } from "./components/index.ts";
-import { CENTRE, DIMENSION } from "./commons/constants.ts";
+import { CENTRE, DIMENSION, SHOOTER_FIRING_RATE } from "./commons/constants.ts";
 import { bindTokenEvent, explode } from "./events.ts";
 import { getRegularPolygonVertex } from "./commons/math.ts";
-import type { Context, FiringPatternParameters } from "./commons/types.ts";
+import type {
+  Context,
+  FiringPatternParameters,
+  Level,
+} from "./commons/types.ts";
+import { ShooterFiringPattern } from "./components/FiringPattern.ts";
 
 export function spawnToken(context: Context) {
   const { tokens } = context.state;
@@ -60,12 +65,16 @@ function listSpawnPositions(sides: number) {
 
 export function spawnEnemy(
   context: Context,
+  levelConfig: Level,
   firingParams: FiringPatternParameters,
   sides: number = 2,
 ) {
   const { enemies, intervals } = context.state;
 
+  let idx = 0;
+
   for (const vertex of listSpawnPositions(sides)) {
+    const enemyType = levelConfig.enemyTypes[idx];
     const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
 
     enemy.onCollide("shape", (obj) => {
@@ -75,7 +84,21 @@ export function spawnEnemy(
     });
 
     enemies.push(enemy);
-    const intervalId = SprinklerFiringPattern(context, firingParams, enemy);
-    intervals.push(intervalId);
+
+    if (enemyType === "sprinkler") {
+      const intervalId = SprinklerFiringPattern(context, firingParams, enemy);
+      intervals.push(intervalId);
+    } else if (enemyType === "shooter") {
+      const intervalId = ShooterFiringPattern(
+        context,
+        SHOOTER_FIRING_RATE,
+        enemy,
+      );
+      intervals.push(intervalId);
+    } else {
+      throw new Error(`Unknown enemy type ${enemyType}`);
+    }
+
+    idx++;
   }
 }

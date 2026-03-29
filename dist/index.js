@@ -42,6 +42,7 @@
     loadSprite("level-3", getAssetPath("level-3.png"));
     loadSprite("level-4", getAssetPath("level-4.png"));
     loadSprite("level-5", getAssetPath("level-5.png"));
+    loadSprite("targeted-bullet", getAssetPath("targeted-bullet.png"));
     loadSprite("ship", getAssetPath("ship.png"));
     loadSprite("sparkle", getAssetPath("sparkle.png"));
     loadSprite("token-sparkle", getAssetPath("token-sparkle.png"), {
@@ -10120,7 +10121,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
   var TOKEN_SPAWN_RATE = 5e3;
-  var GOD_MODE = false;
+  var GOD_MODE = window.location.hostname !== "limitless.rgrannell.xyz";
   var TIMER_X = DIMENSION - 60;
   var TIMER_Y = 10;
   var LIMIT_TEXT_X = 30;
@@ -10139,6 +10140,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return color(r, g, b);
   }
   var PHI = 1.61803399;
+  var SHOOTER_FIRING_RATE = 1500;
   var LEVELS = [
     {
       sides: 2,
@@ -10149,6 +10151,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         speed: 60,
         rotation: 1.2,
       },
+      enemyTypes: [
+        "sprinkler",
+        "sprinkler",
+      ],
     },
     {
       sides: 3,
@@ -10159,6 +10165,11 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         speed: 50,
         rotation: 1.5,
       },
+      enemyTypes: [
+        "sprinkler",
+        "sprinkler",
+        "sprinkler",
+      ],
     },
     {
       sides: 4,
@@ -10169,6 +10180,12 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         speed: 40,
         rotation: 1.3,
       },
+      enemyTypes: [
+        "sprinkler",
+        "shooter",
+        "sprinkler",
+        "shooter",
+      ],
     },
     {
       sides: 5,
@@ -10179,6 +10196,13 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         speed: 30,
         rotation: 1.1,
       },
+      enemyTypes: [
+        "sprinkler",
+        "sprinkler",
+        "shooter",
+        "sprinkler",
+        "sprinkler",
+      ],
     },
     {
       sides: 6,
@@ -10187,8 +10211,16 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       firingParams: {
         interval: 300,
         speed: 20,
-        rotation: 1,
+        rotation: 3,
       },
+      enemyTypes: [
+        "shooter",
+        "sprinkler",
+        "shooter",
+        "sprinkler",
+        "shooter",
+        "sprinkler",
+      ],
     },
   ];
 
@@ -10289,7 +10321,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function Bullet(params) {
     const { position, angle, speed } = params;
     return [
-      sprite("bullet"),
+      sprite(params.sprite ?? "bullet"),
       pos(...position),
       area({
         shape: new Rect(vec2(0, 0), 4, 4),
@@ -10460,6 +10492,25 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }, params.interval);
     return intervalId;
   }
+  function ShooterFiringPattern(context2, rate, enemy) {
+    const intervalId = setInterval(() => {
+      const playerX = context2.state.ship.pos.x;
+      const playerY = context2.state.ship.pos.y;
+      const enemyX = enemy.pos.x;
+      const enemyY = enemy.pos.y;
+      const angle = Math.atan2(playerY - enemyY, playerX - enemyX) *
+        (180 / Math.PI);
+      const bullet = add(Bullet({
+        position: [enemyX, enemyY],
+        angle,
+        speed: 75,
+        rotation: angle,
+        sprite: "targeted-bullet",
+      }));
+      bullet.onCollide("shape", bulletCollision.bind(null, context2));
+    }, rate);
+    return intervalId;
+  }
 
   // src/ts/commons/math.ts
   function getRegularPolygonVertex(
@@ -10520,9 +10571,11 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
     return vertices;
   }
-  function spawnEnemy(context2, firingParams, sides = 2) {
+  function spawnEnemy(context2, levelConfig, firingParams, sides = 2) {
     const { enemies, intervals } = context2.state;
+    let idx = 0;
     for (const vertex of listSpawnPositions(sides)) {
+      const enemyType = levelConfig.enemyTypes[idx];
       const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
       enemy.onCollide("shape", (obj) => {
         if (obj === context2.state.ship) {
@@ -10530,8 +10583,24 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         }
       });
       enemies.push(enemy);
-      const intervalId = SprinklerFiringPattern(context2, firingParams, enemy);
-      intervals.push(intervalId);
+      if (enemyType === "sprinkler") {
+        const intervalId = SprinklerFiringPattern(
+          context2,
+          firingParams,
+          enemy,
+        );
+        intervals.push(intervalId);
+      } else if (enemyType === "shooter") {
+        const intervalId = ShooterFiringPattern(
+          context2,
+          SHOOTER_FIRING_RATE,
+          enemy,
+        );
+        intervals.push(intervalId);
+      } else {
+        throw new Error(`Unknown enemy type ${enemyType}`);
+      }
+      idx++;
     }
   }
 
@@ -10592,7 +10661,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         pos(0, 0),
         z(-2),
       ]);
-      spawnEnemy(context, levelConfig.firingParams, sides);
+      spawnEnemy(context, levelConfig, levelConfig.firingParams, sides);
       bindEvents(context);
       bindIntervals(context);
     });

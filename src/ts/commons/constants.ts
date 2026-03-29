@@ -20,7 +20,7 @@ export const DEFAULT_LIMITS = 3;
 export const TOKEN_SPAWN_RATE = 5000;
 
 // Testing !
-export const GOD_MODE = false &&
+export const GOD_MODE = true &&
   window.location.hostname !== "limitless.rgrannell.xyz";
 
 // Positioning things
@@ -52,6 +52,8 @@ export function paletteColor(colorName: keyof typeof PALLETE) {
 // not a builtin?
 export const PHI = 1.61803399;
 
+export const SHOOTER_FIRING_RATE = 1500;
+
 export const LEVELS: Level[] = [
   {
     sides: 2,
@@ -62,6 +64,10 @@ export const LEVELS: Level[] = [
       speed: 60,
       rotation: 1.2,
     },
+    enemyTypes: [
+      "sprinkler",
+      "sprinkler",
+    ],
   },
   {
     sides: 3,
@@ -72,6 +78,11 @@ export const LEVELS: Level[] = [
       speed: 50,
       rotation: 1.5,
     },
+    enemyTypes: [
+      "sprinkler",
+      "sprinkler",
+      "sprinkler",
+    ],
   },
   {
     sides: 4,
@@ -82,6 +93,12 @@ export const LEVELS: Level[] = [
       speed: 40,
       rotation: 1.3,
     },
+    enemyTypes: [
+      "sprinkler",
+      "shooter",
+      "sprinkler",
+      "shooter",
+    ],
   },
   {
     sides: 5,
@@ -92,6 +109,13 @@ export const LEVELS: Level[] = [
       speed: 30,
       rotation: 1.1,
     },
+    enemyTypes: [
+      "sprinkler",
+      "sprinkler",
+      "shooter",
+      "sprinkler",
+      "sprinkler",
+    ],
   },
   {
     sides: 6,
@@ -100,7 +124,15 @@ export const LEVELS: Level[] = [
     firingParams: {
       interval: 300,
       speed: 20,
-      rotation: 1.0,
+      rotation: 3,
     },
+    enemyTypes: [
+      "shooter",
+      "sprinkler",
+      "shooter",
+      "sprinkler",
+      "shooter",
+      "sprinkler",
+    ],
   },
 ];

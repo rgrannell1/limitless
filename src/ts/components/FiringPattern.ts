@@ -47,7 +47,34 @@ export function SprinklerFiringPattern(
 /*
  * Shoot at the player's ship
  */
-export function TargetedFiringPattern(context: Context, enemy: GameObj) {
+export function ShooterFiringPattern(
+  context: Context,
+  rate: number,
+  enemy: GameObj,
+) {
+  const intervalId = setInterval(() => {
+    const playerX = context.state.ship.pos.x;
+    const playerY = context.state.ship.pos.y;
+
+    const enemyX = enemy.pos.x;
+    const enemyY = enemy.pos.y;
+
+    // lol ty line complete
+    const angle = Math.atan2(playerY - enemyY, playerX - enemyX) *
+      (180 / Math.PI);
+
+    const bullet = add(Bullet({
+      position: [enemyX, enemyY],
+      angle,
+      speed: 75,
+      rotation: angle,
+      sprite: "targeted-bullet",
+    }));
+
+    bullet.onCollide("shape", bulletCollision.bind(null, context));
+  }, rate);
+
+  return intervalId;
 }
 
 /*

@@ -38,7 +38,7 @@ export function registerGameScene() {
       z(-2),
     ]);
 
-    spawnEnemy(context, levelConfig.firingParams, sides);
+    spawnEnemy(context, levelConfig, levelConfig.firingParams, sides);
 
     bindEvents(context);
     bindIntervals(context);

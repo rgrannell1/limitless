@@ -18,7 +18,7 @@ export type Context = {
   state: State;
 };
 
-export type EnemyType = "line";
+export type EnemyType = "sprinkler" | "shooter";
 
 export type FiringPatternParameters = {
   interval: number;
@@ -31,4 +31,5 @@ export type Level = {
   timer: number;
   background: string;
   firingParams: FiringPatternParameters;
+  enemyTypes: EnemyType[];
 };
