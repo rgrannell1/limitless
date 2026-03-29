@@ -18,7 +18,7 @@ const BASIC_SPRITES = [
 
 // or, load four crappy paint frames :)
 export function loadAnimations() {
-  loadSprite("jump", getAssetPath("jump-animation.png"), {
+  loadSprite("jump", getAssetPath("images/jump-animation.png"), {
     sliceX: 2,
     sliceY: 2,
     anims: {
@@ -31,7 +31,7 @@ export function loadAnimations() {
     },
   });
 
-  loadSprite("bang", getAssetPath("bang.png"), {
+  loadSprite("bang", getAssetPath("images/bang.png"), {
     sliceX: 2,
     sliceY: 2,
     anims: {
@@ -44,7 +44,7 @@ export function loadAnimations() {
     },
   });
 
-  loadSprite("token-sparkle", getAssetPath("token-sparkle.png"), {
+  loadSprite("token-sparkle", getAssetPath("images/token-sparkle.png"), {
     sliceX: 2,
     sliceY: 2,
     anims: {
@@ -62,7 +62,7 @@ export function loadAssets() {
   loadAnimations();
 
   for (const spriteName of BASIC_SPRITES) {
-    loadSprite(spriteName, getAssetPath(`${spriteName}.png`));
+    loadSprite(spriteName, getAssetPath(`images/${spriteName}.png`));
   }
 
   loadSound("ship-dead", getAssetPath("audio/ship-dood.flac"));
