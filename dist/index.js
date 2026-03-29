@@ -5942,6 +5942,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   // src/ts/scenes/game.ts
   function registerGameScene(context2) {
     scene("game", () => {
+      clearIntervals(context2);
       const levelConfig = LEVELS[context2.state.level];
       const { timer, sides } = levelConfig;
       if (context2.state.level === 0) {

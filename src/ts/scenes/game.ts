@@ -7,9 +7,11 @@ import { bindEvents } from "../events.ts";
 import { bindIntervals } from "../intervals.ts";
 import { spawnEnemy } from "../spawn.ts";
 import type { Context } from "../commons/types.ts";
+import { clearIntervals } from "../teardown.ts";
 
 export function registerGameScene(context: Context) {
   scene("game", () => {
+    clearIntervals(context);
     const levelConfig = LEVELS[context.state.level];
 
     const { timer, sides } = levelConfig;
