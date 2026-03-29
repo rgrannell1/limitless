@@ -1,10 +1,14 @@
 import { renderLimitBarText } from "./components/LimitsBar.ts";
-import { GOD_MODE, paletteColor } from "./commons/constants.ts";
+import { playExplosionEffect } from "./effects.ts";
+import { startJump, executeJump } from "./hyperfocus.ts";
 import type { Context } from "./commons/types.ts";
 
 const MOVE_RATE = 100;
 
-function bindShipEvents(context: Context) {
+/**
+ * Bind ship movement to mouse position
+ */
+function bindShipMovement(context: Context) {
   const { ship } = context.state;
 
   onUpdate(() => {
@@ -28,140 +32,43 @@ function bindShipEvents(context: Context) {
       ship.move(dirX * MOVE_RATE, dirY * MOVE_RATE);
     }
   });
-
-  onKeyDown("space", () => startJumpShip(context));
 }
 
-/*
- * Render a jump effect
+/**
+ * Bind jump/hyperfocus input
  */
-function renderJumpTrail(
-  currentX: number,
-  currentY: number,
-  targetX: number,
-  targetY: number,
-) {
-  const xDiff = targetX - currentX;
-  const yDiff = targetY - currentY;
-
-  const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-  const steps = Math.ceil(distance / 14);
-
-  for (let ith = 0; ith < steps; ith++) {
-    const progress = ith / steps;
-    const x = currentX + xDiff * progress;
-    const y = currentY + yDiff * progress;
-
-    add([
-      text("□", { size: 32 }),
-      pos(x, y - 8),
-      paletteColor("magenta"),
-      lifespan(0.5, { fade: 0.3 }),
-      opacity(0.8 * progress),
-      "jumpEffect",
-    ]);
-  }
+function bindJumpInput(context: Context) {
+  onKeyDown("space", () => startJump(context));
+  onMousePress(() => executeJump(context));
 }
 
-function startJumpShip(context: Context) {
-  onKeyDown("space", () => {
-    if (context.state.limitsBar.value <= 0) {
-      return;
-    }
-
-    context.state.hyperfocus = true;
-
-    const currentX = context.state.ship.pos.x - 8;
-    const currentY = context.state.ship.pos.y - 8;
-
-    // render a little animation beneath the ship
-    const jumper = add([
-      sprite("jump"),
-      pos(currentX, currentY),
-      lifespan(0.5, { fade: 0.3 }),
-      opacity(0.6),
-    ]);
-    jumper.play("jump");
-  });
-}
-
-export function explode(context: Context) {
-  if (GOD_MODE) {
-    return;
-  }
-
-  const currentX = context.state.ship.pos.x - 8;
-  const currentY = context.state.ship.pos.y - 8;
-
-  context.state.ship.destroy();
-
-  const bang = add([
-    sprite("bang"),
-    pos(currentX, currentY),
-    lifespan(0.5, { fade: 0.3 }),
-    opacity(0.6),
-  ]);
-  bang.play("bang");
-
-  setTimeout(() => location.reload(), 1000);
-}
-
-function jumpShip(context: Context) {
-  const { ship, limitsBar } = context.state;
-
-  if (!context.state.hyperfocus) {
-    return;
-  }
-
-  if (!limitsBar) {
-    throw new Error("limitsBar is not defined in state");
-  }
-
-  if (limitsBar.value === 0) {
-    return;
-  }
-
-  // cool, so check we have points left then decrease them
-  limitsBar.value -= 1;
-  limitsBar.text = renderLimitBarText(limitsBar);
-
-  const mouse = mousePos();
-
-  const targetX = mouse.x;
-  const targetY = mouse.y;
-
-  const currentX = ship.pos.x;
-  const currentY = ship.pos.y;
-
-  renderJumpTrail(currentX, currentY, targetX, targetY);
-
-  // we do, so jump around, jump around
-  ship.moveTo(targetX, targetY);
-
-  context.state.hyperfocus = false;
-}
-
-function bindCursorEvents(context: Context) {
+/**
+ * Bind cursor position to mouse
+ */
+function bindCursorMovement(context: Context) {
   onMouseMove(() => {
     if (!context.state.cursor) {
-      throw new Error("cursor is not defined in state");
+      return;
     }
 
     context.state.cursor.pos = [mousePos().x, mousePos().y];
   });
-
-  onMouseRelease(() => jumpShip(context));
 }
 
-export function bindEvents(context: Context) {
-  bindShipEvents(context);
-  bindCursorEvents(context);
+/**
+ * Trigger explosion and end game
+ */
+export function explode(context: Context) {
+  playExplosionEffect(context);
 }
 
+/**
+ * Handle token collection event
+ */
 export function bindTokenEvent(context: Context, token: any) {
   const { limitsBar } = context.state;
   if (!limitsBar) {
-    throw new Error("limitsBar is not defined in state");
+    return;
   }
 
   token.onCollide("shape", () => {
@@ -183,4 +90,25 @@ export function bindTokenEvent(context: Context, token: any) {
     ]);
     sparkle.play("token-sparkle");
   });
+}
+
+/**
+ * Bind all game events
+ */
+export function bindEvents(context: Context) {
+  bindShipMovement(context);
+  bindJumpInput(context);
+  bindCursorMovement(context);
+}
+
+function bindCursorEvents(context: Context) {
+  onMouseMove(() => {
+    if (!context.state.cursor) {
+      throw new Error("cursor is not defined in state");
+    }
+
+    context.state.cursor.pos = [mousePos().x, mousePos().y];
+  });
+
+  onMouseRelease(() => jumpShip(context));
 }

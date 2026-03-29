@@ -16,11 +16,33 @@ import type {
 } from "./commons/types.ts";
 import { ShooterFiringPattern } from "./components/FiringPattern.ts";
 
-export function spawnToken(context: Context) {
-  const { tokens } = context.state;
+/**
+ * Get spawn positions arranged in a regular polygon around the center
+ */
+function getSpawnPositions(sides: number) {
+  const centerX = CENTRE;
+  const centerY = CENTRE;
+  const radius = DIMENSION / 3;
 
-  const shipX = context.state.ship.pos.x;
-  const shipY = context.state.ship.pos.y;
+  const startAngle = -Math.PI / 2;
+
+  const vertices: { x: number; y: number }[] = [];
+  for (let idx = 0; idx < sides; idx++) {
+    vertices.push(
+      getRegularPolygonVertex(centerX, centerY, radius, sides, idx, startAngle),
+    );
+  }
+
+  return vertices;
+}
+
+export function spawnToken(context: Context) {
+  const { tokens, ship } = context.state;
+
+  if (!ship) return;
+
+  const shipX = ship.pos.x;
+  const shipY = ship.pos.y;
 
   // spawn it pretty close to the player, otherwise it's not worth the risk
   const angle = Math.random() * Math.PI * 2;
@@ -46,23 +68,6 @@ export function spawnToken(context: Context) {
   tokens.push(token);
 }
 
-function listSpawnPositions(sides: number) {
-  const centerX = CENTRE;
-  const centerY = CENTRE;
-  const radius = DIMENSION / 3;
-
-  const startAngle = -Math.PI / 2;
-
-  const vertices: { x: number; y: number }[] = [];
-  for (let idx = 0; idx < sides; idx++) {
-    vertices.push(
-      getRegularPolygonVertex(centerX, centerY, radius, sides, idx, startAngle),
-    );
-  }
-
-  return vertices;
-}
-
 export function spawnEnemy(
   context: Context,
   levelConfig: Level,
@@ -73,7 +78,7 @@ export function spawnEnemy(
 
   let idx = 0;
 
-  for (const vertex of listSpawnPositions(sides)) {
+  for (const vertex of getSpawnPositions(sides)) {
     const enemyType = levelConfig.enemyTypes[idx];
     const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
 
