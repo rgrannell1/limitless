@@ -83,6 +83,9 @@ export function playExplosionEffect(context: Context) {
     volume: 0.5,
   });
 
+  context.state.level = 0;
+
+
   setTimeout(() => {
     clearIntervals(context);
     go("menu", { })

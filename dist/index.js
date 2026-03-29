@@ -5645,6 +5645,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     play("ship-dead", {
       volume: 0.5
     });
+    context2.state.level = 0;
     setTimeout(() => {
       clearIntervals(context2);
       go("menu", {});
