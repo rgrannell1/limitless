@@ -85,7 +85,7 @@ export function spawnToken(context: Context) {
 
   // spawn it pretty close to the player, otherwise it's not worth the risk
   const angle = Math.random() * Math.PI * 2;
-  const distance = Math.random() * (DIMENSION / 8);
+  const distance = Math.max(Math.random() * (DIMENSION / 8), 40);
 
   const position: [number, number] = [
     shipX + Math.cos(angle) * distance,
@@ -93,6 +93,15 @@ export function spawnToken(context: Context) {
   ];
 
   const token = add(LimitTokens({ position }));
+  const sparkle = add([
+    sprite("token-sparkle"),
+    pos(position[0] - 4, position[1]),
+    lifespan(0.5, { fade: 0.3 }),
+    opacity(0.6),
+    z(-1)
+  ]);
+  sparkle.play("token-sparkle");
+
   bindTokenEvent(context, token);
 
   tokens.push(token);

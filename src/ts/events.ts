@@ -173,5 +173,15 @@ export function bindTokenEvent(context: Context, token: any) {
     limitsBar.text = renderLimitBarText(limitsBar);
 
     token.destroy();
+
+    const sparkle = add([
+      sprite("token-sparkle"),
+      pos(token.pos.x - 4, token.pos.y),
+      lifespan(0.5, { fade: 0.3 }),
+      opacity(0.6),
+      z(-1)
+    ]);
+    sparkle.play("token-sparkle");
+
   });
 }

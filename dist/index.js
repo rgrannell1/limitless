@@ -44,6 +44,18 @@
     loadSprite("level-5", getAssetPath("level-5.png"));
     loadSprite("ship", getAssetPath("ship.png"));
     loadSprite("sparkle", getAssetPath("sparkle.png"));
+    loadSprite("token-sparkle", getAssetPath("token-sparkle.png"), {
+      sliceX: 2,
+      sliceY: 2,
+      anims: {
+        "token-sparkle": {
+          from: 0,
+          to: 3,
+          loop: false,
+          speed: 15
+        }
+      }
+    });
     loadSprite("level_one_background", getAssetPath("level-one.png"));
     loadSprite("bullet", getAssetPath("bullet.png"));
     loadFont("pixelpurl", getAssetPath("fonts/pixelpurl/PixelPurl.ttf"));
@@ -5590,6 +5602,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       limitsBar.value += 1;
       limitsBar.text = renderLimitBarText(limitsBar);
       token.destroy();
+      const sparkle = add([
+        sprite("token-sparkle"),
+        pos(token.pos.x - 4, token.pos.y),
+        lifespan(0.5, { fade: 0.3 }),
+        opacity(0.6),
+        z(-1)
+      ]);
+      sparkle.play("token-sparkle");
     });
   }
 
@@ -5726,12 +5746,20 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     const shipX = context2.state.ship.pos.x;
     const shipY = context2.state.ship.pos.y;
     const angle = Math.random() * Math.PI * 2;
-    const distance = Math.random() * (DIMENSION / 8);
+    const distance = Math.max(Math.random() * (DIMENSION / 8), 40);
     const position = [
       shipX + Math.cos(angle) * distance,
       shipY + Math.sin(angle) * distance
     ];
     const token = add(LimitTokens({ position }));
+    const sparkle = add([
+      sprite("token-sparkle"),
+      pos(position[0] - 4, position[1]),
+      lifespan(0.5, { fade: 0.3 }),
+      opacity(0.6),
+      z(-1)
+    ]);
+    sparkle.play("token-sparkle");
     bindTokenEvent(context2, token);
     tokens.push(token);
   }

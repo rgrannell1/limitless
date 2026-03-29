@@ -38,6 +38,18 @@ export function loadAssets() {
 
   loadSprite("ship", getAssetPath("ship.png"));
   loadSprite("sparkle", getAssetPath("sparkle.png"));
+  loadSprite("token-sparkle", getAssetPath("token-sparkle.png"), {
+    sliceX: 2,
+    sliceY: 2,
+    anims: {
+      "token-sparkle": {
+        from: 0,
+        to: 3,
+        loop: false,
+        speed: 15,
+      },
+    },
+  });
   loadSprite("level_one_background", getAssetPath("level-one.png"));
   loadSprite("bullet", getAssetPath("bullet.png"));
   loadFont("pixelpurl", getAssetPath("fonts/pixelpurl/PixelPurl.ttf"));
