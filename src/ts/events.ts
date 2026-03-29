@@ -26,6 +26,7 @@ function bindShipMovement(context: Context) {
     const dy = mouseY - shipY;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
+    // avoid jittering
     if (distance > 1) {
       const dirX = dx / distance;
       const dirY = dy / distance;
@@ -88,27 +89,16 @@ export function bindTokenEvent(context: Context, token: any) {
       opacity(0.6),
       z(-1),
     ]);
+
+    play("limitup", {
+      volume: 0.5
+    });
     sparkle.play("token-sparkle");
   });
 }
 
-/**
- * Bind all game events
- */
 export function bindEvents(context: Context) {
   bindShipMovement(context);
   bindJumpInput(context);
   bindCursorMovement(context);
-}
-
-function bindCursorEvents(context: Context) {
-  onMouseMove(() => {
-    if (!context.state.cursor) {
-      throw new Error("cursor is not defined in state");
-    }
-
-    context.state.cursor.pos = [mousePos().x, mousePos().y];
-  });
-
-  onMouseRelease(() => jumpShip(context));
 }

@@ -5,8 +5,6 @@ import { renderLimitBarText } from "./components/LimitsBar.ts";
 import type { Context } from "./commons/types.ts";
 import { renderJumpTrail, playJumpAnimation } from "./effects.ts";
 
-const MOVE_RATE = 100;
-
 /**
  * Start the jump/hyperfocus mode - called when space is pressed
  */
@@ -19,9 +17,6 @@ export function startJump(context: Context) {
   playJumpAnimation(context);
 }
 
-/**
- * Execute jump to target position and deduct limit
- */
 export function executeJump(context: Context) {
   const { ship, limitsBar } = context.state;
 
@@ -33,7 +28,6 @@ export function executeJump(context: Context) {
     return;
   }
 
-  // Decrease limits
   limitsBar.value -= 1;
   limitsBar.text = renderLimitBarText(limitsBar);
 

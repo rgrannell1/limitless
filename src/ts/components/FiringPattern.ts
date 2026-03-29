@@ -76,10 +76,3 @@ export function ShooterFiringPattern(
 
   return intervalId;
 }
-
-/*
- * THE MISSILE KNOWS WHERE IT IS AT ALL TIMES. IT KNOWS THIS BECAUSE IT
- * KNOWS WHERE IT ISN't
- */
-export function MissileFiringPattern(context: Context, enemy: GameObj) {
-}

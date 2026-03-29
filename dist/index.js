@@ -68,6 +68,7 @@
       loadSprite(spriteName, getAssetPath(`${spriteName}.png`));
     }
     loadSound("ship-dead", getAssetPath("audio/ship-dood.flac"));
+    loadSound("limitup", getAssetPath("audio/limitup.mp3"));
     loadFont("pixelpurl", getAssetPath("fonts/pixelpurl/PixelPurl.ttf"));
   }
 
@@ -5708,6 +5709,9 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         opacity(0.6),
         z(-1)
       ]);
+      play("limitup", {
+        volume: 0.5
+      });
       sparkle.play("token-sparkle");
     });
   }
