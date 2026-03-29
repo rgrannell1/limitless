@@ -5,6 +5,7 @@ import "kaplay/global";
 
 import { GOD_MODE, paletteColor } from "./commons/constants.ts";
 import type { Context } from "./commons/types.ts";
+import { clearIntervals } from "./teardown.ts";
 
 /**
  * Render a trail of visual effects between two points
@@ -82,5 +83,8 @@ export function playExplosionEffect(context: Context) {
     volume: 0.5,
   });
 
-  setTimeout(() => location.reload(), 1000);
+  setTimeout(() => {
+    clearIntervals(context);
+    go("menu", { })
+  }, 1000);
 }

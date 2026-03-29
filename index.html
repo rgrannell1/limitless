@@ -1,6 +1,5 @@
 <html>
   <head>
-    <script src="./dist/index.js" type="module"></script>
 
     <style>
       @font-face {
@@ -28,9 +27,44 @@
 
         padding-top: 100px;
       }
+
+      .start-game {
+        font-family: "PixelPurl", sans-serif;
+        font-size: 30px;
+        padding: 20px 40px;
+        margin-top: 50px;
+        background-color: #000;
+        color: #fff;
+        border: 2px solid #fff;
+        cursor: pointer;
+      }
+
     </style>
   </head>
   <body>
+    <button class="start-game" id="insertTokenBtn">[Enter] Insert Token</button>
+
+    <script>
+      function addTheGame() {
+        const script = document.createElement("script");
+        script.src = "./dist/index.js"
+        script.type = "module";
+        document.body.appendChild(script);
+      }
+
+      // the things we do to trick people into playing audio...
+      function startListener(key) {
+        if (key.code !== "Enter") {
+          return
+        };
+          // just the once
+          document.removeEventListener("keyup", startListener);
+          addTheGame();
+      }
+
+      document.addEventListener("keyup", startListener);
+    </script>
+
     <canvas id="game"></canvas>
   </body>
 </html>

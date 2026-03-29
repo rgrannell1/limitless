@@ -12,7 +12,6 @@ const BASIC_SPRITES = [
   "targeted-bullet",
   "ship",
   "sparkle",
-  "level_one_background",
   "bullet",
   "sprinkler",
   "shooter",
@@ -70,6 +69,7 @@ export function loadAssets() {
   loadSound("ship-dead", getAssetPath("audio/ship-dood.flac"));
   loadSound("limitup", getAssetPath("audio/limitup.mp3"));
   loadSound("jump-around", getAssetPath("audio/jump-around-jump-around.mp3"));
+  loadSound("menu-song", getAssetPath("audio/menu-good-enough-lol.mp3"));
 
   loadFont("pixelpurl", getAssetPath("fonts/pixelpurl/PixelPurl.ttf"));
 }

@@ -21,7 +21,6 @@
     "targeted-bullet",
     "ship",
     "sparkle",
-    "level_one_background",
     "bullet",
     "sprinkler",
     "shooter"
@@ -72,6 +71,7 @@
     loadSound("ship-dead", getAssetPath("audio/ship-dood.flac"));
     loadSound("limitup", getAssetPath("audio/limitup.mp3"));
     loadSound("jump-around", getAssetPath("audio/jump-around-jump-around.mp3"));
+    loadSound("menu-song", getAssetPath("audio/menu-good-enough-lol.mp3"));
     loadFont("pixelpurl", getAssetPath("fonts/pixelpurl/PixelPurl.ttf"));
   }
 
@@ -5372,7 +5372,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
   var TOKEN_SPAWN_RATE = 5e3;
-  var GOD_MODE = window.location.hostname !== "limitless.rgrannell.xyz";
+  var GOD_MODE = false;
   var TIMER_X = DIMENSION - 60;
   var TIMER_Y = 10;
   var LIMIT_TEXT_X = 30;
@@ -5586,6 +5586,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     return bits;
   }
 
+  // src/ts/teardown.ts
+  function clearIntervals(context2) {
+    for (const interval of context2.state.intervals) {
+      clearInterval(interval);
+    }
+    context2.state.intervals = [];
+  }
+
   // src/ts/effects.ts
   function renderJumpTrail(currentX, currentY, targetX, targetY) {
     const xDiff = targetX - currentX;
@@ -5637,7 +5645,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     play("ship-dead", {
       volume: 0.5
     });
-    setTimeout(() => location.reload(), 1e3);
+    setTimeout(() => {
+      clearIntervals(context2);
+      go("menu", {});
+    }, 1e3);
   }
 
   // src/ts/hyperfocus.ts
@@ -5911,10 +5922,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         timer.text = renderTimerText(timer);
       } else if (timer.value === 0) {
         timer.value = -1;
-        state.intervals.forEach(
-          (intervalId) => clearInterval(intervalId)
-        );
-        state.intervals = [];
+        clearIntervals(context2);
         context2.state.level += 1;
         go("game");
       }
@@ -5989,10 +5997,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         z(1)
       ]);
       onKeyPress("enter", () => {
-        for (const interval of context2.state.intervals) {
-          clearInterval(interval);
-        }
-        context2.state.intervals = [];
+        clearIntervals(context2);
         go("game");
       });
     });
@@ -6007,6 +6012,11 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       let offset = idx * DIMENSION / 5;
       context2.state.intervals.push(MenuFirePattern([0, offset], spectrum[idx]));
     }
+    for (let jdx = 0; jdx < 5; jdx++) {
+      let offset = jdx * DIMENSION / 5;
+      context2.state.intervals.push(MenuFirePattern([offset, 0], spectrum[jdx]));
+    }
+    context2.state.menuMusic = play("menu-song");
   }
 
   // src/ts/scenes.ts

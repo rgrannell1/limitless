@@ -3,6 +3,7 @@ import { TOKEN_SPAWN_RATE } from "./commons/constants.ts";
 import { spawnToken } from "./spawn.ts";
 import type { Context } from "./commons/types.ts";
 import { ShipSparkle } from "./components/Ship.ts";
+import { clearIntervals } from "./teardown.ts";
 
 export function bindIntervals(context: Context) {
   const state = context.state;
@@ -19,12 +20,7 @@ export function bindIntervals(context: Context) {
     } else if (timer.value === 0) {
       timer.value = -1;
 
-      // Clear all intervals before transitioning
-      state.intervals.forEach((intervalId: number) =>
-        clearInterval(intervalId)
-      );
-      state.intervals = [];
-
+      clearIntervals(context);
       context.state.level += 1;
       go("game");
     }

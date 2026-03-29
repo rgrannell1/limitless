@@ -12,6 +12,7 @@ export type State = {
   cursor?: GameObj;
   intervals: number[];
   startTime: number;
+  menuMusic: ReturnType<typeof play>;
 };
 
 // Context passed around generally

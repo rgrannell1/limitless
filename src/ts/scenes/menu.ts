@@ -4,6 +4,7 @@ import "kaplay/global";
 import { CENTRE, DIMENSION, paletteColor } from "../commons/constants.ts";
 import { MenuFirePattern } from "../components/FiringPattern.ts";
 import { Context } from "../commons/types.ts";
+import { clearIntervals } from "../teardown.ts";
 
 export function registerMenuScene(context: Context) {
   scene("menu", () => {
@@ -44,11 +45,7 @@ export function registerMenuScene(context: Context) {
     ]);
 
     onKeyPress("enter", () => {
-      for (const interval of context.state.intervals) {
-        clearInterval(interval);
-      }
-      context.state.intervals = [];
-
+      clearIntervals(context);
       go("game");
     });
   });
@@ -65,4 +62,11 @@ export function registerMenuScene(context: Context) {
     let offset = idx * DIMENSION / 5;
     context.state.intervals.push(MenuFirePattern([0, offset], spectrum[idx]));
   }
+
+  for (let jdx = 0; jdx < 5; jdx++) {
+    let offset = jdx * DIMENSION / 5;
+    context.state.intervals.push(MenuFirePattern([offset, 0], spectrum[jdx]));
+  }
+
+  context.state.menuMusic = play("menu-song")
 }
