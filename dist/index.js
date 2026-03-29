@@ -5357,7 +5357,13 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     magenta: "rgb(249, 199, 255)",
     text: "rgb(149, 35, 255)",
     red: "rgb(255, 0, 0)",
-    bannerText: "rgb(255, 102, 204)"
+    bannerText: "rgb(255, 102, 204)",
+    // spectrum for menu
+    magenta1: "rgb(255, 0, 255)",
+    yellow: "rgb(255, 255, 0)",
+    green: "rgb(0, 255, 0)",
+    cyan1: "rgb(0, 255, 255)",
+    blue1: "rgb(0, 0, 255)"
   };
   var DIMENSION = 400;
   var CENTRE = DIMENSION / 2;
@@ -5564,7 +5570,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   // src/ts/components/Bullet.ts
   function Bullet(params) {
     const { position, angle, speed } = params;
-    return [
+    const bits = [
       sprite(params.sprite ?? "bullet"),
       pos(...position),
       area({
@@ -5574,6 +5580,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       move(angle, speed),
       offscreen({ destroy: true })
     ];
+    if (params.colour) {
+      bits.push(params.colour);
+    }
+    return bits;
   }
 
   // src/ts/effects.ts
@@ -5797,13 +5807,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     }, rate);
     return intervalId;
   }
-  function MenuFirePattern(position) {
+  function MenuFirePattern(position, colour) {
     const intervalId = setInterval(() => {
       add(Bullet({
         position,
         angle: 45,
         speed: 50,
-        rotation: 0
+        rotation: 0,
+        colour
       }));
     }, 1e3);
     return intervalId;
@@ -5985,9 +5996,16 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         go("game");
       });
     });
+    const spectrum = [
+      paletteColor("magenta1"),
+      paletteColor("yellow"),
+      paletteColor("green"),
+      paletteColor("cyan1"),
+      paletteColor("blue1")
+    ];
     for (let idx = 0; idx < 5; idx++) {
       let offset = idx * DIMENSION / 5;
-      context2.state.intervals.push(MenuFirePattern([0, offset]));
+      context2.state.intervals.push(MenuFirePattern([0, offset], spectrum[idx]));
     }
   }
 

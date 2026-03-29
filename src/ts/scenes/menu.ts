@@ -53,8 +53,16 @@ export function registerMenuScene(context: Context) {
     });
   });
 
+  const spectrum = [
+    paletteColor("magenta1"),
+    paletteColor("yellow"),
+    paletteColor("green"),
+    paletteColor("cyan1"),
+    paletteColor("blue1"),
+  ];
+
   for (let idx = 0; idx < 5; idx++) {
     let offset = idx * DIMENSION / 5;
-    context.state.intervals.push(MenuFirePattern([0, offset]));
+    context.state.intervals.push(MenuFirePattern([0, offset], spectrum[idx]));
   }
 }

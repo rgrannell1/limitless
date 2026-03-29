@@ -9,6 +9,13 @@ const COLORS_CSS = {
   text: "rgb(149, 35, 255)",
   red: "rgb(255, 0, 0)",
   bannerText: "rgb(255, 102, 204)",
+
+  // spectrum for menu
+  magenta1: "rgb(255, 0, 255)",
+  yellow: "rgb(255, 255, 0)",
+  green: "rgb(0, 255, 0)",
+  cyan1: "rgb(0, 255, 255)",
+  blue1: "rgb(0, 0, 255)",
 };
 
 export const DIMENSION = 400;

@@ -6,12 +6,13 @@ export type BulletParams = {
   angle: number;
   speed: number;
   rotation: number;
+  colour?: any;
 };
 
 export function Bullet(params: BulletParams) {
   const { position, angle, speed } = params;
 
-  return [
+  const bits = [
     sprite(params.sprite ?? "bullet"),
     pos(...position),
     area({
@@ -21,4 +22,10 @@ export function Bullet(params: BulletParams) {
     move(angle, speed),
     offscreen({ destroy: true }),
   ];
+
+  if (params.colour) {
+    bits.push(params.colour);
+  }
+
+  return bits;
 }
