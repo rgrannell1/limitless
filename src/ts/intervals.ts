@@ -1,6 +1,6 @@
 import { renderTimerText } from "./components/Timer.ts";
 import { TOKEN_SPAWN_RATE } from "./commons/constants.ts";
-import { spawnToken } from "./scenes.ts";
+import { spawnToken } from "./spawn.ts";
 import type { Context } from "./commons/types.ts";
 import { ShipSparkle } from "./components/Ship.ts";
 

@@ -12,8 +12,8 @@ const colors = {
     background: "#f0f7ff",
   },
   levelFour: {
-    stroke: "#ffffd4",
-    background: "#fffdf0",
+    stroke: "#93ff78",
+    background: "#ccffde",
   },
   levelFive: {
     stroke: "#c7fecf",
