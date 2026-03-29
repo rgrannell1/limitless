@@ -22,7 +22,9 @@
     "ship",
     "sparkle",
     "level_one_background",
-    "bullet"
+    "bullet",
+    "sprinkler",
+    "shooter"
   ];
   function loadAnimations() {
     loadSprite("jump", getAssetPath("images/jump-animation.png"), {
@@ -5363,7 +5365,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   var CURSOR_SIZE = 32;
   var DEFAULT_LIMITS = 3;
   var TOKEN_SPAWN_RATE = 5e3;
-  var GOD_MODE = false;
+  var GOD_MODE = window.location.hostname !== "limitless.rgrannell.xyz";
   var TIMER_X = DIMENSION - 60;
   var TIMER_Y = 10;
   var LIMIT_TEXT_X = 30;
@@ -5548,7 +5550,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function Enemy(params) {
     const { position } = params;
     return [
-      rect(32, 32),
+      sprite(params.type),
       pos(...position),
       // larger collision to avoid people hiding inside the springler fire-patterns
       area({
@@ -5713,8 +5715,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function explode(context2) {
     playExplosionEffect(context2);
-    add(BannerText(context2));
-    add(Banner(context2));
+    if (!GOD_MODE) {
+      add(BannerText(context2));
+      add(Banner(context2));
+    }
   }
   function bindTokenEvent(context2, token) {
     const { limitsBar } = context2.state;
@@ -5854,7 +5858,10 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     let idx = 0;
     for (const vertex of getSpawnPositions(sides)) {
       const enemyType = levelConfig.enemyTypes[idx];
-      const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
+      const enemy = add(Enemy({
+        type: enemyType,
+        position: [vertex.x, vertex.y]
+      }));
       enemy.onCollide("shape", (obj) => {
         if (obj === context2.state.ship) {
           explode(context2);

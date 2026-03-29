@@ -80,7 +80,10 @@ export function spawnEnemy(
 
   for (const vertex of getSpawnPositions(sides)) {
     const enemyType = levelConfig.enemyTypes[idx];
-    const enemy = add(Enemy({ position: [vertex.x, vertex.y] }));
+    const enemy = add(Enemy({
+      type: enemyType,
+      position: [vertex.x, vertex.y]
+    }));
 
     enemy.onCollide("shape", (obj) => {
       if (obj === context.state.ship) {

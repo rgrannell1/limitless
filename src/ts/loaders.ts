@@ -14,6 +14,8 @@ const BASIC_SPRITES = [
   "sparkle",
   "level_one_background",
   "bullet",
+  "sprinkler",
+  "shooter"
 ];
 
 // or, load four crappy paint frames :)

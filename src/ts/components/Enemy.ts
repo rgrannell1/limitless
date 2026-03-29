@@ -1,6 +1,7 @@
 import { paletteColor } from "../commons/constants.ts";
 
 type EnemyParams = {
+  type:  "sprinkler" | "shooter";
   position: [number, number];
 };
 
@@ -8,7 +9,7 @@ export function Enemy(params: EnemyParams) {
   const { position } = params;
 
   return [
-    rect(32, 32),
+    sprite(params.type),
     pos(...position),
     // larger collision to avoid people hiding inside the springler fire-patterns
     area({

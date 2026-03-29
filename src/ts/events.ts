@@ -3,6 +3,7 @@ import { playExplosionEffect } from "./effects.ts";
 import { executeJump, startJump } from "./hyperfocus.ts";
 import type { Context } from "./commons/types.ts";
 import { Banner, BannerText } from "./components/Banner.ts";
+import { GOD_MODE } from "./commons/constants.ts";
 
 const MOVE_RATE = 100;
 
@@ -63,8 +64,10 @@ function bindCursorMovement(context: Context) {
 export function explode(context: Context) {
   playExplosionEffect(context);
 
-  add(BannerText(context));
-  add(Banner(context));
+  if (!GOD_MODE) {
+    add(BannerText(context));
+    add(Banner(context));
+  }
 }
 
 /**
