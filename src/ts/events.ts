@@ -67,6 +67,8 @@ export function explode(context: Context) {
   if (!GOD_MODE) {
     add(BannerText(context));
     add(Banner(context));
+
+    context.state.hyperfocus = false;
   }
 }
 

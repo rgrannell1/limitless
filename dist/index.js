@@ -5741,6 +5741,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     if (!GOD_MODE) {
       add(BannerText(context2));
       add(Banner(context2));
+      context2.state.hyperfocus = false;
     }
   }
   function bindTokenEvent(context2, token) {
