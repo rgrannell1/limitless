@@ -38,7 +38,7 @@ export function renderJumpTrail(
 
   play("jump-around", {
     volume: 0.25,
-  })
+  });
 }
 
 /**

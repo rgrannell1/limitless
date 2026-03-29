@@ -1,7 +1,7 @@
 import { paletteColor } from "../commons/constants.ts";
 
 type EnemyParams = {
-  type:  "sprinkler" | "shooter";
+  type: "sprinkler" | "shooter";
   position: [number, number];
 };
 

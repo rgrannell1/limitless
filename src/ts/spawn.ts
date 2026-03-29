@@ -82,7 +82,7 @@ export function spawnEnemy(
     const enemyType = levelConfig.enemyTypes[idx];
     const enemy = add(Enemy({
       type: enemyType,
-      position: [vertex.x, vertex.y]
+      position: [vertex.x, vertex.y],
     }));
 
     enemy.onCollide("shape", (obj) => {
