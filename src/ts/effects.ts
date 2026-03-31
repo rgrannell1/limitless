@@ -46,8 +46,13 @@ export function renderJumpTrail(
  * Play jump animation at ship location
  */
 export function playJumpAnimation(context: Context) {
-  const currentX = context.state.ship.pos.x - 8;
-  const currentY = context.state.ship.pos.y - 8;
+  const { ship } = context.state;
+  if (!ship) {
+    return;
+  }
+
+  const currentX = ship.pos.x - 8;
+  const currentY = ship.pos.y - 8;
 
   const jumper = add([
     sprite("jump"),
@@ -66,10 +71,15 @@ export function playExplosionEffect(context: Context) {
     return;
   }
 
-  const currentX = context.state.ship.pos.x - 8;
-  const currentY = context.state.ship.pos.y - 8;
+  const { ship } = context.state;
+  if (!ship) {
+    return;
+  }
 
-  context.state.ship.destroy();
+  const currentX = ship.pos.x - 8;
+  const currentY = ship.pos.y - 8;
+
+  ship.destroy();
 
   const bang = add([
     sprite("bang"),

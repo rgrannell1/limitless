@@ -13,6 +13,7 @@ export type State = {
   intervals: number[];
   startTime: number;
   menuMusic: ReturnType<typeof play>;
+  menu: boolean;
 };
 
 // Context passed around generally

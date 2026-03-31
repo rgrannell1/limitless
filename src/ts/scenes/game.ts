@@ -12,23 +12,24 @@ import { clearIntervals } from "../teardown.ts";
 export function registerGameScene(context: Context) {
   scene("game", () => {
     clearIntervals(context);
-    const levelConfig = LEVELS[context.state.level];
+    const state = context.state;
+    const levelConfig = LEVELS[state.level];
 
     const { timer, sides } = levelConfig;
 
     // so people can't hang out on the menu for an hour (like me, accidentally)
-    if (context.state.level === 0) {
-      context.state.startTime = Date.now();
+    if (state.level === 0) {
+      state.startTime = Date.now();
     }
 
-    context.state.ship = add(Ship());
-    context.state.limitsBar = add(LimitsBar());
-    context.state.cursor = add(Cursor());
+    state.ship = add(Ship());
+    state.limitsBar = add(LimitsBar());
+    state.cursor = add(Cursor());
 
-    context.state.timer = add(Timer(timer));
-    context.state.enemies = [];
-    context.state.tokens = [];
-    context.state.intervals = [];
+    state.timer = add(Timer(timer));
+    state.enemies = [];
+    state.tokens = [];
+    state.intervals = [];
 
     add([
       sprite(levelConfig.background),

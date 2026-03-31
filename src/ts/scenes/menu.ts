@@ -30,6 +30,8 @@ function spawnMenuPatterns(context: Context) {
 
 export function registerMenuScene(context: Context) {
   scene("menu", () => {
+    context.state.menu = true;
+
     add([
       text("LIMITLESS ∞", {
         size: 50,
@@ -68,11 +70,17 @@ export function registerMenuScene(context: Context) {
 
     onKeyPress("enter", () => {
       clearIntervals(context);
+
+      context.state.menu = false;
       go("game");
     });
 
     // idk, bug?
-    setTimeout(() => spawnMenuPatterns(context), 250);
+    setTimeout(() => {
+      if (context.state.menu) {
+        spawnMenuPatterns(context);
+      }
+    }, 250);
   });
 
   context.state.menuMusic = play("menu-song")

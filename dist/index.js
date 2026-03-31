@@ -5618,8 +5618,12 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     });
   }
   function playJumpAnimation(context2) {
-    const currentX = context2.state.ship.pos.x - 8;
-    const currentY = context2.state.ship.pos.y - 8;
+    const { ship } = context2.state;
+    if (!ship) {
+      return;
+    }
+    const currentX = ship.pos.x - 8;
+    const currentY = ship.pos.y - 8;
     const jumper = add([
       sprite("jump"),
       pos(currentX, currentY),
@@ -5632,9 +5636,13 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
     if (GOD_MODE) {
       return;
     }
-    const currentX = context2.state.ship.pos.x - 8;
-    const currentY = context2.state.ship.pos.y - 8;
-    context2.state.ship.destroy();
+    const { ship } = context2.state;
+    if (!ship) {
+      return;
+    }
+    const currentX = ship.pos.x - 8;
+    const currentY = ship.pos.y - 8;
+    ship.destroy();
     const bang = add([
       sprite("bang"),
       pos(currentX, currentY),
@@ -5944,18 +5952,19 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   function registerGameScene(context2) {
     scene("game", () => {
       clearIntervals(context2);
-      const levelConfig = LEVELS[context2.state.level];
+      const state = context2.state;
+      const levelConfig = LEVELS[state.level];
       const { timer, sides } = levelConfig;
-      if (context2.state.level === 0) {
-        context2.state.startTime = Date.now();
+      if (state.level === 0) {
+        state.startTime = Date.now();
       }
-      context2.state.ship = add(Ship());
-      context2.state.limitsBar = add(LimitsBar());
-      context2.state.cursor = add(Cursor());
-      context2.state.timer = add(Timer(timer));
-      context2.state.enemies = [];
-      context2.state.tokens = [];
-      context2.state.intervals = [];
+      state.ship = add(Ship());
+      state.limitsBar = add(LimitsBar());
+      state.cursor = add(Cursor());
+      state.timer = add(Timer(timer));
+      state.enemies = [];
+      state.tokens = [];
+      state.intervals = [];
       add([
         sprite(levelConfig.background),
         pos(0, 0),
@@ -5987,6 +5996,7 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   function registerMenuScene(context2) {
     scene("menu", () => {
+      context2.state.menu = true;
       add([
         text("LIMITLESS \u221E", {
           size: 50,
@@ -6021,9 +6031,14 @@ vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
       ]);
       onKeyPress("enter", () => {
         clearIntervals(context2);
+        context2.state.menu = false;
         go("game");
       });
-      setTimeout(() => spawnMenuPatterns(context2), 250);
+      setTimeout(() => {
+        if (context2.state.menu) {
+          spawnMenuPatterns(context2);
+        }
+      }, 250);
     });
     context2.state.menuMusic = play("menu-song");
   }

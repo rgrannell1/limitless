@@ -1,4 +1,3 @@
-import { paletteColor } from "../commons/constants.ts";
 
 export type BulletParams = {
   sprite?: string;
